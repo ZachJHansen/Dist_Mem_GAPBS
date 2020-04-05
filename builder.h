@@ -203,8 +203,8 @@ class BuilderBase {
     }
   }
 
-  CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el) {
-    printf("Address of EL: %p\n", (void *)&el);
+    // Edit: Return a pointer to a CSRGraph built in symmetric memory
+  CSRGraph<NodeID_, DestID_, invert>* MakeGraphFromEL(EdgeList &el) {
     DestID_ **index = nullptr, **inv_index = nullptr;
     DestID_ *neighs = nullptr, *inv_neighs = nullptr;
     Timer t;
@@ -218,15 +218,19 @@ class BuilderBase {
       MakeCSR(el, true, &inv_index, &inv_neighs);
     t.Stop();
     PrintTime("Build Time", t.Seconds());
-    if (symmetrize_)
-      return CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs);
-    else
-      return CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs,
-                                                inv_index, inv_neighs);
+    void* g_alloc = shmem_malloc(sizeof(CSRGraph<NodeID_, DestID_, invert>));
+    if (symmetrize_){
+      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs);  
+      return(g);
+    } else {
+      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs, inv_index, inv_neighs);
+      return(g);
+    } 
   }
 
+
   CSRGraph<NodeID_, DestID_, invert> MakeGraph() {
-    CSRGraph<NodeID_, DestID_, invert> g;
+    CSRGraph<NodeID_, DestID_, invert>* g;
     {  // extra scope to trigger earlier deletion of el (save memory)
       EdgeList* EL = (EdgeList*) shmem_calloc((1l << cli_.scale()) * cli_.degree(), sizeof(Edge));       // Create space for an edge list with (2^scale)*degree edges in symmetric memory across all PEs.
       if (cli_.filename() != "") {
@@ -242,7 +246,7 @@ class BuilderBase {
       }
       g = MakeGraphFromEL(*EL);
     }
-    return SquishGraph(g);
+    return SquishGraph(*g);
   }
 
   // Relabels (and rebuilds) graph by order of decreasing degree
