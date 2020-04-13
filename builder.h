@@ -13,8 +13,8 @@
 #include "shmem.h"
 
 #include "/home/zach/projects/GAPBS/gapbs/src/command_line.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/generator.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/graph.h"
+#include "generator.h"
+#include "graph.h"
 #include "/home/zach/projects/GAPBS/gapbs/src/platform_atomics.h"
 #include "/home/zach/projects/GAPBS/gapbs/src/pvector.h"
 #include "/home/zach/projects/GAPBS/gapbs/src/reader.h"
@@ -132,8 +132,7 @@ class BuilderBase {
 
   // Removes self-loops and redundant edges
   // Side effect: neighbor IDs will be sorted
-  void SquishCSR(const CSRGraph<NodeID_, DestID_, invert> &g, bool transpose,
-                 DestID_*** sq_index, DestID_** sq_neighs) {
+  void SquishCSR(const CSRGraph<NodeID_, DestID_, invert> &g, bool transpose, DestID_*** sq_index, DestID_** sq_neighs) {
     pvector<NodeID_> diffs(g.num_nodes());
     DestID_ *n_start, *n_end;
     #pragma omp parallel for private(n_start, n_end)
@@ -151,7 +150,7 @@ class BuilderBase {
       diffs[n] = new_end - n_start;
     }
     pvector<SGOffset> sq_offsets = ParallelPrefixSum(diffs);
-    *sq_neighs = new DestID_[sq_offsets[g.num_nodes()]];
+    *sq_neighs = (DestID_ *) shmem_calloc(sq_offsets[g.num_nodes()], sizeof(DestID_));
     *sq_index = CSRGraph<NodeID_, DestID_>::GenIndex(sq_offsets, *sq_neighs);
     #pragma omp parallel for private(n_start)
     for (NodeID_ n=0; n < g.num_nodes(); n++) {
@@ -163,19 +162,20 @@ class BuilderBase {
     }
   }
 
-  CSRGraph<NodeID_, DestID_, invert> SquishGraph(
-      const CSRGraph<NodeID_, DestID_, invert> &g) {
-    DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
-    SquishCSR(g, false, &out_index, &out_neighs);
+  CSRGraph<NodeID_, DestID_, invert> SquishGraph( const CSRGraph<NodeID_, DestID_, invert> &g) {
+    DestID_ ***out_index = (DestID_ ***) shmem_malloc(sizeof(DestID_**));
+    DestID_ **out_neighs = (DestID_ **) shmem_malloc(sizeof(DestID_*));
+    DestID_ ***in_index = (DestID_ ***) shmem_malloc(sizeof(DestID_**));
+    DestID_ **in_neighs = (DestID_ **) shmem_malloc(sizeof(DestID_*));
+    SquishCSR(g, false, out_index, out_neighs);
     if (g.directed()) {
       if (invert)
-        SquishCSR(g, true, &in_index, &in_neighs);
-      return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), out_index,
-                                                out_neighs, in_index,
-                                                in_neighs);
+        SquishCSR(g, true, in_index, in_neighs);
+      return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), *out_index,
+                                                *out_neighs, *in_index,
+                                                *in_neighs);
     } else {
-      return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), out_index,
-                                                out_neighs);
+      return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), *out_index, *out_neighs);
     }
   }
 
@@ -186,48 +186,53 @@ class BuilderBase {
     - Allocate storage and set points according to offsets (GenIndex)
     - Copy edges into storage
   */
-  void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
-               DestID_** neighs) {
+  void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index, DestID_** neighs) {
     pvector<NodeID_> degrees = CountDegrees(el, transpose);
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
-    *neighs = new DestID_[offsets[num_nodes_]];
+    *neighs = (DestID_ *) shmem_calloc(offsets[num_nodes_], sizeof(DestID_));                   // Array of DestIDs of size (last offset in offsets array)
     *index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, *neighs);
     #pragma omp parallel for
     for (auto it = el.begin(); it < el.end(); it++) {
       Edge e = *it;
-      if (symmetrize_ || (!symmetrize_ && !transpose))
+      if (symmetrize_ || (!symmetrize_ && !transpose)){
         (*neighs)[fetch_and_add(offsets[e.u], 1)] = e.v;
-      if (symmetrize_ || (!symmetrize_ && transpose))
-        (*neighs)[fetch_and_add(offsets[static_cast<NodeID_>(e.v)], 1)] =
-            GetSource(e);
+      }
+      if (symmetrize_ || (!symmetrize_ && transpose)){
+        (*neighs)[fetch_and_add(offsets[static_cast<NodeID_>(e.v)], 1)] = GetSource(e);
+      }
     }
   }
 
     // Edit: Return a pointer to a CSRGraph built in symmetric memory
   CSRGraph<NodeID_, DestID_, invert>* MakeGraphFromEL(EdgeList &el) {
-    DestID_ **index = nullptr, **inv_index = nullptr;
-    DestID_ *neighs = nullptr, *inv_neighs = nullptr;
+    DestID_ **neigh_alloc = (DestID_ **) shmem_malloc(sizeof(DestID_ **));
+    DestID_ **neighs = new (neigh_alloc) DestID_*;
+    DestID_ **inv_neigh_alloc = (DestID_ **) shmem_malloc(sizeof(DestID_ **));
+    DestID_ **inv_neighs = new (inv_neigh_alloc) DestID_*;
+    DestID_ ***index_alloc = (DestID_ ***) shmem_malloc(sizeof(DestID_ ***));
+    DestID_ ***index = new (index_alloc) DestID_**;
+    DestID_ ***inv_index_alloc = (DestID_ ***) shmem_malloc(sizeof(DestID_ ***));
+    DestID_ ***inv_index = new (inv_index_alloc) DestID_**;
     Timer t;
     t.Start();
     if (num_nodes_ == -1)
       num_nodes_ = FindMaxNodeID(el)+1;
     if (needs_weights_)
       Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el);
-    MakeCSR(el, false, &index, &neighs);
+    MakeCSR(el, false, index, neighs);
     if (!symmetrize_ && invert)
-      MakeCSR(el, true, &inv_index, &inv_neighs);
+      MakeCSR(el, true, inv_index, inv_neighs);
     t.Stop();
     PrintTime("Build Time", t.Seconds());
     void* g_alloc = shmem_malloc(sizeof(CSRGraph<NodeID_, DestID_, invert>));
     if (symmetrize_){
-      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs);  
+      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, *index, *neighs);  
       return(g);
     } else {
-      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, index, neighs, inv_index, inv_neighs);
+      CSRGraph<NodeID_, DestID_, invert>* g = new(g_alloc) CSRGraph<NodeID_, DestID_, invert>(num_nodes_, *index, *neighs, *inv_index, *inv_neighs);
       return(g);
     } 
   }
-
 
   CSRGraph<NodeID_, DestID_, invert> MakeGraph() {
     CSRGraph<NodeID_, DestID_, invert>* g;
@@ -245,6 +250,7 @@ class BuilderBase {
         *EL = gen.GenerateEL(cli_.uniform());                                               // Generate a uniform edge list in symmetric memory
       }
       g = MakeGraphFromEL(*EL);
+      shmem_free(EL);
     }
     return SquishGraph(*g);
   }
