@@ -87,12 +87,13 @@ class QueueBuffer {
   const size_t local_size;
   int pe;
   int npes; 
-  int locked;
-  long* FRONTIER_LOCK;
+  long* QLOCK;
 
  public:
-  explicit QueueBuffer(SlidingQueue<T> &master, int my_pe, int num_pes, long* FL, size_t given_size = 16384)
-      : sq(master), pe(my_pe), npes(num_pes), FRONTIER_LOCK(FL), local_size(given_size) {
+  explicit QueueBuffer(SlidingQueue<T> &master, long* QL, size_t given_size = 16384)
+      : sq(master), QLOCK(QL), local_size(given_size) {
+    pe = shmem_my_pe();
+    npes = shmem_n_pes();
     in = 0;
     local_queue = new T[local_size];
   }
@@ -108,7 +109,7 @@ class QueueBuffer {
   }
 
   void flush() {
-    shmem_set_lock(FRONTIER_LOCK);                                                      // Lock critical region (the frontier) to avoid simultaneous flushes
+    shmem_set_lock(QLOCK);                                                      // Lock critical region (the frontier) to avoid simultaneous flushes
     T *shared_queue = sq.shared;
     size_t copy_start = shmem_ulong_atomic_fetch_add(&(sq.shared_in), in, pe);          // Get start of shared queue incoming region, update local copy of incoming region start position
     size_t copy_end = copy_start + local_size;
@@ -120,7 +121,7 @@ class QueueBuffer {
         }
     }
     in = 0;
-    shmem_clear_lock(FRONTIER_LOCK);
+    shmem_clear_lock(QLOCK);
   }
 };
 
