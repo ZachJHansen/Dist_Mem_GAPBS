@@ -1,14 +1,11 @@
-#include "/home/zach/projects/GAPBS/gapbs/src/bitmap.h"
+#include "bitmap.h"
 #include "builder.h"
 #include "command_line.h"
 #include "graph.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/platform_atomics.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/pvector.h"
+#include "platform_atomics.h"
+#include "pvector.h"
 #include "sliding_queue.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/timer.h"
-
-#define True 1
-#define False 0
+#include "timer.h"
 
 typedef EdgePair<int, int> Edge;
 typedef pvector<Edge> EdgeList;

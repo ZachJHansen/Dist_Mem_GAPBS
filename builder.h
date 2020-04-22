@@ -12,14 +12,14 @@
 #include <utility>
 #include "shmem.h"
 
-#include "/home/zach/projects/GAPBS/gapbs/src/command_line.h"
+#include "command_line.h"
 #include "generator.h"
 #include "graph.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/platform_atomics.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/pvector.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/reader.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/timer.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/util.h"
+#include "platform_atomics.h"
+#include "pvector.h"
+#include "reader.h"
+#include "timer.h"
+#include "util.h"
 
 
 /*

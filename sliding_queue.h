@@ -6,7 +6,7 @@
 
 #include <algorithm>
 #include "shmem.h"
-#include "/home/zach/projects/GAPBS/gapbs/src/platform_atomics.h"
+#include "platform_atomics.h"
 
 
 /*
