@@ -85,13 +85,15 @@ class QueueBuffer {
   T *local_queue;
   SlidingQueue<T> &sq;
   const size_t local_size;
+  size_t data_size;
   int pe;
   int npes; 
   long* QLOCK;
 
  public:
   explicit QueueBuffer(SlidingQueue<T> &master, long* QL, size_t given_size = 16384)
-      : sq(master), QLOCK(QL), local_size(given_size) {
+                      : sq(master), QLOCK(QL), local_size(given_size) {
+    data_size = sizeof(T);
     pe = shmem_my_pe();
     npes = shmem_n_pes();
     in = 0;
@@ -109,15 +111,15 @@ class QueueBuffer {
   }
 
   void flush() {
-    shmem_set_lock(QLOCK);                                                      // Lock critical region (the frontier) to avoid simultaneous flushes
+    shmem_set_lock(QLOCK);                                                                      // Lock critical region (the frontier) to avoid simultaneous flushes
     T *shared_queue = sq.shared;
-    size_t copy_start = shmem_ulong_atomic_fetch_add(&(sq.shared_in), in, pe);          // Get start of shared queue incoming region, update local copy of incoming region start position
+    size_t copy_start = shmem_ulong_atomic_fetch_add(&(sq.shared_in), in, pe);                  // Get start of shared queue incoming region, update local copy of incoming region start position
     size_t copy_end = copy_start + local_size;
-    std::copy(local_queue, local_queue+in, shared_queue+copy_start);                    // Update local copy of shared queue
+    std::copy(local_queue, local_queue+in, shared_queue+copy_start);                            // Update local copy of shared queue
     for (int i = 0; i < npes; i++){
         if (i != pe){
-            shmem_put64(shared_queue+copy_start, local_queue, local_size, i);           // Update shared queue on all PEs (An Edge<int, int> consumes 8 bytes of memory)
-            shmem_ulong_put(&(sq.shared_in), &copy_end, (long unsigned) 1, i);          // Move start of incoming region to end of copied elements
+            shmem_putmem(shared_queue+copy_start, local_queue, data_size*local_size, i);        // Updata shared queue on all PEs (put a contiguous block of memory determined by data type & size)
+            shmem_ulong_put(&(sq.shared_in), &copy_end, (long unsigned) 1, i);                  // Move start of incoming region to end of copied elements
         }
     }
     in = 0;
