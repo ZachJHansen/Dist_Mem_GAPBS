@@ -69,7 +69,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
                       long *QLOCK, long *PLOCKS, long *pSync, int *pwrk) {
   int pe = shmem_my_pe();
   int npes = shmem_n_pes();
-  int64_t local_scout;                                                          // Every PE maintains a scout count for their subset of the parent array 
+  int* local_scout = (int *) shmem_malloc(sizeof(int));                         // Every PE maintains a scout count for their subset of the parent array 
   int* scout_count = (int *) shmem_malloc(sizeof(int));                         // The global scout_count is in symmetric memory
   QueueBuffer<NodeID> lqueue(queue, QLOCK);                                     // Every PE maintains a queue buffer that updates the shared sliding queue
   int queue_offset = queue.size() / npes;
@@ -81,7 +81,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
     end = queue.size();
     upper_bound = g.num_nodes();                
   } else {
-    end = start + offset;
+    end = start + queue_offset;
     upper_bound = lower_bound + parent_offset;
   }
   auto q_iter = queue.begin();
@@ -96,9 +96,9 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
       if (v >= lower_bound && v < upper_bound) {                                        // The outgoing neighbor v of node u is in the local subset of the parent array
         NodeID curr_val = parent[v-lower_bound];
         if (curr_val < 0) {
-          if (shmem_int_atomic_compare_swap(parent[v-lower_bound], curr_val, u, pe)) {  // If a remote put has not updated parent[v], then replace value of parent[v] with u
+          if (shmem_int_atomic_compare_swap(parent.begin() + (v-lower_bound), curr_val, u, pe)) {  // If a remote put has not updated parent[v], then replace value of parent[v] with u
             lqueue.push_back(v);
-            local_scout += -curr_val;
+            *local_scout += -curr_val;
           }  
         }
       } else {                                                                          // v is in the parent array subset on a different PE
@@ -111,21 +111,21 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
         } else {
           local_v = v % parent_offset;
         }
-        shmem_set_lock(PLOCKS[foreign_pe]);                                             // Get exclusive access to the parent array on PE foreign_pe
-        shmem_int_get(curr_val, parent+local_v, 1, foreign_pe); 
+        shmem_set_lock(PLOCKS+foreign_pe);                                             // Get exclusive access to the parent array on PE foreign_pe
+        shmem_int_get(&curr_val, parent.begin()+local_v, 1, foreign_pe); 
         if (curr_val < 0) {
-          shmem_int_atomic_swap(parent[local_v], u, foreign_pe);
+          shmem_int_atomic_swap(parent.begin()+local_v, u, foreign_pe);
           lqueue.push_back(v);                                                          // The sliding queue and scouts get aggregated, so it shouldnt matter which PE updates them?
-          local_scout += -curr_val;
+          *local_scout += -curr_val;
         }
-        shmem_clear_lock(PLOCKS[foreign_pe]);                                           
+        shmem_clear_lock(PLOCKS+foreign_pe);                                           
       }
     }
     q_iter++;
   }
   lqueue.flush();
   shmem_int_sum_to_all(scout_count, local_scout, 1, 0, 0, npes, pwrk, pSync);           // Reduction: + (represents a synchronization point)
-  printf("PE: %d | Local: %d | Total: %d\n", pe, *local_scout_count, *scout_count);
+  printf("PE: %d | Local: %d | Total: %d\n", pe, *local_scout, *scout_count); 
   return ((int64_t) *scout_count); 
 }
  
@@ -218,7 +218,7 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK,
   front.reset();
   int64_t edges_to_check = g.num_edges_directed();
   int64_t scout_count = g.out_degree(source);
-  printf("Initial edges to check: %d | Initial scout: %d\n", edges_to_check, scout_count);
+  printf("Initial edges to check: %ld | Initial scout: %ld\n", edges_to_check, scout_count);
   while (!frontier->empty()) {
     if (scout_count > edges_to_check / alpha) {
       int64_t awake_count, old_awake_count;
@@ -245,6 +245,7 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK,
       //scout_count = TDStep(g, parent, *frontier, FRONTIER_LOCK);   
       scout_count = SHMEM_TDStep(g, parent, *frontier, FRONTIER_LOCK, PLOCKS, pSync, pwrk);
       //exit(0);
+      printf("Scout count: %lu\n", scout_count);
       frontier->slide_window();
       t.Stop();
       PrintStep("td", t.Seconds(), frontier->size());
@@ -353,7 +354,7 @@ int main(int argc, char* argv[]) {
     Graph g = b->MakeGraph();
     g.PrintTopology();
     shmem_barrier_all();
-    printf("Directed: %d | Num Edges: %d | Num Directed Edges: %d\n", g.directed(), g.num_edges(), g.num_edges_directed());    
+    printf("Directed: %d | Num Edges: %ld | Num Directed Edges: %ld\n", g.directed(), g.num_edges(), g.num_edges_directed());    
     SourcePicker<Graph> sp(g, cli.start_vertex());
   
    /* void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));                                
