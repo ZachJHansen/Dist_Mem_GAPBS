@@ -52,15 +52,19 @@ class SlidingQueue {
     return shared_out_start == shared_out_end;
   }
 
-  void reset() {
+  void reset() {                                // Sync point
+    shmem_barrier_all();
     shared_out_start = 0;
     shared_out_end = 0;
     shared_in = 0;
+    shmem_barrier_all();
   }
 
-  void slide_window() {
+  void slide_window() {                         // Sync point
+    shmem_barrier_all();
     shared_out_start = shared_out_end;
     shared_out_end = shared_in;
+    shmem_barrier_all();
   }
 
   typedef T* iterator;
@@ -111,19 +115,21 @@ class QueueBuffer {
   }
 
   void flush() {
-    shmem_set_lock(QLOCK);                                                                      // Lock critical region (the frontier) to avoid simultaneous flushes
-    T *shared_queue = sq.shared;
-    size_t copy_start = shmem_ulong_atomic_fetch_add(&(sq.shared_in), in, pe);                  // Get start of shared queue incoming region, update local copy of incoming region start position
-    size_t copy_end = copy_start + local_size;
-    std::copy(local_queue, local_queue+in, shared_queue+copy_start);                            // Update local copy of shared queue
-    for (int i = 0; i < npes; i++){
+    if (in != 0) {                                                                              // Avoid accidental flushes of empty buffers
+      shmem_set_lock(QLOCK);                                                                    // Lock critical region (the frontier) to avoid simultaneous flushes
+      T *shared_queue = sq.shared;
+      size_t copy_start = shmem_ulong_atomic_fetch_add(&(sq.shared_in), in, pe);                // Get start of shared queue incoming region, update local copy of incoming region start position
+      size_t copy_end = copy_start + in;
+      std::copy(local_queue, local_queue+in, shared_queue+copy_start);                          // Update local copy of shared queue
+      for (int i = 0; i < npes; i++){
         if (i != pe){
-            shmem_putmem(shared_queue+copy_start, local_queue, data_size*local_size, i);        // Updata shared queue on all PEs (put a contiguous block of memory determined by data type & size)
-            shmem_ulong_put(&(sq.shared_in), &copy_end, (long unsigned) 1, i);                  // Move start of incoming region to end of copied elements
+          shmem_putmem(shared_queue+copy_start, local_queue, data_size*in, i);                  // Update shared queue on all PEs (put a contiguous block of memory determined by data type & size)
+          shmem_ulong_put(&(sq.shared_in), &copy_end, (long unsigned) 1, i);                    // Move start of incoming region to end of copied elements
         }
+      }
+      in = 0;
+      shmem_clear_lock(QLOCK);
     }
-    in = 0;
-    shmem_clear_lock(QLOCK);
   }
 };
 
