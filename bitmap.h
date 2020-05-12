@@ -39,6 +39,7 @@ class Bitmap {
   ~Bitmap() {
     if (symmetric_) {
       shmem_free(start_);
+      printf("Bitmpas freed\n");
     } else {
       delete[] start_; 
     }
@@ -76,7 +77,10 @@ class Bitmap {
     // I think yes: the bits are all we care about, not the decimal value
     /// So signed vs unsigned shouldnt matter, as long as each word is 64 bits long
     if (symmetric_) {
+      shmem_barrier_all();
+      printf("PE %d has start %p => %ld\n", shmem_my_pe(), (void *) start_, *start_);
       shmem_longlong_or_to_all((long long *) start_, (long long *) start_, num_words, 0, 0, shmem_n_pes(), pwrk, pSync);
+      printf("Check 2\n");
     } else {
       printf("Bitmaps that do not exist in symmetric memory do not support merging\n");
     }

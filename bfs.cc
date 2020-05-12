@@ -43,21 +43,16 @@ them in parent array as negative numbers. Thus the encoding of parent is:
 
 using namespace std;
 
-// Assumes all PEs begin with synchronized front bitmaps, parent array, graph
+// Assumes all PEs begin with synchronized front bitmaps, graph
 // front is never updated within this function
 // updates to parent arrays do not occur accross pe boundaries
 // next bitmaps are synchronized at the end of the function
-int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bitmap &next, int pe, int npes) {
-  static long long pwrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
-  static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
-    pSync[i] = SHMEM_SYNC_VALUE;
-  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++)
-    pwrk[i] = SHMEM_SYNC_VALUE;
+int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bitmap &next, int pe, int npes, long long *pwrk, long *psync) {
   next.reset();
   long long* awake_count = (long long *) shmem_malloc(sizeof(long long));               // Synchonization point?
+  *awake_count = 0;
   int parent_offset = g.num_nodes() / npes;
-  int upper_bound;
+  int upper_bound, relative;                                                            // Each element of the complete parent array has a relative position in the local array
   int lower_bound = parent_offset * pe;                                                 // Distribute graph processing ~evenly
   if (pe == npes-1){
     upper_bound = g.num_nodes();                
@@ -65,20 +60,27 @@ int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bit
     upper_bound = lower_bound + parent_offset;
   }
   for (NodeID u = lower_bound; u < upper_bound; u++) {                                  // PE N has parent array[lower : upper] and is responsible for processing nodes lower-upper
-    if (parent[u] < 0) {
-      for (NodeID v : g.in_neigh(u)) {
+    relative = u - lower_bound;
+    if (parent[relative] < 0) {
+      for (NodeID v : g.in_neigh(u, false)) {
+        if (pe == 1)
+          printf("PE %d - u: %d v: %d\n", pe, u, v);
         if (front.get_bit(v)) {
-          parent[u] = v;
+          parent[relative] = v;
           awake_count++;
+          printf("Before setting bit %d: %d\n", u, next.get_bit(u)); 
           next.set_bit(u);
+          printf("After setting bit %d: %d\n", u, next.get_bit(u));
           break;
         }
       }
     }
-  } 
-  next.merge(pwrk, pSync);                                                              // Synchronize local copies of bitmaps
-  shmem_longlong_sum_to_all(awake_count, awake_count, 1, 0, 0, npes, pwrk, pSync);      // Reduction : +
-  return(*awake_count);
+    printf("PE %d - Relative: %d - p[r]: %d - u: %d\n", pe, relative, parent[relative], u);
+  }
+  printf("PE %d left for\n", pe);
+//  next.merge(pwrk, psync);                                                              // Synchronize local copies of bitmaps
+  //shmem_longlong_sum_to_all(awake_count, awake_count, 1, 0, 0, npes, pwrk, psync);      // Reduction : +
+  return(5/**awake_count*/);
 }
 
 int64_t BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front,
@@ -138,7 +140,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
     for (NodeID v : g.out_neigh(u)) {
       printf("U: %d - v: %d - lb: %d - ub: %d\n", u, v, lower_bound, upper_bound);
       if (v >= lower_bound && v < upper_bound) {                                        // The outgoing neighbor v of node u is in the local subset of the parent array
-        NodeID curr_val = parent[v-lower_bound];
+        NodeID curr_val = parent[v-lower_bound];                // A PE can lock itself, instead of atomic c&s
         if (curr_val < 0) {
           if (shmem_int_atomic_compare_swap(parent.begin() + (v-lower_bound), curr_val, u, pe)) {  // If a remote put has not updated parent[v], then replace value of parent[v] with u
             lqueue.push_back(v);
@@ -233,10 +235,8 @@ void BitmapToQueue(const Graph &g, const Bitmap &bm, SlidingQueue<NodeID> &queue
 // Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
 // Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
 // (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
-pvector<NodeID> InitParent(const Graph &g, NodeID source) {
+pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
   int start, end;
-  int pe = shmem_my_pe();
-  int npes = shmem_n_pes();
   int offset = g.num_nodes()/npes;
   size_t max_size = g.num_nodes() - (npes-1)*offset;
   start = offset * pe;
@@ -249,11 +249,64 @@ pvector<NodeID> InitParent(const Graph &g, NodeID source) {
   #pragma omp parallel for                                              // But even though the parent array is symmetric, the elements aren't the same across PEs
   for (NodeID n=start; n < end; n++)
     parent[n-start] = g.out_degree(n) != 0 ? -g.out_degree(n) : -1;
-  if (source >= start && source <= end)                                 // Source occurs in the local parent pvector
+  if (source >= start && source < end)                                 // Source occurs in the local parent pvector
     parent[source-start] = source;
   return parent;
 }
 
+pvector<NodeID> Fake_DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *PLOCKS, int alpha = 15, int beta = 18) {
+  int pe = shmem_my_pe();
+  int npes = shmem_n_pes();
+  static long td_pwrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static long long bu_pwrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+  static long pSync[SHMEM_REDUCE_SYNC_SIZE];
+  for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+    pSync[i] = SHMEM_SYNC_VALUE;
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) {
+    bu_pwrk[i] = SHMEM_SYNC_VALUE;
+    td_pwrk[i] = SHMEM_SYNC_VALUE;
+  }
+
+  pvector<NodeID> parent = InitParent(g, source, pe, npes);
+  //for (p : parent)
+    //printf("PE: %d | Parent[i]: %d\n", pe, p);
+  void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));                                
+  SlidingQueue<NodeID>* frontier = new(frontier_alloc) SlidingQueue<NodeID>{(size_t) g.num_nodes()};                                  
+  frontier->push_back(source);
+  frontier->slide_window();
+  //for (auto it = frontier->begin(); it < frontier->end(); it++)
+   // printf("PE: %d | (%p => %d)\n", pe, (void*) it, *it);
+  Bitmap curr(g.num_nodes(), true);                     // Symmetric bitmap
+  curr.reset();
+  Bitmap front(g.num_nodes(), true);                    // Symmetric bitmap
+  front.reset();                                        // All PEs are synched at this point
+  int64_t edges_to_check = g.num_edges_directed();
+  int64_t scout_count = g.out_degree(source);
+  if (!frontier->empty()) {
+    if (scout_count > edges_to_check / alpha) {
+      int64_t awake_count, old_awake_count;
+      awake_count = frontier->size();
+      frontier->slide_window();
+      old_awake_count = awake_count;
+      //curr.merge(bu_pwrk, pSync);
+      awake_count = SHMEM_BUStep(g, parent, front, curr, pe, npes, bu_pwrk, pSync);
+      printf("Left BU\n");
+     // printf("\nPE %d awake count after BU = %ld\n", pe, awake_count);
+     // printf("PE %d Curr Bitmap: ", pe);
+    //  for (int i = 0; i < g.num_nodes(); i++)
+  //      printf("%d ", curr.get_bit(i));
+    //  front.swap(curr);
+      scout_count = 1;
+    } else { 
+      printf("Scout count < edges\n");
+    }
+  } else {
+    printf("Frontier is empty\n");
+  }
+  printf("Returning parent\n");
+  return parent;
+}
+ 
 pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, 
                       long *pSync, int *pwrk, int alpha = 15, int beta = 18) {
   int pe = shmem_my_pe();
@@ -261,7 +314,7 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK,
   PrintStep("Source", static_cast<int64_t>(source));
   Timer t;
   t.Start();
-  pvector<NodeID> parent = InitParent(g, source);
+  pvector<NodeID> parent = InitParent(g, source, pe, npes);
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));
   t.Stop();
   PrintStep("i", t.Seconds());
@@ -269,18 +322,19 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK,
   SlidingQueue<NodeID>* frontier = new(frontier_alloc) SlidingQueue<NodeID>{(size_t) g.num_nodes()};                                  
   frontier->push_back(source);
   frontier->slide_window();
-  Bitmap curr(g.num_nodes(), true);             // Symmetric bitmap
+  Bitmap curr(g.num_nodes(), true);                     // Symmetric bitmap
   curr.reset();
-  Bitmap front(g.num_nodes(), true);            // Symmetric bitmap
-  front.reset();
-  shmem_barrier_all();                          // Both bitmaps should be reset on all PEs before proceeding
+  Bitmap front(g.num_nodes(), true);                    // Symmetric bitmap
+  front.reset();                                        // All PEs are synched at this point
   int64_t edges_to_check = g.num_edges_directed();
   int64_t scout_count = g.out_degree(source);
-  printf("Initial edges to check: %ld | Initial scout: %ld\n", edges_to_check, scout_count);
   while (!frontier->empty()) {
     if (scout_count > edges_to_check / alpha) {
       int64_t awake_count, old_awake_count;
       TIME_OP(t, QueueToBitmap(*frontier, front));
+      printf("PE %d Bitmap: ", pe);
+      for (int i = 0; i < g.num_nodes(); i++)
+        printf("%d ", front.get_bit(i));
       PrintStep("e", t.Seconds());
       awake_count = frontier->size();
       frontier->slide_window();
@@ -300,9 +354,9 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK,
       t.Start();
       edges_to_check -= scout_count;
       printf("Beginning TDStep\n");
-      //scout_count = TDStep(g, parent, *frontier, FRONTIER_LOCK);   
-      printf("Frontier size: %d\n", frontier->size());
-      scout_count = SHMEM_TDStep(g, parent, *frontier, FRONTIER_LOCK, PLOCKS, pSync, pwrk);
+      scout_count = TDStep(g, parent, *frontier, FRONTIER_LOCK);   
+      printf("Frontier size: %ld\n", frontier->size());
+      //scout_count = SHMEM_TDStep(g, parent, *frontier, FRONTIER_LOCK, PLOCKS, pSync, pwrk);
       //exit(0);
       printf("Scout count: %lu\n", scout_count);
       frontier->slide_window();
@@ -392,7 +446,7 @@ int main(int argc, char* argv[]) {
     return -1;
 
   static long FRONTIER_LOCK = 0;                                                      // Create a mutex lock in symmetric memory to control access to the frontier
-  static long long pwrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static int pwrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
@@ -406,16 +460,17 @@ int main(int argc, char* argv[]) {
 
   int npes = shmem_n_pes();
   int pe = shmem_my_pe();
+  static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
 
   {
     void* builder_alloc = shmem_malloc(sizeof(Builder));
     Builder* b = new(builder_alloc) Builder{cli};
     Graph g = b->MakeGraph();
-  //  g.PrintTopology();
+//    g.PrintTopology();
     shmem_barrier_all();
     //printf("Directed: %d | Num Edges: %ld | Num Directed Edges: %ld\n", g.directed(), g.num_edges(), g.num_edges_directed());    
     SourcePicker<Graph> sp(g, cli.start_vertex());
-    Bitmap bm(g.num_nodes(), true);
+/*    Bitmap bm(g.num_nodes(), true);
     bm.reset();
     void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));
     SlidingQueue<NodeID>* frontier = new(frontier_alloc) SlidingQueue<NodeID>{(size_t) g.num_nodes()};
@@ -425,23 +480,29 @@ int main(int argc, char* argv[]) {
     for (auto it = frontier->begin(); it < frontier->end(); it++)
       printf("PE: %d | Frontier: %d\n", pe, *it);    
 
-   /* void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));                                
+    void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));                                
     SlidingQueue<NodeID>* frontier = new(frontier_alloc) SlidingQueue<NodeID>{(size_t) g.num_nodes()};                                  
     for (int i = 0; i < g.num_nodes(); i++)
       frontier->push_back(i+10);
     frontier->slide_window();
     int64_t thing = SHMEM_TDStep(g, parent, *frontier, &FRONTIER_LOCK, PLOCKS);
     printf("Thing: %d\n", thing);*/
-//    auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, pSync, pwrk); };
-  //  BFSBound(g);
+    auto BFSBound = [&sp] (const Graph &g) { return Fake_DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS); };
+  //  printf("aha\n");
+    pvector<int> p = BFSBound(g);
    /*  SourcePicker<Graph> vsp(g, cli.start_vertex());
     auto VerifierBound = [&vsp] (const Graph &g, const pvector<NodeID> &parent) {
     return BFSVerifier(g, vsp.PickNext(), parent);
     };
     BenchmarkKernel(cli, g, BFSBound, PrintBFSStats, VerifierBound);*/
     shmem_free(b);
+    //exit(0);
   }                                                                                            // Extra scope to trigger deletion of graph, otherwise shmem destructor is screwy
+  printf("Left extra scope\n");
+  shmem_barrier_all();
+  shmem_global_exit(0);
   shmem_finalize();
+  printf("Finished shmem finalize\n");
   return 0;
 }
 
