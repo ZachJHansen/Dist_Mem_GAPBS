@@ -95,10 +95,10 @@ class CSRGraph {
   // Used to access neighbors of vertex, basically sugar for iterators
   class Neighborhood {
     NodeID_ n_;
-    DestID_** g_index_ = (DestID_**) shmem_malloc(sizeof(DestID_));
+    DestID_** g_index_;
     OffsetT start_offset_;
    public:
-    Neighborhood(NodeID_ n, DestID_** g_index, OffsetT start_offset) :
+    Neighborhood(NodeID_ n, DestID_** g_index, OffsetT start_offset, bool symmetrize = true) :
         n_(n), g_index_(g_index), start_offset_(0) {
       OffsetT max_offset = end() - begin();
       start_offset_ = std::min(start_offset, max_offset);
@@ -109,6 +109,7 @@ class CSRGraph {
   };
 
   void ReleaseResources() {
+    printf("Releasing resources\n");
     if (out_index_ != nullptr)
       shmem_free(out_index_);
     if (out_neighbors_ != nullptr)
@@ -210,17 +211,26 @@ class CSRGraph {
     return in_index_[v+1] - in_index_[v];
   }
 
-  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
-    Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
-    Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset);
-    return(*N);
+  // If neighborhoods must be repeatedly instantiated, better to construct outside of symmetric memory to avoid calloc synchronization bottleneck (symmetrize = False)
+  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0, bool symmetrize = true) const {
+    if (symmetrize) {
+      Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
+      Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset, true);
+      return(*N);
+    } else {
+      return Neighborhood(n, out_index_, start_offset, false);
+    }
   }
 
-  Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0) const {
+  Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0, bool symmetrize = true) const {
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
-    Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
-    Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset);
-    return(*N);
+    if (symmetrize) {
+      Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
+      Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset, true);
+      return(*N);
+    } else {
+      return Neighborhood(n, in_index_, start_offset, false);
+    }
   }
 
   void PrintStats() const {
@@ -234,13 +244,9 @@ class CSRGraph {
 
   void PrintTopology() const {
     for (NodeID_ i=0; i < num_nodes_; i++) {
-      int k = 0;
       Neighborhood N = out_neigh(i);
       printf("PE: %d | Node: %d | Values: ", shmem_my_pe(), i);
       for (auto it = N.begin(); it < N.end(); it++) {
-        if (k > 3)
-          break;
-        k++;
         std::cout << "(" << it << " => " << *it << "), ";
       }
       std::cout << std::endl;
@@ -274,10 +280,14 @@ class CSRGraph {
   bool directed_;
   int64_t num_nodes_;
   int64_t num_edges_;
-  DestID_** out_index_ = (DestID_**) shmem_malloc(sizeof(DestID_**));
+  /*DestID_** out_index_ = (DestID_**) shmem_malloc(sizeof(DestID_**));
   DestID_*  out_neighbors_ = (DestID_*) shmem_malloc(sizeof(DestID_*));
   DestID_** in_index_ = (DestID_**) shmem_malloc(sizeof(DestID_**));
-  DestID_*  in_neighbors_ = (DestID_*) shmem_malloc(sizeof(DestID_*));
+  DestID_*  in_neighbors_ = (DestID_*) shmem_malloc(sizeof(DestID_*));*/
+  DestID_** out_index_;
+  DestID_*  out_neighbors_;
+  DestID_** in_index_;
+  DestID_*  in_neighbors_;  
 };
 
 #endif  // GRAPH_H_

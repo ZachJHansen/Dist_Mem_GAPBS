@@ -29,8 +29,7 @@ class pvector {
 
   pvector() : start_(nullptr), end_size_(nullptr), end_capacity_(nullptr) {}
 
-  explicit pvector(size_t num_elements, bool symmetric = false) {
-    bool symmetric_ = symmetric; 
+  explicit pvector(size_t num_elements, bool symmetric = false) : symmetric_(symmetric) {
     if (symmetric_) {
       start_ = (T_ *) shmem_calloc(num_elements, sizeof(T_));
       end_size_ = start_ + num_elements;
@@ -57,7 +56,7 @@ class pvector {
 
   // prefer move because too much data to copy
   pvector(pvector &&other)
-      : start_(other.start_), end_size_(other.end_size_),
+      : symmetric_(other.symmetric_), start_(other.start_), end_size_(other.end_size_),
         end_capacity_(other.end_capacity_) {
     other.start_ = nullptr;
     other.end_size_ = nullptr;
@@ -66,6 +65,8 @@ class pvector {
 
   // want move assignment
   pvector& operator= (pvector &&other) {
+    //printf("move\n");
+    symmetric_ = other.symmetric_;
     start_ = other.start_;
     end_size_ = other.end_size_;
     end_capacity_ = other.end_capacity_;
@@ -161,8 +162,8 @@ class pvector {
     std::swap(end_capacity_, other.end_capacity_);
   }
 
-
- private:
+// should be private!
+ public:
   T_* start_;
   T_* end_size_;
   T_* end_capacity_;
