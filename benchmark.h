@@ -109,13 +109,14 @@ void BenchmarkKernel(const CLApp &cli, const GraphT_ &g,
     trial_timer.Stop();
     PrintTime("Trial Time", trial_timer.Seconds());
     total_seconds += trial_timer.Seconds();
+    shmem_barrier_all();
     if (cli.do_analysis() && (iter == (cli.num_trials()-1)))
       stats(g, result);
     if (cli.do_verify()) {
       if (shmem_my_pe() == 0) {
         trial_timer.Start();
         PrintLabel("Verification", verify(std::ref(g), std::ref(result)) ? "PASS" : "FAIL");
-        trial_timer.Stop();
+        trial_timer.Stop();          
         PrintTime("Verification Time", trial_timer.Seconds());
       }
     }
