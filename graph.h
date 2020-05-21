@@ -18,7 +18,6 @@
 GAP Benchmark Suite
 Class:  CSRGraph
 Author: Scott Beamer
-
 Simple container for graph in CSR format
  - Intended to be constructed by a Builder
  - To make weighted, set DestID_ template type to NodeWeight
@@ -98,7 +97,7 @@ class CSRGraph {
     DestID_** g_index_;
     OffsetT start_offset_;
    public:
-    Neighborhood(NodeID_ n, DestID_** g_index, OffsetT start_offset, bool symmetrize = true) :
+    Neighborhood(NodeID_ n, DestID_** g_index, OffsetT start_offset) :
         n_(n), g_index_(g_index), start_offset_(0) {
       OffsetT max_offset = end() - begin();
       start_offset_ = std::min(start_offset, max_offset);
@@ -109,7 +108,6 @@ class CSRGraph {
   };
 
   void ReleaseResources() {
-    printf("Releasing resources\n");
     if (out_index_ != nullptr)
       shmem_free(out_index_);
     if (out_neighbors_ != nullptr)
@@ -211,26 +209,13 @@ class CSRGraph {
     return in_index_[v+1] - in_index_[v];
   }
 
-  // If neighborhoods must be repeatedly instantiated, better to construct outside of symmetric memory to avoid calloc synchronization bottleneck (symmetrize = False)
-  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0, bool symmetrize = true) const {
-    if (symmetrize) {
-      Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
-      Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset, true);
-      return(*N);
-    } else {
-      return Neighborhood(n, out_index_, start_offset, false);
-    }
+  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
+    return Neighborhood(n, out_index_, start_offset);
   }
 
-  Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0, bool symmetrize = true) const {
+  Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0) const {
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
-    if (symmetrize) {
-      Neighborhood* N_alloc = (Neighborhood *) shmem_malloc(sizeof(Neighborhood*));
-      Neighborhood* N = new (N_alloc) Neighborhood(n, out_index_, start_offset, true);
-      return(*N);
-    } else {
-      return Neighborhood(n, in_index_, start_offset, false);
-    }
+    return Neighborhood(n, in_index_, start_offset);
   }
 
   void PrintStats() const {
@@ -280,10 +265,6 @@ class CSRGraph {
   bool directed_;
   int64_t num_nodes_;
   int64_t num_edges_;
-  /*DestID_** out_index_ = (DestID_**) shmem_malloc(sizeof(DestID_**));
-  DestID_*  out_neighbors_ = (DestID_*) shmem_malloc(sizeof(DestID_*));
-  DestID_** in_index_ = (DestID_**) shmem_malloc(sizeof(DestID_**));
-  DestID_*  in_neighbors_ = (DestID_*) shmem_malloc(sizeof(DestID_*));*/
   DestID_** out_index_;
   DestID_*  out_neighbors_;
   DestID_** in_index_;

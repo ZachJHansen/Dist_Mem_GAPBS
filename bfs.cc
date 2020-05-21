@@ -62,7 +62,7 @@ int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bit
   for (NodeID u = lower_bound; u < upper_bound; u++) {                                  // PE N has parent array[lower : upper] and is responsible for processing nodes lower-upper
     relative = u - lower_bound;
     if (parent[relative] < 0) {
-      for (NodeID v : g.in_neigh(u, 0, false)) {
+      for (NodeID v : g.in_neigh(u)) {
         if (front.get_bit(v)) {
           parent[relative] = v;
           (*awake_count)++;
@@ -124,7 +124,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
   while (q_iter < q_end) {
     NodeID u = *q_iter;
     NodeID curr_val;
-    for (NodeID v : g.out_neigh(u, 0, false)) {
+    for (NodeID v : g.out_neigh(u)) {
       if (v >= lower_bound && v < upper_bound) {                                        // The outgoing neighbor v of node u is in the local subset of the parent array
         shmem_set_lock(PLOCKS+pe);                                                      // A PE can lock itself to avoid simultaneous remote accesses to nodes in the local subset
         curr_val = parent[v-lower_bound];                                               // v is the absolute location in the complete parent array
@@ -316,8 +316,10 @@ void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
 // - parent[v] = u  => there is edge from u to v
 // - all vertices reachable from source have a parent
 bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
+  ofstream shmem_out;
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
   for (auto it = parent.begin(); it < parent.end(); it++)
-    printf("Parent(%p) = %d\n", (void *) it, *it);
+    shmem_out << *it << endl;
   pvector<int> depth(g.num_nodes(), -1);
   depth[source] = 0;
   vector<NodeID> to_visit;
@@ -325,7 +327,7 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   to_visit.push_back(source);
   for (auto it = to_visit.begin(); it != to_visit.end(); it++) {
     NodeID u = *it;
-    for (NodeID v : g.out_neigh(u, 0, false)) {
+    for (NodeID v : g.out_neigh(u)) {
       if (depth[v] == -1) {
         depth[v] = depth[u] + 1;
         to_visit.push_back(v);
@@ -342,7 +344,7 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
         continue;
       }
       bool parent_found = false;
-      for (NodeID v : g.in_neigh(u, 0, false)) {
+      for (NodeID v : g.in_neigh(u)) {
         if (v == parent[u]) {
           if (depth[v] != depth[u] - 1) {
             cout << "Wrong depths for " << u << " & " << v << endl;
@@ -381,15 +383,9 @@ int main(int argc, char* argv[]) {
     void* builder_alloc = shmem_malloc(sizeof(Builder));
     Builder* b = new(builder_alloc) Builder{cli};
     Graph g = b->MakeGraph();
-   // g.PrintTopology();
     shmem_barrier_all();
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS); };
-    /*pvector<int> p = BFSBound(g);
-    if (pe == 0) {
-      for (auto it = p.begin(); it < p.end(); it++)
-        printf("PE: %d | P - %d\n", pe, *it);
-    }*/
     SourcePicker<Graph> vsp(g, cli.start_vertex());
     auto VerifierBound = [&vsp] (const Graph &g, const pvector<NodeID> &parent) {
       return BFSVerifier(g, vsp.PickNext(), parent);
