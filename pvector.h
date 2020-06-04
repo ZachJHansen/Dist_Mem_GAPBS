@@ -89,14 +89,26 @@ class pvector {
   // not thread-safe
   void reserve(size_t num_elements) {
     if (num_elements > capacity()) {
-      T_ *new_range = new T_[num_elements];
-      #pragma omp parallel for
-      for (size_t i=0; i < size(); i++)
-        new_range[i] = start_[i];
-      end_size_ = new_range + size();
-      delete[] start_;
-      start_ = new_range;
-      end_capacity_ = start_ + num_elements;
+      if (symmetric_) { 
+        T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
+        #pragma omp parallel for
+        for (size_t i=0; i < size(); i++)
+          new_range[i] = start_[i];
+        end_size_ = new_range + size();
+        shmem_free(start_);
+        start_ = new_range;
+        end_capacity_ = start_ + num_elements;
+        shmem_barrier_all();
+      } else {
+        T_ *new_range = new T_[num_elements];
+        #pragma omp parallel for
+        for (size_t i=0; i < size(); i++)
+          new_range[i] = start_[i];
+        end_size_ = new_range + size();
+        delete[] start_;
+        start_ = new_range;
+        end_capacity_ = start_ + num_elements;
+      }
     }
   }
 
@@ -123,17 +135,26 @@ class pvector {
 
   void push_back(T_ val) {
     if (size() == capacity()) {
-      size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;
+      size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
       reserve(new_size);
     }
-    *end_size_ = val;
-    end_size_++;
+    if (symmetric_) {
+      *end_size_ = val;
+      end_size_++;
+      shmem_barrier_all();                                      // do we want all pes to push back the same element, or broadcast individual elements?
+      //shmem_broadcast
+    } else {
+      *end_size_ = val;
+      end_size_++;
+    }
   }
 
   void fill(T_ init_val) {
     #pragma omp parallel for
     for (T_* ptr=start_; ptr < end_size_; ptr++)
       *ptr = init_val;
+    if (symmetric_)
+      shmem_barrier_all();
   }
 
   size_t capacity() const {

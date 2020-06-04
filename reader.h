@@ -27,6 +27,7 @@ Given filename, returns an edgelist or the entire graph (if serialized)
  - Otherwise, reads the file and returns an edgelist
 */
 
+// First lets try building an edgelist in symmetric memory
 
 template <typename NodeID_, typename DestID_ = NodeID_,
           typename WeightT_ = NodeID_, bool invert = true>
@@ -48,7 +49,7 @@ class Reader {
   }
 
   EdgeList ReadInEL(std::ifstream &in) {
-    EdgeList el;
+    EdgeList el(0, true);                                       // Initialize a zero length symmetric pvector
     NodeID_ u, v;
     while (in >> u >> v) {
       el.push_back(Edge(u, v));
@@ -57,7 +58,7 @@ class Reader {
   }
 
   EdgeList ReadInWEL(std::ifstream &in) {
-    EdgeList el;
+    EdgeList el(0, true);
     NodeID_ u;
     NodeWeight<NodeID_, WeightT_> v;
     while (in >> u >> v) {
@@ -68,7 +69,7 @@ class Reader {
 
   // Note: converts vertex numbering from 1..N to 0..N-1
   EdgeList ReadInGR(std::ifstream &in) {
-    EdgeList el;
+    EdgeList el(0, true);
     char c;
     NodeID_ u;
     NodeWeight<NodeID_, WeightT_> v;
@@ -220,7 +221,7 @@ class Reader {
   EdgeList ReadFile(bool &needs_weights) {
     Timer t;
     t.Start();
-    EdgeList el;
+    EdgeList el; /*(1, true);*/
     std::string suffix = GetSuffix();
     std::ifstream file(filename_);
     if (!file.is_open()) {

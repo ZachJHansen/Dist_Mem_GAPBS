@@ -318,8 +318,10 @@ void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
 bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   ofstream shmem_out;
   shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
-  for (auto it = parent.begin(); it < parent.end(); it++)
+  for (auto it = parent.begin(); it < parent.end(); it++) {
     shmem_out << *it << endl;
+  //  *it = 15;           // scramble
+  }
   pvector<int> depth(g.num_nodes(), -1);
   depth[source] = 0;
   vector<NodeID> to_visit;
@@ -383,7 +385,10 @@ int main(int argc, char* argv[]) {
     void* builder_alloc = shmem_malloc(sizeof(Builder));
     Builder* b = new(builder_alloc) Builder{cli};
     Graph g = b->MakeGraph();
+    //g.PrintTopology();
     shmem_barrier_all();
+    //shmem_global_exit(0);
+    //exit(0);
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());

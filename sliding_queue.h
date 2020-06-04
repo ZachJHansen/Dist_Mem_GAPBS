@@ -46,6 +46,7 @@ class SlidingQueue {
 
   void push_back(T to_add) {
     shared[shared_in++] = to_add;
+    shmem_barrier_all();
   }
 
   bool empty() const {

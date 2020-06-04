@@ -1,14 +1,242 @@
-Generate Time:       0.00008
-Build Time:          0.00002
-Generate Time:       0.00009
-Build Time:          0.00002
-aha
-Check 1
-Incoming neighbors for node 0:  1,  2,  3,  4,  5,  6,  7, 
-Outgoing neighbors for node 0:  1,  2,  3,  4,  5,  6,  7, 
-aha
-Incoming neighbors for node 1:  0,  2,  3,  4,  5,  6,  7, 
-Outgoing neighbors for node 1:  0,  2,  3,  4,  5,  6,  7, 
-Incoming neighbors for node 2:  0,  1,  3,  4,  5,  6,  7, 
-Outgoing neighbors for node 2:  0,  1,  3,  4,  5,  6,  7, 
-PE 1 has start 0
+PE: 0 | Generate Time:       0.00016
+PE: 1 | Generate Time:       0.00022
+PE: 2 | Generate Time:       0.00019
+PE: 3 | Generate Time:       0.00022
+PE: 4 | Generate Time:       0.00019
+PE: 0 | Build Time:          0.00007
+PE: 1 | Build Time:          0.00008
+PE: 2 | Build Time:          0.00008
+PE: 3 | Build Time:          0.00008
+PE: 4 | Build Time:          0.00007
+Graph has 32 nodes and 316 undirected edges for degree: 9
+PE: 3 | Source:                    6
+PE: 3 |     i                0.00001
+Graph has 32 nodes and 316 undirected edges for degree: 9
+PE: 0 | Source:                    6
+PE: 0 |     i                0.00003
+Graph has 32 nodes and 316 undirected edges for degree: 9
+PE: 1 | Source:                    6
+PE: 1 |     i                0.00001
+Graph has 32 nodes and 316 undirected edges for degree: 9
+PE: 2 | Source:                    6
+PE: 2 |     i                0.00002
+Graph has 32 nodes and 316 undirected edges for degree: 9
+PE: 4 | Source:                    6
+PE: 4 |     i                0.00002
+PE: 2 |    td         16     0.00042
+PE: 2 |     e                0.00000
+PE: 2 |    bu         15     0.00003
+PE: 2 |    bu          0     0.00002
+PE: 3 |    td         16     0.00042
+PE: 3 |     e                0.00000
+PE: 3 |    bu         15     0.00003
+PE: 3 |    bu          0     0.00001
+PE: 0 |    td         16     0.00042
+PE: 0 |     e                0.00000
+PE: 0 |    bu         15     0.00003
+PE: 0 |    bu          0     0.00002
+PE: 0 |     c                0.00001
+PE: 1 |    td         16     0.00042
+PE: 1 |     e                0.00000
+PE: 1 |    bu         15     0.00003
+PE: 1 |    bu          0     0.00001
+PE: 1 |     c                0.00001
+PE: 4 |    td         16     0.00042
+PE: 4 |     e                0.00000
+PE: 4 |    bu         15     0.00003
+PE: 4 |    bu          0     0.00002
+PE: 4 |     c                0.00001
+PE: 2 |     c                0.00001
+PE: 3 |     c                0.00001
+PE: 1 | Trial Time:          0.00065
+PE: 4 | Trial Time:          0.00066
+PE: 2 | Trial Time:          0.00066
+PE: 0 | Trial Time:          0.00067
+Parent(0xff001058) = 6
+Parent(0xff00105c) = 0
+Parent(0xff001060) = 0
+Parent(0xff001064) = 0
+Parent(0xff001068) = 6
+PE: 3 | Trial Time:          0.00065
+Parent(0xff00106c) = 6
+Parent(0xff001070) = 6
+Parent(0xff001074) = 5
+Parent(0xff001078) = 0
+Parent(0xff00107c) = 5
+Parent(0xff001080) = 4
+Parent(0xff001084) = 6
+Parent(0xff001088) = 6
+Parent(0xff00108c) = 0
+Parent(0xff001090) = 0
+Parent(0xff001094) = 6
+Parent(0xff001098) = 11
+Parent(0xff00109c) = 6
+Parent(0xff0010a0) = 6
+Parent(0xff0010a4) = 6
+Parent(0xff0010a8) = 6
+Parent(0xff0010ac) = 6
+Parent(0xff0010b0) = 6
+Parent(0xff0010b4) = 0
+Parent(0xff0010b8) = 0
+Parent(0xff0010bc) = 6
+Parent(0xff0010c0) = 4
+Parent(0xff0010c4) = 5
+Parent(0xff0010c8) = 6
+Parent(0xff0010cc) = 4
+Parent(0xff0010d0) = 6
+Parent(0xff0010d4) = 6
+PE: 0 | Verification:           PASS
+PE: 0 | Verification Time:   0.00014
+PE: 3 | Source:                   28
+PE: 1 | Source:                   28
+PE: 4 | Source:                   28
+PE: 4 |     i                0.00001
+PE: 2 | Source:                   28
+PE: 2 |     i                0.00001
+PE: 0 | Source:                   28
+PE: 0 |     i                0.00001
+PE: 3 |     i                0.00000
+PE: 1 |     i                0.00000
+PE: 2 |    td         23     0.00042
+PE: 2 |     e                0.00000
+PE: 0 |    td         23     0.00042
+PE: 0 |     e                0.00000
+PE: 3 |    td         23     0.00042
+PE: 3 |     e                0.00000
+PE: 4 |    td         23     0.00042
+PE: 4 |     e                0.00000
+PE: 1 |    td         23     0.00042
+PE: 1 |     e                0.00000
+PE: 4 |    bu          8     0.00002
+PE: 2 |    bu          8     0.00002
+PE: 0 |    bu          8     0.00002
+PE: 3 |    bu          8     0.00002
+PE: 1 |    bu          8     0.00002
+PE: 3 |    bu          0     0.00001
+PE: 4 |    bu          0     0.00001
+PE: 4 |     c                0.00001
+PE: 2 |    bu          0     0.00001
+PE: 2 |     c                0.00001
+PE: 0 |    bu          0     0.00002
+PE: 0 |     c                0.00001
+PE: 1 |    bu          0     0.00001
+PE: 1 |     c                0.00001
+PE: 3 |     c                0.00001
+PE: 0 | Trial Time:          0.00061
+Parent(0xff002d58) = 2
+Parent(0xff002d5c) = 3
+Parent(0xff002d60) = 28
+Parent(0xff002d64) = 28
+PE: 1 | Trial Time:          0.00061
+PE: 4 | Trial Time:          0.00061
+PE: 2 | Trial Time:          0.00061
+PE: 3 | Trial Time:          0.00061
+Parent(0xff002d68) = 28
+Parent(0xff002d6c) = 3
+Parent(0xff002d70) = 28
+Parent(0xff002d74) = 28
+Parent(0xff002d78) = 2
+Parent(0xff002d7c) = 28
+Parent(0xff002d80) = 28
+Parent(0xff002d84) = 2
+Parent(0xff002d88) = 2
+Parent(0xff002d8c) = 28
+Parent(0xff002d90) = 28
+Parent(0xff002d94) = 28
+Parent(0xff002d98) = 28
+Parent(0xff002d9c) = 28
+Parent(0xff002da0) = 28
+Parent(0xff002da4) = 28
+Parent(0xff002da8) = 28
+Parent(0xff002dac) = 28
+Parent(0xff002db0) = 28
+Parent(0xff002db4) = 2
+Parent(0xff002db8) = 28
+Parent(0xff002dbc) = 28
+Parent(0xff002dc0) = 28
+Parent(0xff002dc4) = 28
+Parent(0xff002dc8) = 28
+Parent(0xff002dcc) = 28
+Parent(0xff002dd0) = 28
+Parent(0xff002dd4) = 2
+PE: 0 | Verification:           PASS
+PE: 0 | Verification Time:   0.00011
+PE: 0 | Source:                    0
+PE: 2 | Source:                    0
+PE: 2 |     i                0.00001
+PE: 3 | Source:                    0
+PE: 3 |     i                0.00000
+PE: 1 | Source:                    0
+PE: 1 |     i                0.00000
+PE: 4 | Source:                    0
+PE: 4 |     i                0.00001
+PE: 0 |     i                0.00001
+PE: 4 |    td         18     0.00036
+PE: 4 |     e                0.00000
+PE: 2 |    td         18     0.00036
+PE: 2 |     e                0.00000
+PE: 3 |    td         18     0.00036
+PE: 3 |     e                0.00000
+PE: 1 |    td         18     0.00036
+PE: 1 |     e                0.00000
+PE: 0 |    td         18     0.00036
+PE: 0 |     e                0.00000
+PE: 1 |    bu         13     0.00002
+PE: 4 |    bu         13     0.00002
+PE: 2 |    bu         13     0.00002
+PE: 3 |    bu         13     0.00002
+PE: 0 |    bu         13     0.00002
+PE: 0 |    bu          0     0.00002
+PE: 3 |    bu          0     0.00001
+PE: 1 |    bu          0     0.00001
+PE: 4 |    bu          0     0.00001
+PE: 4 |     c                0.00001
+PE: 2 |    bu          0     0.00001
+PE: 2 |     c                0.00001
+PE: 0 |     c                0.00001
+PE: 3 |     c                0.00001
+PE: 1 |     c                0.00001
+PE: 2 | Trial Time:          0.00055
+PE: 0 | Trial Time:          0.00055
+Parent(0xff002e98) = 0
+Parent(0xff002e9c) = 0
+Parent(0xff002ea0) = 0
+PE: 3 | Trial Time:          0.00055
+PE: 4 | Trial Time:          0.00055
+PE: 1 | Trial Time:          0.00055
+Parent(0xff002ea4) = 0
+Parent(0xff002ea8) = 1
+Parent(0xff002eac) = 0
+Parent(0xff002eb0) = 0
+Parent(0xff002eb4) = 1
+Parent(0xff002eb8) = 0
+Parent(0xff002ebc) = 2
+Parent(0xff002ec0) = 2
+Parent(0xff002ec4) = 0
+Parent(0xff002ec8) = 0
+Parent(0xff002ecc) = 0
+Parent(0xff002ed0) = 0
+Parent(0xff002ed4) = 0
+Parent(0xff002ed8) = 1
+Parent(0xff002edc) = 0
+Parent(0xff002ee0) = 0
+Parent(0xff002ee4) = 0
+Parent(0xff002ee8) = 0
+Parent(0xff002eec) = 0
+Parent(0xff002ef0) = 1
+Parent(0xff002ef4) = 0
+Parent(0xff002ef8) = 0
+Parent(0xff002efc) = 1
+Parent(0xff002f00) = 1
+Parent(0xff002f04) = 2
+Parent(0xff002f08) = 2
+Parent(0xff002f0c) = 1
+Parent(0xff002f10) = 2
+Parent(0xff002f14) = 1
+PE: 0 | Verification:           PASS
+PE: 0 | Verification Time:   0.00011
+PE: 4 | Average Time:        0.00061
+PE: 2 | Average Time:        0.00061
+PE: 1 | Average Time:        0.00060
+PE: 3 | Average Time:        0.00060
+PE: 0 | Average Time:        0.00061

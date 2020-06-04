@@ -52,11 +52,25 @@ using namespace std;
 const WeightT kDistInf = numeric_limits<WeightT>::max()/2;
 const size_t kMaxBin = numeric_limits<size_t>::max()/2;
 
+pvector<WeightT> Shmem_DeltaStep(const WGraph &g, NodeID source, WeightT delta) {
+  Timer t;
+  pvector<WeightT> dist(g.num_nodes(), kDistInf, true);                                 // Initialize symmetric pvector with +inf
+  dist[source] = 0;
+  pvector<NodeID> frontier(g.num_edges_directed(), true);                               // Symmetric frontier
+  // two element arrays for double buffering curr=iter&1, next=(iter+1)&1
+  size_t shared_indexes* = (size_t *) shmem_calloc(2, sizeof(size_t));                  // size_t shared_indexes[2] = {0, kMaxBin};
+  shared_indexes[1] = kMaxBin;
+  size_t frontier_tails = (size_t *) shmem_calloc(2, sizeof(size_t));                   // size_t frontier_tails[2] = {1, 0};
+  frontier_tails[0] = 1;
+  frontier[0] = source;
+  shmem_barrier_all();
+  t.Start();
+
 pvector<WeightT> DeltaStep(const WGraph &g, NodeID source, WeightT delta) {
   Timer t;
-  pvector<WeightT> dist(g.num_nodes(), kDistInf);
+  pvector<WeightT> dist(g.num_nodes(), kDistInf);                          
   dist[source] = 0;
-  pvector<NodeID> frontier(g.num_edges_directed());
+  pvector<NodeID> frontier(g.num_edges_directed());                               
   // two element arrays for double buffering curr=iter&1, next=(iter+1)&1
   size_t shared_indexes[2] = {0, kMaxBin};
   size_t frontier_tails[2] = {1, 0};
@@ -176,10 +190,19 @@ int main(int argc, char* argv[]) {
   CLDelta<WeightT> cli(argc, argv, "single-source shortest-path");
   if (!cli.ParseArgs())
     return -1;
-  WeightedBuilder b(cli);
-  WGraph g = b.MakeGraph();
-  SourcePicker<WGraph> sp(g, cli.start_vertex());
-  auto SSSPBound = [&sp, &cli] (const WGraph &g) {
+
+  static long FRONTIER_LOCK = 0;                                                      // Create a mutex lock in symmetric memory to control access to the frontier
+  shmem_init();
+
+  int npes = shmem_n_pes();
+  int pe = shmem_my_pe();
+  {
+    WeightedBuilder b(cli);
+    WGraph g = b.MakeGraph();
+    SourcePicker<WGraph> sp(g, cli.start_vertex());
+    g.PrintTopology();
+  }
+/*  auto SSSPBound = [&sp, &cli] (const WGraph &g) {
     return DeltaStep(g, sp.PickNext(), cli.delta());
   };
   SourcePicker<WGraph> vsp(g, cli.start_vertex());
@@ -187,5 +210,7 @@ int main(int argc, char* argv[]) {
     return SSSPVerifier(g, vsp.PickNext(), dist);
   };
   BenchmarkKernel(cli, g, SSSPBound, PrintSSSPStats, VerifierBound);
+  */
+  shmem_finalize();
   return 0;
 }

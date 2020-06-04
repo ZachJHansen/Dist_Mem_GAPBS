@@ -237,20 +237,23 @@ class BuilderBase {
   CSRGraph<NodeID_, DestID_, invert> MakeGraph() {
     CSRGraph<NodeID_, DestID_, invert>* g;
     {  // extra scope to trigger earlier deletion of el (save memory)
-      EdgeList* EL = (EdgeList*) shmem_calloc((1l << cli_.scale()) * cli_.degree(), sizeof(Edge));       // Create space for an edge list with (2^scale)*degree edges in symmetric memory across all PEs.
+      //EdgeList* EL = (EdgeList*) shmem_calloc((1l << cli_.scale()) * cli_.degree(), sizeof(Edge));       // Create space for an edge list with (2^scale)*degree edges in symmetric memory across all PEs.
+      EdgeList EL(1l << cli_.scale(), true);
       if (cli_.filename() != "") {
         Reader<NodeID_, DestID_, WeightT_, invert> r(cli_.filename());
         if ((r.GetSuffix() == ".sg") || (r.GetSuffix() == ".wsg")) {
           return r.ReadSerializedGraph();
         } else {
-          *EL = r.ReadFile(needs_weights_);
+          EL = r.ReadFile(needs_weights_);
+        //  for (auto it = EL.begin(); it < EL.end(); it++)
+          //  printf("PE: %d | %p => (%d, %d)\n", shmem_my_pe(), (void *) it, it->u, it->v);
         }
       } else if (cli_.scale() != -1) {
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
-        *EL = gen.GenerateEL(cli_.uniform());                                               // Generate a uniform edge list in symmetric memory
+        EL = gen.GenerateEL(cli_.uniform());                                               // Generate a uniform edge list in symmetric memory
       }
-      g = MakeGraphFromEL(*EL);
-      shmem_free(EL);
+      g = MakeGraphFromEL(EL);
+    //  shmem_free(&EL);
     }
     return SquishGraph(*g);
   }

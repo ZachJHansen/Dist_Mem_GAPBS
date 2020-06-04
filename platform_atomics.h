@@ -120,7 +120,6 @@ Wrappers for compiler intrinsics for atomic memory operations (AMOs)
 
   template<typename T>
   bool compare_and_swap(T &x, const T &old_val, const T &new_val) {
-    printf("Generic\n");
     if (x == old_val) {
       x = new_val;
       return true;
