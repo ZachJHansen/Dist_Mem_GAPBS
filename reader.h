@@ -250,7 +250,7 @@ class Reader {
     return el;
   }
 
-  CSRGraph<NodeID_, DestID_, invert> ReadSerializedGraph() {
+  CSRGraph<NodeID_, DestID_, invert> ReadSerializedGraph(long* pSync, long* pWrk) {
     bool weighted = GetSuffix() == ".wsg";
     if (!std::is_same<NodeID_, SGID>::value) {
       std::cout << "serialized graphs only allowed for 32bit" << std::endl;
@@ -283,26 +283,27 @@ class Reader {
     file.read(reinterpret_cast<char*>(&num_edges), sizeof(SGOffset));
     file.read(reinterpret_cast<char*>(&num_nodes), sizeof(SGOffset));
     pvector<SGOffset> offsets(num_nodes+1);
+    Partition p(num_nodes);
     neighs = new DestID_[num_edges];
     std::streamsize num_index_bytes = (num_nodes+1) * sizeof(SGOffset);
     std::streamsize num_neigh_bytes = num_edges * sizeof(DestID_);
     file.read(reinterpret_cast<char*>(offsets.data()), num_index_bytes);
     file.read(reinterpret_cast<char*>(neighs), num_neigh_bytes);
-    index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs);
+    index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &p);
     if (directed && invert) {
       inv_neighs = new DestID_[num_edges];
       file.read(reinterpret_cast<char*>(offsets.data()), num_index_bytes);
       file.read(reinterpret_cast<char*>(inv_neighs), num_neigh_bytes);
-      inv_index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, inv_neighs);
+      inv_index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, inv_neighs, &p);
     }
     file.close();
     t.Stop();
     PrintTime("Read Time", t.Seconds());
     if (directed)
       return CSRGraph<NodeID_, DestID_, invert>(num_nodes, index, neighs,
-                                                inv_index, inv_neighs);
+                                                inv_index, inv_neighs, pSync, pWrk);
     else
-      return CSRGraph<NodeID_, DestID_, invert>(num_nodes, index, neighs);
+      return CSRGraph<NodeID_, DestID_, invert>(num_nodes, index, neighs, pSync, pWrk);
   }
 };
 

@@ -117,14 +117,10 @@ class Generator {
     EdgeList el;
     Timer t;
     t.Start();
-    if (uniform) {
-      printf("Generator: uniform\n");
+    if (uniform)
       el = MakeUniformEL();
-    }
-    else {
-      printf("Generator: nonuniform\n");
+    else
       el = MakeRMatEL();
-    }
     t.Stop();
     PrintTime("Generate Time", t.Seconds());
     return el;

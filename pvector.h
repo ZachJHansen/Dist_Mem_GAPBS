@@ -4,6 +4,7 @@
 #ifndef PVECTOR_H_
 #define PVECTOR_H_
 
+#include "shmem.h"
 #include <algorithm>
 
 

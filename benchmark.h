@@ -43,21 +43,39 @@ typedef WriterBase<NodeID, WNode> WeightedWriter;
 
 
 // Used to pick random non-zero degree starting points for search algorithms
+// A single PE finds the source and broadcasts to the rest
+// i don't know how compute/space intensive udist is though
 template<typename GraphT_>
 class SourcePicker {
  public:
   explicit SourcePicker(const GraphT_ &g, NodeID given_source = -1)
       : given_source(given_source), rng(kRandSeed), udist(0, g.num_nodes()-1),
-        g_(g) {}
+        g_(g) { 
+    source = (NodeID*) shmem_malloc(sizeof(NodeID));         // init -1 on all PES   
+    *source = -1;
+    shmem_barrier_all();
+  }
 
   NodeID PickNext() {
-    if (given_source != -1)
-      return given_source;
-    NodeID source;
-    do {
-      source = udist(rng);
-    } while (g_.out_degree(source) == 0);
-    return source;
+    NodeID temp;
+    if (shmem_my_pe() == 0) {
+      if (given_source != -1)
+        return given_source;
+      do {
+        *source = udist(rng);
+      } while (g_.out_degree(*source) == 0);
+      // assumes NodeID = int
+      for (int i = 0; i < shmem_n_pes(); i++) {
+        if (i != shmem_my_pe()) {
+          shmem_int_p(source, *source, i);
+        }
+      }
+    } else {
+      shmem_int_wait_until(source, SHMEM_CMP_GT, -1);
+    }
+    temp = *source;                                         // src has to be reset to -1 for the compare to work in subsequent PickNexts
+    *source = -1;
+    return temp;
   }
 
  private:
@@ -65,6 +83,7 @@ class SourcePicker {
   std::mt19937 rng;
   std::uniform_int_distribution<NodeID> udist;
   const GraphT_ &g_;
+  NodeID* source;
 };
 
 
