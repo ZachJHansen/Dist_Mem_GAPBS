@@ -20,11 +20,15 @@ class Timer {
   Timer() {}
 
   void Start() {
-    elapsed_time_ = start_time_ = std::chrono::high_resolution_clock::now();
+    shmem_barrier_all();                                // all pes must be present to start timer
+    elapsed_time_ = start_time_ = std::chrono::high_resolution_clock::now();    // what if exec times for this line vary? will each pe have a different start time?
+    shmem_barrier_all();
   }
 
   void Stop() {
+    shmem_barrier_all();                                // all pes must arrive to stop timer
     elapsed_time_ = std::chrono::high_resolution_clock::now();
+    shmem_barrier_all();
   }
 
   double Seconds() const {

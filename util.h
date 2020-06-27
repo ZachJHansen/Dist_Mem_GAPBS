@@ -16,6 +16,8 @@ GAP Benchmark Suite
 Author: Scott Beamer
 
 Miscellaneous helpers that don't fit into classes
+
+Only PE 0 prints time ops
 */
 
 
@@ -27,25 +29,31 @@ void PrintLabel(const std::string &label, const std::string &val) {
 }
 
 void PrintTime(const std::string &s, double seconds) {
-  printf("PE: %d | %-21s%3.5lf\n", shmem_my_pe(), (s + ":").c_str(), seconds);
+  if (shmem_my_pe() == 0) 
+    printf("PE: %d | %-21s%3.5lf\n", shmem_my_pe(), (s + ":").c_str(), seconds);
 }
 
 void PrintStep(const std::string &s, int64_t count) {
-  printf("PE: %d | %-14s%14" PRId64 "\n", shmem_my_pe(), (s + ":").c_str(), count);
+  if (shmem_my_pe() == 0) 
+    printf("PE: %d | %-14s%14" PRId64 "\n", shmem_my_pe(), (s + ":").c_str(), count);
 }
 
 void PrintStep(int step, double seconds, int64_t count = -1) {
-  if (count != -1)
-    printf("PE: %d | %5d%11" PRId64 "  %10.5lf\n", shmem_my_pe(), step, count, seconds);
-  else
-    printf("PE: %d | %5d%23.5lf\n", shmem_my_pe(), step, seconds);
+  if (shmem_my_pe() == 0) {
+    if (count != -1)
+      printf("PE: %d | %5d%11" PRId64 "  %10.5lf\n", shmem_my_pe(), step, count, seconds);
+    else
+      printf("PE: %d | %5d%23.5lf\n", shmem_my_pe(), step, seconds);
+  }
 }
 
 void PrintStep(const std::string &s, double seconds, int64_t count = -1) {
-  if (count != -1)
-    printf("PE: %d | %5s%11" PRId64 "  %10.5lf\n", shmem_my_pe(), s.c_str(), count, seconds);
-  else
-    printf("PE: %d | %5s%23.5lf\n", shmem_my_pe(), s.c_str(), seconds);
+  if (shmem_my_pe() == 0) {
+    if (count != -1)
+      printf("PE: %d | %5s%11" PRId64 "  %10.5lf\n", shmem_my_pe(), s.c_str(), count, seconds);
+    else
+      printf("PE: %d | %5s%23.5lf\n", shmem_my_pe(), s.c_str(), seconds);
+  }
 }
 
 // Runs op and prints the time it took to execute labelled by label
