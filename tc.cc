@@ -44,54 +44,65 @@ to relabel the graph, we use the heuristic in WorthRelabelling.
 
 using namespace std;
 
-size_t OrderedCount(const Graph &g) {
-  size_t total = 0;
-  #pragma omp parallel for reduction(+ : total) schedule(dynamic, 64)
-  for (NodeID u=0; u < g.num_nodes(); u++) {
+size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
+  Partition vp(g.num_nodes());
+  long* total = (long *) shmem_calloc(1, sizeof(long));
+  for (NodeID u = vp.start; u < vp.end; u++) {
     for (NodeID v : g.out_neigh(u)) {
+  //    printf("Pe %d | U = %d, V = %d\n", vp.pe, u, v);
       if (v > u)
         break;
       auto it = g.out_neigh(u).begin();
       for (NodeID w : g.out_neigh(v)) {
+        //printf("\tV = %d, W = %d\n", v, w);
         if (w > v)
           break;
-        while (*it < w)
+        while (*it < w) {
+    //      printf("\t\tOut neigh(%d) = %d\n", u, *it);
           it++;
-        if (w == *it)
-          total++;
+        }
+        if (w == *it) {
+      //    printf("\t\t\tIterating: u = %d, v = %d, w = %d\n", u, v, w);
+          (*total)++;
+        }
       }
     }
   }
-  return total;
+  printf("Pe %d: Total = %lu\n", vp.pe, *total);
+  shmem_long_sum_to_all(total, total, 1, 0, 0, vp.npes, pWrk, pSync);                   // double should fit size_t regardless of 32 vs 64 bit system?
+  return ((size_t) *total);
 }
 
-
-// heuristic to see if sufficently dense power-law graph
-bool WorthRelabelling(const Graph &g) {
+// heuristic to see if sufficently dense power-law graph                        Does this still hold for the partitioned version?
+bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   int64_t average_degree = g.num_edges() / g.num_nodes();
   if (average_degree < 10)
     return false;
   SourcePicker<Graph> sp(g);
   int64_t num_samples = min(int64_t(1000), g.num_nodes());
-  int64_t sample_total = 0;
-  pvector<int64_t> samples(num_samples);
-  for (int64_t trial=0; trial < num_samples; trial++) {
-    samples[trial] = g.out_degree(sp.PickNext());
-    sample_total += samples[trial];
+  int64_t* sample_total = (int64_t *) shmem_calloc(1, sizeof(int64_t));
+  Partition sample_part(num_samples);
+  pvector<int64_t> samples(sample_part.max_width, true);                         // symmetric partitioned overallocated pvector
+  pvector<int64_t> dest(num_samples, true);                             // symmetric overallocated pvector
+  for (int64_t trial = sample_part.start; trial < sample_part.end; trial++) {
+    samples[sample_part.local_pos(trial)] = g.out_degree(sp.PickNext());
+    *sample_total += samples[sample_part.local_pos(trial)];
   }
-  sort(samples.begin(), samples.end());
-  double sample_average = static_cast<double>(sample_total) / num_samples;
-  double sample_median = samples[num_samples/2];
+  shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, sample_part.npes, pSync);
+  shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, sample_part.npes, pWrk, pSync);
+  sort(dest.begin(), dest.end());
+  double sample_average = static_cast<double>(*sample_total) / num_samples;
+  double sample_median = dest[num_samples/2];
   return sample_average / 1.3 > sample_median;
 }
 
 
 // uses heuristic to see if worth relabeling
-size_t Hybrid(const Graph &g) {
-  if (WorthRelabelling(g))
-    return OrderedCount(Builder::RelabelByDegree(g));
+size_t Hybrid(const Graph &g, long* pSync, long* pWrk) {
+  if (/*WorthRelabelling(g, pSync, pWrk)*/true)
+    return OrderedCount(Builder::RelabelByDegree(g, pSync, pWrk), pSync, pWrk);
   else
-    return OrderedCount(g);
+    return OrderedCount(g, pSync, pWrk);
 }
 
 
@@ -127,12 +138,36 @@ int main(int argc, char* argv[]) {
   CLApp cli(argc, argv, "triangle count");
   if (!cli.ParseArgs())
     return -1;
-  Builder b(cli);
-  Graph g = b.MakeGraph();
-  if (g.directed()) {
-    cout << "Input graph is directed but tc requires undirected" << endl;
-    return -2;
+
+  static long PRINT_LOCK = 0;
+
+  shmem_init();
+
+  static long pSync[SHMEM_REDUCE_SYNC_SIZE];
+  static long lng_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+  static double dbl_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+
+  for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+    pSync[i] = SHMEM_SYNC_VALUE;
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) {
+    lng_pWrk[i] = SHMEM_SYNC_VALUE;
+    dbl_pWrk[i] = SHMEM_SYNC_VALUE;
   }
-  BenchmarkKernel(cli, g, Hybrid, PrintTriangleStats, TCVerifier);
+
+  {
+    Builder b(cli);
+    Graph g = b.MakeGraph(pSync, lng_pWrk);
+    //g.PrintTopology(&PRINT_LOCK);
+    Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
+    //gee.PrintTopology(&PRINT_LOCK);
+    if (g.directed()) {
+      cout << "Input graph is directed but tc requires undirected" << endl;
+      return -2;
+    } 
+    size_t results = Hybrid(g, pSync, lng_pWrk);
+    printf("Result: %lu\n", results);
+    //BenchmarkKernel(cli, g, Hybrid, PrintTriangleStats, TCVerifier);
+  }
+  shmem_finalize();
   return 0;
 }

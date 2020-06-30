@@ -185,11 +185,11 @@ class pvector {
   }
   
   // Combines the parent pvector from all PEs into a single pvector, which is returned
-  // Assumes nodeids are 32 bit integers
-  pvector<int32_t> combine(int num_nodes, int pe, int npes, long* pSync) {
+  pvector<T_> combine(int num_nodes, int pe, int npes, long* pSync) {
     if (!symmetric_) {
       printf("Can't combine pvectors that don't occur in symmetric memory!\n");
       shmem_global_exit(1);
+      exit(1);
     } else {
       int start, end;
       int offset = num_nodes/npes;
@@ -199,8 +199,8 @@ class pvector {
       } else {
         end = start + offset; 
       }
-      int32_t* src = (int32_t *) shmem_calloc(offset + npes - 1, sizeof(int32_t));        // Max number of elems any pe can have (offset + max remainder)
-      pvector<int32_t> dest(num_nodes, true);
+      T_* src = (T_ *) shmem_calloc(offset + npes - 1, sizeof(T_));        // Max number of elems any pe can have (offset + max remainder)
+      pvector<T_> dest(num_nodes, true);
       #pragma omp parallel for
       for (int n = start; n < end; n++) {
         if (start_[n-start] < -1) {
@@ -209,7 +209,15 @@ class pvector {
           src[n-start] = start_[n-start];
         }
       }
-      shmem_collect32(dest.begin(), src, end-start, 0, 0, npes, pSync);
+      if (sizeof(T_) <= 32) {
+        shmem_collect32(dest.begin(), src, end-start, 0, 0, npes, pSync);
+      } else if (sizeof(T_) <= 64) {                                                                     // else pray it fits in 64 bits?
+        shmem_collect64(dest.begin(), src, end-start, 0, 0, npes, pSync);
+      } else {
+        printf("Requested type for NodeID is larger than 64 bits! pvector.h -> combine method cannot be used. Giving up.\n");
+        shmem_global_exit(1);
+        exit(1);
+      }
       return dest;
     }
   }

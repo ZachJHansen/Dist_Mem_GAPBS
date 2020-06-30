@@ -81,6 +81,7 @@ class BuilderBase {
   // Return pvector representing degrees for vertices assigned to local PE
   // pvector is symmetric and up-to-date but unsynched - do not synch!
   // pvectors on each pe should be concatenated to make a complete list (once unused remainder is trimmed off PEs != npes-1)
+  // ASSUMES NODEIDS ARE INTS
   pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition* vp, Partition* ep) {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
@@ -228,7 +229,7 @@ class BuilderBase {
   void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
                DestID_** neighs, Partition* vp, long* pSync, long* pWrk) {
     SGOffset neighbor;
-    int receiver, local_v;
+    int64_t receiver, local_v;
     *vp = Partition(num_nodes_);                                                 // bounds for dividing vertices between PEs
     Partition ep(el.size());                                                     // bounds for dividing work (edges to process) between PEs
     pvector<NodeID_> degrees = CountDegrees(el, transpose, vp, &ep);                  // each pe maintains an array of degrees for the vertices assigned to that pe
@@ -257,7 +258,8 @@ class BuilderBase {
         receiver = vp->recv(e.u);
         local_v = vp->local_pos(e.u);
         neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);                      // move offset pointer for e.u forward one on specified pe
-        shmem_int_put((*neighs)+neighbor, &(e.v), 1, receiver);                        // should be safe since offset pointer has already been atomically incremented?
+        //shmem_int_put((*neighs)+neighbor, &(e.v), 1, receiver);                        // should be safe since offset pointer has already been atomically incremented?
+        shmem_putmem((*neighs)+neighbor, &(e.v), sizeof(DestID_), receiver);
           //(*neighs)[fetch_and_add(offsets[e.u], 1)] = e.v;                        // array of neighbors[old offset for e.u] = e.v, increment old offset for e.u
       }
       //shmem_barrier_all();
@@ -267,7 +269,8 @@ class BuilderBase {
         // why wont shmem_int64 work?
         neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);                     
         NodeID_ src = GetSource(e);
-        shmem_int_put((*neighs)+neighbor, &src, 1, receiver);                        
+        //shmem_int_put((*neighs)+neighbor, &src, 1, receiver);                        
+        shmem_putmem((*neighs)+neighbor, &src, sizeof(DestID_), receiver);
       }
       //shmem_barrier_all();              // are these necessary?
     }
@@ -336,27 +339,23 @@ class BuilderBase {
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
         el = gen.GenerateEL(cli_.uniform());
       }
-      //long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long));
       g = MakeGraphFromEL(el, &p, pSync, pWrk);
-     // printf("PE: %d\n", p.pe);
-      //g.PrintTopology(&p, PRINT_LOCK);
-      //shmem_global_exit(0);
-      //exit(0);
     }
-    long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long));
     return SquishGraph(g, &p, pSync, pWrk);
   }
 
+
   // Relabels (and rebuilds) graph by order of decreasing degree
-  static
+ /* static
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
-      const CSRGraph<NodeID_, DestID_, invert> &g) {
+      const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync,long* pWrk) {
     if (g.directed()) {
       std::cout << "Cannot relabel directed graph" << std::endl;
       std::exit(-11);
     }
     Timer t;
     t.Start();
+    Partition vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(g.num_nodes());
     #pragma omp parallel for
@@ -373,17 +372,148 @@ class BuilderBase {
     }
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
     DestID_* neighs = new DestID_[offsets[g.num_nodes()]];
-    DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs);
+    //DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs);
+    DestID_** index = CSRGraph<NodeID_, DestID_>::OLDGenIndex(offsets, neighs);
     #pragma omp parallel for
     for (NodeID_ u=0; u < g.num_nodes(); u++) {
       for (NodeID_ v : g.out_neigh(u))
         neighs[offsets[new_ids[u]]++] = new_ids[v];
       std::sort(index[new_ids[u]], index[new_ids[u]+1]);
     }
+    size_t max_neigh = 0;
+    for (int i = 0; i < vp.npes; i++)
+      if (offsets[i * (vp.partition_width+1)] > max_neigh)
+        max_neigh = offsets[i * (vp.partition_width+1)];
+    pvector<SGOffset> sym_offsets(vp.max_width+1);
+    for (auto i = vp.start; i <= vp.end; i++)
+      sym_offsets[i-vp.start] = offsets[i];
+    printf("PE %d | Max neigh: %lu\n", vp.pe, max_neigh);
+    for (o : sym_offsets)
+      printf("PE %d | o = %lu\n", vp.pe, o);
+    DestID_* sym_neighs = (DestID_*) shmem_calloc(max_neigh, sizeof(DestID_));
+    DestID_** sym_index = CSRGraph<NodeID_, DestID_>::GenIndex(sym_offsets, sym_neighs, &vp);
+    for (auto i = vp.start; i < vp.end; i++)
+      sym_neighs[i-vp.start] = neighs[i];
     t.Stop();
     PrintTime("Relabel", t.Seconds());
-    return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), index, neighs);
+    return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), sym_index, sym_neighs, pSync, pWrk);
+  }
+};*/
+
+
+  static
+  CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
+      const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
+    if (g.directed()) {
+      std::cout << "Cannot relabel directed graph" << std::endl;
+      std::exit(-11);
+    }
+    Timer t;
+    t.Start();
+    Partition vp(g.num_nodes());
+    typedef std::pair<int64_t, NodeID_> degree_node_p;
+    pvector<degree_node_p> degree_id_pairs(g.num_nodes(), true);        // up to date on PE 0
+    for (NodeID_ n = vp.start; n < vp.end; n++)
+      degree_id_pairs[n] = std::make_pair(g.out_degree(n), n);
+    shmem_putmem(degree_id_pairs.begin()+vp.start, degree_id_pairs.begin()+vp.start, (vp.end - vp.start)*sizeof(degree_node_p), 0); // collect on PE 0
+    shmem_barrier_all();
+    if (vp.pe == 0) {
+      std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>());           // sort on PE 0
+    //shmem_broadcast32(degree_id_pairs.begin(), degree_id_pairs.begin(), g.num_nodes(), 0, 0, 0, vp.npes, pSync);        // broadcast sorted list
+      for (int i = 0; i < vp.npes; i++)
+        if (vp.pe != i)
+          shmem_putmem(degree_id_pairs.begin(), degree_id_pairs.begin(), g.num_nodes()*sizeof(degree_node_p), i);
+    }
+    shmem_barrier_all();
+    //if (vp.pe == 1)
+      //for (auto it : degree_id_pairs)
+        //printf("degree(%d) = %lu\n", it.second, it.first);
+    pvector<NodeID_> temp_degrees(g.num_nodes());
+    pvector<NodeID_> temp_new_ids(g.num_nodes());
+    for (NodeID_ n=0; n < g.num_nodes(); n++) {
+      temp_degrees[n] = degree_id_pairs[n].first;
+      temp_new_ids[degree_id_pairs[n].second] = n;
+    }
+    shmem_barrier_all();
+   // for (int i = 0; i < g.num_nodes(); i++)
+   //   printf("PE %d | degree = %d, NodeID = %d\n", vp.pe, temp
+    pvector<NodeID_> degrees(vp.max_width);
+    pvector<NodeID_> new_ids(vp.max_width);
+    for (int i = vp.start; i < vp.end; i++) {
+      degrees[i-vp.start] = temp_degrees[i];
+      new_ids[i-vp.start] = temp_new_ids[i];
+    }
+    //for (int i = 0; i < vp.max_width; i++)
+      //printf("PE %d | degrees[%d] = %d, new_ids[%d] = %d\n", vp.pe, i, degrees[i], i, new_ids[i]);
+    pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
+    //for (o : offsets)
+      //printf("Pe: %d | o = %d\n", vp.pe, o);
+    SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    shmem_long_max_to_all(max_neigh, offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
+    //printf("PE %d | Max neigh: %lu\n", vp.pe, *max_neigh);
+    DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
+    DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
+    shmem_barrier_all();
+    for (NodeID_ u = vp.start; u < vp.end; u++) {
+      for (NodeID_ v : g.out_neigh(u)) {
+        //printf("PE %d | u = %d, v = %d, new_ids[u] = %d\n", vp.pe, u, v, temp_new_ids[u]);
+        //if (temp_new_ids[u]
+        //if (temp_new_ids[u]   
+        //neighs[offsets[temp_new_ids[u]-vp.start]+k] = temp_new_ids[v];
+        //if (temp_new_ids[u] >= vp.start && temp_new_ids < vp.end) 
+        int owner = vp.recv(temp_new_ids[u]);
+        int x = temp_new_ids[u] - (owner * vp.partition_width);
+        SGOffset off = shmem_long_atomic_fetch_inc(offsets.begin()+x, owner);
+        //printf("Pe %d | U = %d | V = %d | owner = %d | offset = %lu\n", vp.pe, u, v, owner, off);
+        if (owner == vp.pe) {
+      //    printf("U = %d, V = %d | PE %d is locally putting %d at neighs[%d]\n", u, v, vp.pe, temp_new_ids[v], off);
+          neighs[off] = temp_new_ids[v];
+        } else {
+      //    printf("U = %d, V = %d | PE %d is remotely putting %d at neighs[%d] on PE %d\n", u, v, vp.pe, temp_new_ids[v], off, owner);
+          shmem_putmem(neighs+off, temp_new_ids.begin()+v, sizeof(DestID_), owner);
+        }
+        //printf("PE %d | u = %d, v = %d, new_id(u) = %d, new_id(v) = %d, offsets[%d] = %d\n", vp.pe, u, v, temp_new_ids[u], temp_new_ids[v], temp_new_ids[u], off);
+        //  k++;
+        //printf("Current offset of %d = %lu\n", temp_new_ids[u], offsets[(temp_new_ids[u]-vp.start)]);
+        //SGOffset off = offsets
+      //std::sort(index[new_ids[u-vp.start]], index[new_ids[u-vp.start]+1]);
+      }
+    }
+    //shmem_clear_lock(LOCK);
+    shmem_barrier_all();
+    for (int i = 0; i < vp.max_width; i++)
+      std::sort(index[i], index[i+1]);
+    shmem_barrier_all(); 
+    //for (int n = 0; n < *max_neigh; n++)
+      //printf("Pe %d | %d\n", vp.pe, neighs[n]);
+    t.Stop();
+    shmem_free(max_neigh);
+    PrintTime("Relabel", t.Seconds());
+    //return CSRGraph<NodeID_, DestID_, invert>();
+    return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), index, neighs, pSync, pWrk);
   }
 };
+
+
+// complicated optimized partitioned version - https://sites.cs.ucsb.edu/~gilbert/reports/sorting111904.pdf
+/*static
+CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
+    const CSRGraph<NodeID_, DestID_, invert> &g) {
+  if (g.directed()) {
+    std::cout << "Cannot relabel directed graph" << std::endl;
+    std::exit(-11);
+  }
+  Timer t;
+  t.Start();
+  Partition vp(g.num_nodes());
+  typedef std::pair<int64_t, NodeID_> degree_node_p;            // do we need a different partition scheme to satisfy distribution requirement?
+  pvector<degree_node_p> degree_id_pairs(vp.max_width);         // symmetric partitioned pvector (unsynched)
+  for (NodeID_ n = vp.start; n < vp.end; n++)                   // 1. Local sort
+    degree_id_pair(g.out_degree(n), n);                         
+    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(),
+              std::greater<degree_node_p>());
+  shmem_barrier_all();
+  // 2. Exact splitting
+*/
 
 #endif  // BUILDER_H_

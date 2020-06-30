@@ -69,16 +69,11 @@ class SlidingQueue {
     shmem_barrier_all();
   }
 
-  void slide_window(bool help = false) {                         // Sync point
+  void slide_window() {                         // Sync point
     //printf("PE %d says start = %lu, end = %lu, in: %p => %lu\n", shmem_my_pe(), shared_out_start, shared_out_end, (void *) shared_in, *shared_in);
     shmem_barrier_all();
-    if (help) {
-      //shared_out_start = shared_out_end;
-      printf("suh\n");
-    } else {  
-      shared_out_start = shared_out_end;
-      shared_out_end = *shared_in;
-    }
+    shared_out_start = shared_out_end;
+    shared_out_end = *shared_in;
     shmem_barrier_all();
   }
 

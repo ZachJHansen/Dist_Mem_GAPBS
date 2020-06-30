@@ -29,6 +29,8 @@ Simple container for graph in CSR format
 // Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
 // Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
 // (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
+// should this be generically typed??
+//template <typename T>
 struct Partition {
   int pe, npes;
   int64_t N, start, end, partition_width, max_width;
@@ -49,7 +51,7 @@ struct Partition {
   }
   
   // Given a node, determine which PE it belongs to
-  int recv(int node) {
+  int recv(int64_t node) {
     int receiver = node / partition_width;
     if (receiver >= npes) 
       receiver = npes - 1;
@@ -57,7 +59,7 @@ struct Partition {
   }
 
   // Given a node, determine the local position on assigned PE
-  int local_pos(int node) {
+  int64_t local_pos(int64_t node) {
     int rec = node / partition_width;
     if (rec >= npes)
       return(node - (npes-1)*partition_width);
@@ -67,15 +69,15 @@ struct Partition {
   }
 
   // Given a local position, determine the global node number
-  int global_pos(int local_pos) {
+  int64_t global_pos(int64_t local_pos) {
     return(start + local_pos);
   }
 
   void PrintStats(long* PRINT_LOCK) {
     shmem_set_lock(PRINT_LOCK);
     printf("PE %d stats: \n\tpartition width: %lu\n\tmax width: %lu\n\tstart: %lu\n\tend: %lu\n", pe, partition_width, max_width, start, end);
-    for (int i = 0; i < N; i++)
-      printf("Element %d has local pos %d & receiver %d\n", i, local_pos(i), recv(i)); 
+    for (int64_t i = 0; i < N; i++)
+      printf("Element %lu has local pos %lu & receiver %d\n", i, local_pos(i), recv(i)); 
     shmem_clear_lock(PRINT_LOCK);
   }
 };
@@ -156,10 +158,8 @@ class CSRGraph {
     NodeID_** foreign_start;
     NodeID_** foreign_end;
    public:
-    Neighborhood(NodeID_ n, DestID_** g_index, Partition vp, OffsetT start_offset, bool help = false) :
+    Neighborhood(NodeID_ n, DestID_** g_index, Partition vp, OffsetT start_offset) :
         n_(n), g_index_(g_index), start_offset_(0) {
-      if (help)
-        printf("g_index = %p, g_index_ = %p\n", (void*) g_index, (void*) g_index_);
       OffsetT max_offset;
       local = vp.local_pos(n_);
       owner = vp.recv(n_);
@@ -167,15 +167,15 @@ class CSRGraph {
         max_offset = g_index_[local+1] - g_index_[local];
     //  printf("PE %d | Node: %d | (index[n] = %p) => %d | (index[n+1] = %p) => %d\n", vp.pe, n, (void*) (g_index_+n_), *(g_index_[n_]), (void*) (g_index_+(n_+1)), *(g_index_[n_+1]));
       } else {
-        //foreign_start = (NodeID_**) shmem_ptr(g_index_+local, owner);
-        //foreign_end = (NodeID_ **) shmem_ptr((g_index_+(local+1)), owner);
-        //printf("PE %d thinks start on PE %d is %p => and end %p => \n", vp.pe, owner, (void*) foreign_start[0], (void*) foreign_end[0]); 
-        NodeID_** thing = (NodeID_**) shmem_ptr(g_index_, owner);
-        if (shmem_addr_accessible(g_index_, owner) == 1)
+        foreign_start = (NodeID_**) shmem_ptr(g_index_+local, owner);
+        foreign_end = (NodeID_ **) shmem_ptr((g_index_+(local+1)), owner);
+       // printf("PE %d thinks start on PE %d is %p => and end %p => \n", vp.pe, owner, (void*) foreign_start[0], (void*) foreign_end[0]); 
+        //NodeID_** thing = (NodeID_**) shmem_ptr(g_index_, owner);
+        /*if (shmem_addr_accessible(g_index_, owner) == 1)
           printf("%p is accessible on %d\n", (void*) g_index_, owner);
-        printf("Thing: %p\n", (void *) thing);
-        //max_offset = *foreign_end - *foreign_start; 
-        printf("Done\n");
+        printf("Thing: %p\n", (void *) *thing);*/
+        max_offset = *foreign_end - *foreign_start; 
+        //printf("Done\n");
       }
       start_offset_ = std::min(start_offset, max_offset);
     }
@@ -186,9 +186,8 @@ class CSRGraph {
       if (shmem_my_pe() == owner) {
         return g_index_[local] + start_offset_; 
       } else {
-        // neigh_start = foreign_start + start_offset
-        // return shmem_ptr(neigh_start, owner);
-        return *foreign_start + start_offset_;
+        DestID_ * neigh_start = (DestID_ *) shmem_ptr(*foreign_start + start_offset_, owner);
+        return (neigh_start);
       }
     }
 
@@ -196,7 +195,7 @@ class CSRGraph {
       if (shmem_my_pe() == owner)
         return g_index_[local+1]; 
       else
-        return *foreign_end;
+        return ((DestID_*) shmem_ptr(*foreign_end, owner));
     }
   };
 
@@ -228,7 +227,6 @@ class CSRGraph {
     *edge_counts = out_index_[p.end - p.start] - out_index_[0];                             // how long is the local neighbor array?
     shmem_long_sum_to_all(edge_counts, edge_counts, 1, 0, 0, p.npes, pWrk, pSync);      // Reduction : +
     num_edges_ = *edge_counts / 2;
-      printf("constructor 2\n");
   }
 
   CSRGraph(int64_t num_nodes, DestID_** out_index, DestID_* out_neighs,
@@ -337,9 +335,9 @@ class CSRGraph {
     return *degree;
   }
 
-  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0, bool help = false) const {
+  Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
     Partition vp(num_nodes_);
-    return Neighborhood(n, out_index_, vp, start_offset, help);
+    return Neighborhood(n, out_index_, vp, start_offset);
   }
 
   Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0) const {
@@ -386,6 +384,15 @@ class CSRGraph {
       //if (squish)
         //printf("PE: %d | index[%d] = (%p => %d)\n", p->pe, n, (void *) index[n-p->start], *(index[n-p->start])); 
     }
+    return index;
+  }
+
+  static DestID_** OLDGenIndex(const pvector<SGOffset> &offsets, DestID_* neighs) {
+    NodeID_ length = offsets.size();
+    DestID_** index = new DestID_*[length];
+    #pragma omp parallel for
+    for (NodeID_ n=0; n < length; n++)
+      index[n] = neighs + offsets[n];
     return index;
   }
 

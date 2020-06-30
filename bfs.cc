@@ -102,17 +102,11 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
   q_iter += start;
   auto q_end = queue.begin();
   q_end += end;
-  printf("PE %d has start %d and end %d\n", pe, start, end);
   while (q_iter < q_end) {      // what if q size < npes?
     NodeID u = *q_iter;
     NodeID curr_val;
-    printf("PE %d has u = %d\n", pe, u);
-    for (NodeID v : g.out_neigh(u, true)) {
-      printf("V: %d\n", v);
-      shmem_global_exit(0);
-      exit(0);
+    for (NodeID v : g.out_neigh(u)) {
       if (v >= lower_bound && v < upper_bound) {                                        // The outgoing neighbor v of node u is in the local subset of the parent array
-        printf("Mine? Pe %d \n", pe);
         shmem_set_lock(PLOCKS+pe);                                                      // A PE can lock itself to avoid simultaneous remote accesses to nodes in the local subset
         curr_val = parent[v-lower_bound];                                               // v is the absolute location in the complete parent array
         if (curr_val < 0) {
@@ -122,7 +116,6 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
         }  
         shmem_clear_lock(PLOCKS+pe);
       } else {                                                                          // v is in the parent array subset on a different PE
-        printf("Theirs? \n");
         foreign_pe = v / parent_offset;
         if (foreign_pe >= npes) {                                                       // The parent array on the last PE is > offset, thus foreign_pe could be >= npes
           foreign_pe = npes-1;
@@ -144,7 +137,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
   }
   lqueue.flush();
   shmem_longlong_sum_to_all(scout_count, scout_count, 1, 0, 0, npes, pWrk, pSync);           // Reduction: + (represents a synchronization point)
-  printf("PE %d has scout count %lu\n", pe, *scout_count);
+  //printf("PE %d has scout count %lu\n", pe, *scout_count);
   return (*scout_count); 
 }
 
@@ -203,7 +196,7 @@ pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
   return parent;
 }
 
-pvector<int32_t> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *PLOCKS, long long* pWrk, long* pSync, int alpha = 15, int beta = 18) {
+pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *PLOCKS, long long* pWrk, long* pSync, int alpha = 15, int beta = 18) {
   int pe = shmem_my_pe();
   int npes = shmem_n_pes();
   Partition vp(g.num_nodes());
@@ -230,18 +223,11 @@ pvector<int32_t> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long 
   exit(0);*/
   while (!frontier->empty()) {
     if (scout_count > edges_to_check / alpha) {
-      //printf("{E %d \n", pe);
-      shmem_global_exit(0);
-      exit(0);
       int64_t awake_count, old_awake_count;
-      //TIME_OP(t, QueueToBitmap(*frontier, front));
-      //PrintStep("e", t.Seconds());
+      TIME_OP(t, QueueToBitmap(*frontier, front));
+      PrintStep("e", t.Seconds());
       awake_count = frontier->size();
-      //frontier->slide_window(true);
-      //shmem_barrier_all();
-      printf("into the unknown\n");
-      shmem_global_exit(0);
-      exit(0);
+      frontier->slide_window();
       do {
         t.Start();
         old_awake_count = awake_count;
@@ -249,7 +235,7 @@ pvector<int32_t> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long 
         front.swap(curr);
         t.Stop();
         PrintStep("bu", t.Seconds(), awake_count);
-      } while ((awake_count >= old_awake_count) || (awake_count > g.num_nodes() / beta));
+      } while ((awake_count >= old_awake_count) || (awake_count > vp.max_width / beta));    // used to ac > g.num_nodes / beta, does vp.max_width make sense?
       TIME_OP(t, BitmapToQueue(g, front, *frontier, FRONTIER_LOCK, pe, npes));
       PrintStep("c", t.Seconds());
       scout_count = 1;
@@ -262,6 +248,10 @@ pvector<int32_t> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long 
       PrintStep("td", t.Seconds(), frontier->size());
     }
   }
+  //for (int i = 0; i < vp.max_width; i++) 
+    //printf("PE %d | Node %d has parent %d\n", vp.pe, vp.global_pos(i), parent[i]);
+  //for (p : parent)
+    //printf("PE: %d | p - %d\n", vp.pe, p);
   // Do we care about the time required to combine parent arrays?
   // If not, it may be better to just fill a pvector with NodeIDs instead of 32 bit ints
   return(parent.combine(g.num_nodes(), pe, npes, pSync));
@@ -286,14 +276,20 @@ void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
 // - parent[v] = u  =>  depth[v] = depth[u] + 1 (except for source)
 // - parent[v] = u  => there is edge from u to v
 // - all vertices reachable from source have a parent
+
+// BUT since we need a serial, non-partitioned verifier, we also need a complete
+// graph built on PE 0. So verifier won't work on graphs that require partitioning
+// output generated parent arrays to a file, then have the original BFS verify them
 bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
-  ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
-  for (auto it = parent.begin(); it < parent.end(); it++) {
-    shmem_out << *it << endl;
+  if (shmem_my_pe() == 0) {
+    ofstream shmem_out;
+    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+    for (auto it = parent.begin(); it < parent.end(); it++) {
+      shmem_out << *it << endl;
   //  *it = 15;           // scramble
+    }
   }
-  pvector<int> depth(g.num_nodes(), -1);
+/*  pvector<int> depth(g.num_nodes(), -1);
   depth[source] = 0;
   vector<NodeID> to_visit;
   to_visit.reserve(g.num_nodes());
@@ -335,25 +331,8 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
       cout << "Reachability mismatch" << endl;
       return false;
     }
-  }
+  }*/
   return true;
-}
-
-int64_t od(int x) {
-  int pe = shmem_my_pe();
-  int64_t temp;
-  int64_t* test = (int64_t *) shmem_malloc(sizeof(int64_t));
-  *test = 0;
-  if (x == pe){
-    temp = 15;
-    *test = temp;
-    for (int i = 0; i < shmem_n_pes(); i++)
-      if (i != pe)
-        shmem_int64_p(test, temp, i);    
-  } else {
-    shmem_int64_wait_until(test, SHMEM_CMP_NE, 0);
-  }
-  return *test;
 }
 
 int main(int argc, char* argv[]) {
@@ -388,28 +367,29 @@ int main(int argc, char* argv[]) {
     //g.PrintTopology(LOCK);
 
     shmem_barrier_all();
-//    printf("PE %d says out_index starts at %p\n", pe, g.out_index_);
-//    printf("PE %d says out_neigh starts at %p\n", pe, g.out_neighbors_);
+    //printf("PE %d says out_index starts at %p\n", pe, g.out_index_);
+    //printf("PE %d says out_neigh starts at %p\n", pe, g.out_neighbors_);
     /*int64_t x;
     for (v : g.vertices()) {
       x = g.out_degree(v);
       printf("PE %d | degree of %d: %lu\n", pe, v, x);
     }*/
-  //  shmem_barrier_all();
-    if (pe == 1) {
-      for (int x : g.out_neigh(0, 0, true))
-        printf("0 neighbor: %d\n", x);
-    }
-  /*  SourcePicker<Graph> sp(g, cli.start_vertex());
+    /*if (pe == 0) {
+      for (int y = 0; y < 10; y++) {
+        for (int x : g.in_neigh(y, 0))
+          printf("%d neighbor: %d\n", y, x);
+      }
+    }*/
+    SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS, ll_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());
-    BFSBound(g);
     auto VerifierBound = [&vsp] (const Graph &g, const pvector<NodeID> &parent) {
       return BFSVerifier(g, vsp.PickNext(), parent);
-    }; */
-    //BenchmarkKernel(cli, g, BFSBound, PrintBFSStats, VerifierBound);
+    }; 
+    BenchmarkKernel(cli, g, BFSBound, PrintBFSStats, VerifierBound);
   }                                                                                            // Extra scope to trigger deletion of graph, otherwise shmem destructor is screwy
   shmem_free(PLOCKS);
+  shmem_free(LOCK);
   shmem_finalize();
   return 0;
 }
