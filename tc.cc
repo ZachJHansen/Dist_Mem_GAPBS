@@ -45,7 +45,7 @@ to relabel the graph, we use the heuristic in WorthRelabelling.
 using namespace std;
 
 size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
-  Partition vp(g.num_nodes());
+  Partition<NodeID> vp(g.num_nodes());
   long* total = (long *) shmem_calloc(1, sizeof(long));
   for (NodeID u = vp.start; u < vp.end; u++) {
     for (NodeID v : g.out_neigh(u)) {
@@ -68,7 +68,7 @@ size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
       }
     }
   }
-  printf("Pe %d: Total = %lu\n", vp.pe, *total);
+//  printf("Pe %d: Total = %lu\n", vp.pe, *total);
   shmem_long_sum_to_all(total, total, 1, 0, 0, vp.npes, pWrk, pSync);                   // double should fit size_t regardless of 32 vs 64 bit system?
   return ((size_t) *total);
 }
@@ -81,7 +81,7 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   SourcePicker<Graph> sp(g);
   int64_t num_samples = min(int64_t(1000), g.num_nodes());
   int64_t* sample_total = (int64_t *) shmem_calloc(1, sizeof(int64_t));
-  Partition sample_part(num_samples);
+  Partition<int> sample_part(num_samples);
   pvector<int64_t> samples(sample_part.max_width, true);                         // symmetric partitioned overallocated pvector
   pvector<int64_t> dest(num_samples, true);                             // symmetric overallocated pvector
   for (int64_t trial = sample_part.start; trial < sample_part.end; trial++) {
@@ -99,7 +99,7 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
 
 // uses heuristic to see if worth relabeling
 size_t Hybrid(const Graph &g, long* pSync, long* pWrk) {
-  if (/*WorthRelabelling(g, pSync, pWrk)*/true)
+  if (WorthRelabelling(g, pSync, pWrk))
     return OrderedCount(Builder::RelabelByDegree(g, pSync, pWrk), pSync, pWrk);
   else
     return OrderedCount(g, pSync, pWrk);
@@ -113,6 +113,13 @@ void PrintTriangleStats(const Graph &g, size_t total_triangles) {
 
 // Compares with simple serial implementation that uses std::set_intersection
 bool TCVerifier(const Graph &g, size_t test_total) {
+  if (shmem_my_pe() == 0) {
+    ofstream shmem_out;
+    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+    shmem_out << test_total << endl;
+    shmem_out.close();
+  }
+/*
   size_t total = 0;
   vector<NodeID> intersection;
   intersection.reserve(g.num_nodes());
@@ -130,7 +137,8 @@ bool TCVerifier(const Graph &g, size_t test_total) {
   total = total / 6;  // each triangle was counted 6 times
   if (total != test_total)
     cout << total << " != " << test_total << endl;
-  return total == test_total;
+  return total == test_total;*/
+  return true;
 }
 
 
@@ -140,6 +148,9 @@ int main(int argc, char* argv[]) {
     return -1;
 
   static long PRINT_LOCK = 0;
+
+  char size_env[] = "SHMEM_SYMMETRIC_SIZE=8192M";
+  putenv(size_env);
 
   shmem_init();
 
@@ -156,17 +167,21 @@ int main(int argc, char* argv[]) {
 
   {
     Builder b(cli);
+//    printf("Check 1\n");
     Graph g = b.MakeGraph(pSync, lng_pWrk);
-    //g.PrintTopology(&PRINT_LOCK);
-    Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
-    //gee.PrintTopology(&PRINT_LOCK);
+//    printf("Check 2\n");
+    //g.PrintTopology();
+    //Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
+    //gee.PrintTopology();
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;
     } 
-    size_t results = Hybrid(g, pSync, lng_pWrk);
-    printf("Result: %lu\n", results);
-    //BenchmarkKernel(cli, g, Hybrid, PrintTriangleStats, TCVerifier);
+    auto TCBound = [] (const Graph &g) { return Hybrid(g, lng_pWrk, pSync); };
+
+    //size_t result = TCBound(gee);//Hybrid(g, pSync, lng_pWrk);
+    //printf("Result: %lu\n", result);
+    BenchmarkKernel(cli, g, TCBound, PrintTriangleStats, TCVerifier);
   }
   shmem_finalize();
   return 0;

@@ -82,7 +82,7 @@ class BuilderBase {
   // pvector is symmetric and up-to-date but unsynched - do not synch!
   // pvectors on each pe should be concatenated to make a complete list (once unused remainder is trimmed off PEs != npes-1)
   // ASSUMES NODEIDS ARE INTS
-  pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition* vp, Partition* ep) {
+  pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition<NodeID_>* vp, Partition<>* ep) {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
     //#pragma omp parallel for
@@ -153,7 +153,7 @@ class BuilderBase {
   // Removes self-loops and redundant edges
   // Side effect: neighbor IDs will be sorted
   void SquishCSR(const CSRGraph<NodeID_, DestID_, invert> &g, bool transpose,
-                 DestID_*** sq_index, DestID_** sq_neighs, Partition vp, long* pSync, long* pWrk) {
+                 DestID_*** sq_index, DestID_** sq_neighs, Partition<NodeID_> vp, long* pSync, long* pWrk) {
     int indx;
     pvector<NodeID_> diffs(vp.max_width);
     DestID_ *n_start, *n_end;
@@ -197,7 +197,7 @@ class BuilderBase {
   }
 
   CSRGraph<NodeID_, DestID_, invert> SquishGraph(
-      const CSRGraph<NodeID_, DestID_, invert> &g, Partition* vp, long* pSync, long* pWrk) {
+      const CSRGraph<NodeID_, DestID_, invert> &g, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
     DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
     SquishCSR(g, false, &out_index, &out_neighs, *vp, pSync, pWrk);
     //shmem_barrier_all();
@@ -227,11 +227,11 @@ class BuilderBase {
     - Copy edges into storage
   */
   void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
-               DestID_** neighs, Partition* vp, long* pSync, long* pWrk) {
+               DestID_** neighs, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
     SGOffset neighbor;
     int64_t receiver, local_v;
-    *vp = Partition(num_nodes_);                                                 // bounds for dividing vertices between PEs
-    Partition ep(el.size());                                                     // bounds for dividing work (edges to process) between PEs
+    *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
+    Partition<> ep(el.size());                                                     // bounds for dividing work (edges to process) between PEs
     pvector<NodeID_> degrees = CountDegrees(el, transpose, vp, &ep);                  // each pe maintains an array of degrees for the vertices assigned to that pe
     shmem_barrier_all();
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);                     // offset from start of local neighs array, NOT the global array (symmetric & unsynched)
@@ -297,7 +297,7 @@ class BuilderBase {
     printf("Coheck 2\n");*/
   }
 
-  CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition* p, long* pSync, long* pWrk) {
+  CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition<NodeID_>* p, long* pSync, long* pWrk) {
     DestID_ **index = nullptr, **inv_index = nullptr;
     DestID_ *neighs = nullptr, *inv_neighs = nullptr;
     Timer t;
@@ -324,7 +324,7 @@ class BuilderBase {
   }
 
   CSRGraph<NodeID_, DestID_, invert> MakeGraph(long* pWrk, long* pSync) {
-    Partition p; 
+    Partition<NodeID_> p; 
     CSRGraph<NodeID_, DestID_, invert> g;
     {  // extra scope to trigger earlier deletion of el (save memory)
       EdgeList el;
@@ -355,7 +355,7 @@ class BuilderBase {
     }
     Timer t;
     t.Start();
-    Partition vp(g.num_nodes());
+    Partition<NodeID_> vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(g.num_nodes());
     #pragma omp parallel for
@@ -401,6 +401,7 @@ class BuilderBase {
 };*/
 
 
+// UNOPTIMIZED! Possibly requires partitioned parallel sorting and partitioned pvectors for space efficiency.
   static
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
       const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
@@ -408,9 +409,10 @@ class BuilderBase {
       std::cout << "Cannot relabel directed graph" << std::endl;
       std::exit(-11);
     }
+    printf("Rebuilding the graph\n");
     Timer t;
     t.Start();
-    Partition vp(g.num_nodes());
+    Partition<NodeID_> vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(g.num_nodes(), true);        // up to date on PE 0
     for (NodeID_ n = vp.start; n < vp.end; n++)
@@ -428,6 +430,7 @@ class BuilderBase {
     //if (vp.pe == 1)
       //for (auto it : degree_id_pairs)
         //printf("degree(%d) = %lu\n", it.second, it.first);
+    printf("Check x\n");
     pvector<NodeID_> temp_degrees(g.num_nodes());
     pvector<NodeID_> temp_new_ids(g.num_nodes());
     for (NodeID_ n=0; n < g.num_nodes(); n++) {
@@ -450,7 +453,7 @@ class BuilderBase {
       //printf("Pe: %d | o = %d\n", vp.pe, o);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
-    //printf("PE %d | Max neigh: %lu\n", vp.pe, *max_neigh);
+    printf("PE %d | Max neigh: %lu\n", vp.pe, *max_neigh);
     DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
     shmem_barrier_all();
@@ -479,11 +482,15 @@ class BuilderBase {
       //std::sort(index[new_ids[u-vp.start]], index[new_ids[u-vp.start]+1]);
       }
     }
+    //printf("hey\n");
     //shmem_clear_lock(LOCK);
     shmem_barrier_all();
-    for (int i = 0; i < vp.max_width; i++)
+    //for (int n = 0; n < *max_neigh; n++)
+    //  printf("PE %d | n = %d\n", 
+    for (int i = 0; i < vp.end-vp.start/*)+1vp.max_width*/; i++)
       std::sort(index[i], index[i+1]);
     shmem_barrier_all(); 
+    //printf("what\n");
     //for (int n = 0; n < *max_neigh; n++)
       //printf("Pe %d | %d\n", vp.pe, neighs[n]);
     t.Stop();
@@ -505,7 +512,7 @@ CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
   }
   Timer t;
   t.Start();
-  Partition vp(g.num_nodes());
+  Partition<NodeID_> vp(g.num_nodes());
   typedef std::pair<int64_t, NodeID_> degree_node_p;            // do we need a different partition scheme to satisfy distribution requirement?
   pvector<degree_node_p> degree_id_pairs(vp.max_width);         // symmetric partitioned pvector (unsynched)
   for (NodeID_ n = vp.start; n < vp.end; n++)                   // 1. Local sort
