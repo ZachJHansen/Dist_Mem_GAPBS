@@ -283,7 +283,7 @@ class Reader {
     file.read(reinterpret_cast<char*>(&num_edges), sizeof(SGOffset));
     file.read(reinterpret_cast<char*>(&num_nodes), sizeof(SGOffset));
     pvector<SGOffset> offsets(num_nodes+1);
-    Partition p(num_nodes);
+    Partition<NodeID_> p(num_nodes);
     neighs = new DestID_[num_edges];
     std::streamsize num_index_bytes = (num_nodes+1) * sizeof(SGOffset);
     std::streamsize num_neigh_bytes = num_edges * sizeof(DestID_);
