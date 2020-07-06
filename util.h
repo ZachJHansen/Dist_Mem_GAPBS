@@ -25,7 +25,8 @@ static const int64_t kRandSeed = 27491095;
 
 
 void PrintLabel(const std::string &label, const std::string &val) {
-  printf("PE: %d | %-21s%7s\n", shmem_my_pe(), (label + ":").c_str(), val.c_str());
+  if (shmem_my_pe() == 0)
+    printf("PE: %d | %-21s%7s\n", shmem_my_pe(), (label + ":").c_str(), val.c_str());
 }
 
 void PrintTime(const std::string &s, double seconds) {
