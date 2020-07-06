@@ -35,48 +35,79 @@ which restructures and extends the Shiloach-Vishkin algorithm [2].
 */
 
 
+// WARNING! SHMEM_INT_ATOMIC_COMPARE_SWAP has been fissioned into two+ commands. Race conditions exist until fusion.
+
+
+// so [1] is saying that min-label propogation is a good algorithm for distributed memory envs
 using namespace std;
 
 
-// Place nodes u and v in same component of lower component ID
-void Link(NodeID u, NodeID v, pvector<NodeID>& comp) {
-  NodeID p1 = comp[u];
-  NodeID p2 = comp[v];
+// Place nodes u and v in same component of lower component ID  
+void Link(NodeID u, NodeID v, pvector<NodeID>& comp, Partition<NodeID> vp) {    // I'm not sure if race conditions exist in this step
+  NodeID temp, comparator;
+  NodeID p1 = shmem_int_g(comp.begin()+vp.local_pos(u), vp.recv(u));
+  NodeID p2 = shmem_int_g(comp.begin()+vp.local_pos(v), vp.recv(v));
   while (p1 != p2) {
     NodeID high = p1 > p2 ? p1 : p2;
     NodeID low = p1 + (p2 - high);
-    NodeID p_high = comp[high];
+    NodeID p_high = shmem_int_g(comp.begin()+vp.local_pos(high), vp.recv(high));
     // Was already 'low' or succeeded in writing 'low'
-    if ((p_high == low) ||
-        (p_high == high && compare_and_swap(comp[high], high, low)))
+    //printf("About to C&S\n");
+    comparator = shmem_int_atomic_fetch(comp.begin()+vp.local_pos(high), vp.recv(high)); // C&S part 1
+    if ((p_high == low) || (p_high == high && comparator == high)) {                    // C&S part 2
+      shmem_int_atomic_set(comp.begin()+vp.local_pos(high), low, vp.recv(high));             // C&S part 3
+    //if ((p_high == low) ||
+    //    (p_high == high && shmem_int_atomic_compare_swap(comp.begin()+vp.local_pos(high), high, low, vp.recv(high))))
       break;
-    p1 = comp[comp[high]];
-    p2 = comp[low];
+    }
+
+    temp = shmem_int_g(comp.begin()+vp.local_pos(high), vp.recv(high));
+    p1 = shmem_int_g(comp.begin()+vp.local_pos(temp), vp.recv(temp));
+    p2 = shmem_int_g(comp.begin()+vp.local_pos(low), vp.recv(low));
+    //p1 = comp[comp[high]];
+    //p2 = comp[low];
   }
 }
 
 
 // Reduce depth of tree for each component to 1 by crawling up parents
-void Compress(const Graph &g, pvector<NodeID>& comp) {
-  #pragma omp parallel for schedule(dynamic, 16384)
+void Compress(const Graph &g, pvector<NodeID>& comp, Partition<NodeID> cp) {
+  /*#pragma omp parallel for schedule(dynamic, 16384)
   for (NodeID n = 0; n < g.num_nodes(); n++) {
     while (comp[n] != comp[comp[n]]) {
       comp[n] = comp[comp[n]];
     }
+  }*/
+  int pop_of_n, own_of_p, l_of_p, loc_n, p_of_n;
+  for (NodeID n = cp.start; n < cp.end; n++) {
+    loc_n = cp.local_pos(n);                    // local position of n
+    while (true) {
+      p_of_n = comp[loc_n];                     // parent of n (guaranteed to be local since n is within bounds of cp)
+      l_of_p = cp.local_pos(p_of_n);            // local position of parent
+      own_of_p = cp.recv(p_of_n);               // PE to whom parent is assigned
+      pop_of_n = shmem_int_g(comp.begin()+l_of_p, own_of_p);    // parent of parent of n
+      comp[loc_n] = pop_of_n;
+      //printf("PE %d | N = %d, p = %d, own(p) = %d, l(p) = %d, pop(n) = %d\n", cp.pe, n, p_of_n, own_of_p, l_of_p, pop_of_n);
+      if (comp[loc_n] == pop_of_n)
+        break;
+    }
   }
 }
 
-
-NodeID SampleFrequentElement(const pvector<NodeID>& comp,
+// so if i partition & parrallelize this so each node contributes 32/npes samples, we lose some randomness
+// also what if npes > 32?
+// maybe its best for the first pe that reaches this function to handle it alone, since work is small
+void SampleFrequentElement(const pvector<NodeID>& comp, int* most_freq, Partition<NodeID> vp,
                              int64_t num_samples = 1024) {
-  std::unordered_map<NodeID, int> sample_counts(32);
-  using kvp_type = std::unordered_map<NodeID, int>::value_type;
+  std::unordered_map<NodeID, int> sample_counts(32);                    // 32 pairs, key = NodeID, val = int
+  using kvp_type = std::unordered_map<NodeID, int>::value_type;         // kvp_type is a pair (2 tuple) of type <NodeID, int>
   // Sample elements from 'comp'
   std::mt19937 gen;
-  std::uniform_int_distribution<NodeID> distribution(0, comp.size() - 1);
+  std::uniform_int_distribution<NodeID> distribution(0, vp.N - 1);       // ints from 0 to num_nodes-1 with equal prob
   for (NodeID i = 0; i < num_samples; i++) {
     NodeID n = distribution(gen);
-    sample_counts[comp[n]]++;
+    sample_counts[shmem_int_g(comp.begin()+vp.local_pos(n), vp.recv(n))]++;
+    //sample_counts[comp[n]]++;           // increment value of key val pair with key comp[n]
   }
   // Find most frequent element in samples (estimate of most frequent overall)
   auto most_frequent = std::max_element(
@@ -87,65 +118,74 @@ NodeID SampleFrequentElement(const pvector<NodeID>& comp,
     << "Skipping largest intermediate component (ID: " << most_frequent->first
     << ", approx. " << static_cast<int>(frac_of_graph * 100)
     << "% of the graph)" << std::endl;
-  return most_frequent->first;
+  for (int i = 0; i < vp.npes; i++)
+    if (i != vp.pe)
+      shmem_int_p(most_freq, most_frequent->first, i);
+  //return most_frequent->first;
 }
 
 
-pvector<NodeID> Afforest(const Graph &g, int32_t neighbor_rounds = 2) {
-  pvector<NodeID> comp(g.num_nodes());
+pvector<NodeID> Afforest(const Graph &g, long* pSync, int32_t neighbor_rounds = 2) {
+  Partition<NodeID> vp(g.num_nodes());
+  pvector<NodeID> comp(vp.max_width, true);
 
   // Initialize each node to a single-node self-pointing tree
-  #pragma omp parallel for
-  for (NodeID n = 0; n < g.num_nodes(); n++)
-    comp[n] = n;
-
+  for (NodeID n = vp.start; n < vp.end; n++)
+    comp[vp.local_pos(n)] = n;                                  // label should be global "name" (index) of node, even if position is local
   // Process a sparse sampled subgraph first for approximating components.
   // Sample by processing a fixed number of neighbors for each node (see paper)
   for (int r = 0; r < neighbor_rounds; ++r) {
-  #pragma omp parallel for schedule(dynamic,16384)
-    for (NodeID u = 0; u < g.num_nodes(); u++) {
+    for (NodeID u = vp.start; u < vp.end; u++) {
       for (NodeID v : g.out_neigh(u, r)) {
         // Link at most one time if neighbor available at offset r
-        Link(u, v, comp);
+        Link(u, v, comp, vp);
         break;
       }
     }
-    Compress(g, comp);
+    shmem_barrier_all();                // necessary?
+    Compress(g, comp, vp);
   }
-
   // Sample 'comp' to find the most frequent element -- due to prior
   // compression, this value represents the largest intermediate component
-  NodeID c = SampleFrequentElement(comp);
+  int* c = (int*) shmem_malloc(sizeof(int));
+  if (vp.pe == 0)
+    SampleFrequentElement(comp, c, vp);
+  shmem_barrier_all();
 
   // Final 'link' phase over remaining edges (excluding largest component)
   if (!g.directed()) {
-    #pragma omp parallel for schedule(dynamic, 16384)
-    for (NodeID u = 0; u < g.num_nodes(); u++) {
+    //#pragma omp parallel for schedule(dynamic, 16384)
+    for (NodeID u = vp.start; u < vp.end; u++) {
       // Skip processing nodes in the largest component
-      if (comp[u] == c)
+      if (shmem_int_g(comp.begin()+vp.local_pos(u), vp.recv(u)) == *c)
         continue;
       // Skip over part of neighborhood (determined by neighbor_rounds)
       for (NodeID v : g.out_neigh(u, neighbor_rounds)) {
-        Link(u, v, comp);
+        Link(u, v, comp, vp);
       }
     }
   } else {
-    #pragma omp parallel for schedule(dynamic, 16384)
-    for (NodeID u = 0; u < g.num_nodes(); u++) {
-      if (comp[u] == c)
+    //#pragma omp parallel for schedule(dynamic, 16384)
+    for (NodeID u = vp.start; u < vp.end; u++) {
+      if (shmem_int_g(comp.begin()+vp.local_pos(u), vp.recv(u)) == *c)
         continue;
       for (NodeID v : g.out_neigh(u, neighbor_rounds)) {
-        Link(u, v, comp);
+        Link(u, v, comp, vp);
       }
       // To support directed graphs, process reverse graph completely
       for (NodeID v : g.in_neigh(u)) {
-        Link(u, v, comp);
+        Link(u, v, comp, vp);
       }
     }
   }
   // Finally, 'compress' for final convergence
-  Compress(g, comp);
-  return comp;
+  shmem_barrier_all();                          // necessary?
+  Compress(g, comp, vp);
+  shmem_barrier_all();
+  //pvector<NodeID> labels = comp.combine(vp, pSync, false);
+  //for (int i = 0; i < g.num_nodes(); i++)
+    //printf("Pe %d | label(%d) = %d\n", vp.pe, i, labels[i]);
+  return comp;//labels;
 }
 
 
@@ -173,7 +213,21 @@ void PrintCompStats(const Graph &g, const pvector<NodeID> &comp) {
 // - If the graph is directed, it performs the search as if it was undirected
 // - Asserts every vertex is visited (degree-0 vertex should have own label)
 bool CCVerifier(const Graph &g, const pvector<NodeID> &comp) {
-  unordered_map<NodeID, NodeID> label_to_source;
+  Partition<NodeID> vp(g.num_nodes());
+  int* PRINTER = (int *) shmem_malloc(sizeof(int));
+  *PRINTER = 0;
+  shmem_barrier_all();
+  shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
+  ofstream shmem_out;
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+  for (NodeID n = vp.start; n < vp.end; n++) {
+    shmem_out << comp[vp.local_pos(n)] << endl;
+  //  *it = 15;           // scramble
+  }
+  shmem_out.close();
+  if (!(vp.pe == vp.npes-1))
+    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
+  /*unordered_map<NodeID, NodeID> label_to_source;
   for (NodeID n : g.vertices())
     label_to_source[comp[n]] = n;
   Bitmap visited(g.num_nodes());
@@ -210,7 +264,7 @@ bool CCVerifier(const Graph &g, const pvector<NodeID> &comp) {
   }
   for (NodeID n=0; n < g.num_nodes(); n++)
     if (!visited.get_bit(n))
-      return false;
+      return false;*/
   return true;
 }
 
@@ -218,10 +272,66 @@ bool CCVerifier(const Graph &g, const pvector<NodeID> &comp) {
 int main(int argc, char* argv[]) {
   CLApp cli(argc, argv, "connected-components-afforest");
   if (!cli.ParseArgs())
-    return -1;
-  Builder b(cli);
-  Graph g = b.MakeGraph();
-  auto CCBound = [](const Graph& gr){ return Afforest(gr); };
-  BenchmarkKernel(cli, g, CCBound, PrintCompStats, CCVerifier);
+    return -1;   
+
+  shmem_init();
+
+  static long pSync[SHMEM_REDUCE_SYNC_SIZE];
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+
+  for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+    pSync[i] = SHMEM_SYNC_VALUE;
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++)
+    pWrk[i] = SHMEM_SYNC_VALUE;
+
+  char size_env[] = "SHMEM_SYMMETRIC_SIZE=1024M";
+  putenv(size_env);
+
+  int npes = shmem_n_pes();
+  int pe = shmem_my_pe();
+  static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
+  static long* LOCK = (long *) shmem_calloc(1, sizeof(long)); 
+  {
+    Builder b(cli);
+    Graph g = b.MakeGraph(pWrk, pSync);
+    //printf("Last check\n");
+//    g.PrintTopology(LOCK);
+
+/*    Partition<NodeID> vp(g.num_nodes());
+    pvector<NodeID> comp(vp.max_width, true);
+    if (pe == 0) {
+      comp[0] = 0;
+      comp[1] = 0;
+      comp[2] = 4;
+      comp[3] = 0;
+      comp[4] = 4;
+    } else {
+      comp[0] = 4;
+      comp[1] = 1;
+      comp[2] = 5;
+      comp[3] = 6;
+      comp[4] = 5;
+    }
+    shmem_barrier_all();
+    Compress(g, comp, vp);
+    Link(6, 7, comp, vp);
+    Compress(g, comp, vp);
+    shmem_barrier_all();
+    for (NodeID c : comp)
+      printf("PE %d | c = %d\n", pe, c);
+*//*    int* thing = (int*) shmem_calloc(5, sizeof(int));
+    for (int i = 0; i < 5; i++)
+      thing[i] = 4;
+    shmem_barrier_all();
+    if (pe == 0)
+      if (shmem_int_atomic_compare_swap(thing, 4, 15, 1))
+        printf("Thank goodness, i was afraid c&s was broken\n");*/
+
+    auto CCBound = [](const Graph& gr){ return Afforest(gr, pSync); };
+    //CCBound(g);
+    BenchmarkKernel(cli, g, CCBound, PrintCompStats, CCVerifier);
+  }
+
+  shmem_finalize();
   return 0;
 }

@@ -47,7 +47,7 @@ using namespace std;
 // front is never updated within this function
 // updates to parent arrays do not occur accross pe boundaries
 // next bitmaps are synchronized at the end of the function
-int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bitmap &next, int pe, int npes, long long *pWrk, long *psync, Partition vp) {
+int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bitmap &next, int pe, int npes, long long *pWrk, long *psync, Partition<NodeID> vp) {
   int relative;
   next.reset();
   long long* awake_count = (long long *) shmem_malloc(sizeof(long long));               // Synchonization point?
@@ -81,7 +81,7 @@ int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bit
 // This assumes NodeIDs are integers, otherwise I'm not sure how to do the atomic compare and swap
 // Assumes PLOCKS is an array of locks of length npes: so access to the parent array on each PE is controlled by a seperate lock
 int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeID> &queue, 
-                      long *QLOCK, long *PLOCKS, long *pSync, long long *pWrk, Partition vp) {
+                      long *QLOCK, long *PLOCKS, long *pSync, long long *pWrk, Partition<NodeID> vp) {
   int pe = shmem_my_pe();
   int npes = shmem_n_pes();
   long long* scout_count = (long long *) shmem_calloc(1, sizeof(long long));    // The global scout_count is in symmetric memory (calloc to init at 0)
@@ -186,7 +186,7 @@ pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
   } else {
     end = start + offset; 
   }*/
-  Partition p(g.num_nodes());
+  Partition<NodeID> p(g.num_nodes());
   pvector<NodeID> parent(p.max_width, true);                               // The last PE contains the remainding elements, so the symmetric parent array must be at least this large on each PE
   #pragma omp parallel for                                              // But even though the parent array is symmetric, the elements aren't the same across PEs
   for (NodeID n=p.start; n < p.end; n++)
@@ -199,7 +199,7 @@ pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
 pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *PLOCKS, long long* pWrk, long* pSync, int alpha = 15, int beta = 18) {
   int pe = shmem_my_pe();
   int npes = shmem_n_pes();
-  Partition vp(g.num_nodes());
+  Partition<NodeID> vp(g.num_nodes());
   PrintStep("Source", static_cast<int64_t>(source));
   Timer t;
   t.Start();
@@ -217,7 +217,7 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *
   front.reset();                                        // All PEs are synched at this point
   int64_t edges_to_check = g.num_edges_directed();
   int64_t scout_count = g.out_degree(source);
-  printf("Pe %d thin edges = %lu & scout = %lu\n", pe, edges_to_check, scout_count);
+  //printf("Pe %d thin edges = %lu & scout = %lu\n", pe, edges_to_check, scout_count);
   /*shmem_barrier_all();
   shmem_global_exit(0);
   exit(0);*/
