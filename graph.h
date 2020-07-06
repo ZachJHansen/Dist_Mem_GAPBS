@@ -25,63 +25,6 @@ Simple container for graph in CSR format
  - MakeInverse parameter controls whether graph stores its inverse
 */
 
-// bounds for partitioning nodes ~evenly across PEs like a naif (final PE gets remainder)
-// Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
-// Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
-// (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
-// should this be generically typed??
-//template <typename T>
-struct Partition {
-  int pe, npes;
-  int64_t N, start, end, partition_width, max_width;
-
-  Partition() {}
-
-  Partition(int64_t num_nodes) : N(num_nodes){
-    pe = shmem_my_pe();
-    npes = shmem_n_pes();
-    partition_width = N/npes;
-    max_width = N - (npes-1)*partition_width;
-    start = partition_width * pe;
-    if (pe == npes-1) {
-      end = N;  
-    } else {
-      end = start + partition_width; 
-    }
-  }
-  
-  // Given a node, determine which PE it belongs to
-  int recv(int64_t node) {
-    int receiver = node / partition_width;
-    if (receiver >= npes) 
-      receiver = npes - 1;
-    return receiver;
-  }
-
-  // Given a node, determine the local position on assigned PE
-  int64_t local_pos(int64_t node) {
-    int rec = node / partition_width;
-    if (rec >= npes)
-      return(node - (npes-1)*partition_width);
-    else
-      return(node % partition_width);
-    //return(node - start);
-  }
-
-  // Given a local position, determine the global node number
-  int64_t global_pos(int64_t local_pos) {
-    return(start + local_pos);
-  }
-
-  void PrintStats(long* PRINT_LOCK) {
-    shmem_set_lock(PRINT_LOCK);
-    printf("PE %d stats: \n\tpartition width: %lu\n\tmax width: %lu\n\tstart: %lu\n\tend: %lu\n", pe, partition_width, max_width, start, end);
-    for (int64_t i = 0; i < N; i++)
-      printf("Element %lu has local pos %lu & receiver %d\n", i, local_pos(i), recv(i)); 
-    shmem_clear_lock(PRINT_LOCK);
-  }
-};
-
 // Used to hold node & weight, with another node it makes a weighted edge
 template <typename NodeID_, typename WeightT_>
 struct NodeWeight {
@@ -158,7 +101,7 @@ class CSRGraph {
     NodeID_** foreign_start;
     NodeID_** foreign_end;
    public:
-    Neighborhood(NodeID_ n, DestID_** g_index, Partition vp, OffsetT start_offset) :
+    Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset) :
         n_(n), g_index_(g_index), start_offset_(0) {
       OffsetT max_offset;
       local = vp.local_pos(n_);
@@ -223,7 +166,7 @@ class CSRGraph {
     out_index_(index), out_neighbors_(neighs),
     in_index_(index), in_neighbors_(neighs) {
     int64_t* edge_counts = (int64_t*) shmem_malloc(sizeof(int64_t));
-    Partition p(num_nodes_);
+    Partition<NodeID_> p(num_nodes_);
     *edge_counts = out_index_[p.end - p.start] - out_index_[0];                             // how long is the local neighbor array?
     shmem_long_sum_to_all(edge_counts, edge_counts, 1, 0, 0, p.npes, pWrk, pSync);      // Reduction : +
     num_edges_ = *edge_counts / 2;
@@ -235,7 +178,7 @@ class CSRGraph {
     out_index_(out_index), out_neighbors_(out_neighs),
     in_index_(in_index), in_neighbors_(in_neighs)/*, p_{num_nodes}*/ {
     int64_t* edge_counts = (int64_t*) shmem_malloc(sizeof(int64_t));
-    Partition p(num_nodes_);
+    Partition<NodeID_> p(num_nodes_);
     *edge_counts = out_index_[p.end - p.start] - out_index_[0];                             // how long is the local neighbor array?
     shmem_long_sum_to_all(edge_counts, edge_counts, 1, 0, 0, p.npes, pWrk, pSync);      // Reduction : +
     num_edges_ = *edge_counts;
@@ -300,7 +243,7 @@ class CSRGraph {
   int64_t out_degree(NodeID_ v, bool help = false) const {
     int64_t degree;                                                                                             // = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
     //*degree = 0;
-    Partition vp(num_nodes_);
+    Partition<NodeID_> vp(num_nodes_);
     NodeID_ local = vp.local_pos(v);    
     if (help) {
       printf("PE %d is finding the out_degree of node %d\n", vp.pe, v);
@@ -323,7 +266,7 @@ class CSRGraph {
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
     int64_t* degree = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
     *degree = 0;
-    Partition vp(num_nodes_);
+    Partition<NodeID_> vp(num_nodes_);
     NodeID_ local = vp.local_pos(v);
     if (v >= vp.start && v < vp.end) {
       *degree = in_index_[local+1] - in_index_[local];
@@ -336,12 +279,12 @@ class CSRGraph {
   }
 
   Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
-    Partition vp(num_nodes_);
+    Partition<NodeID_> vp(num_nodes_);
     return Neighborhood(n, out_index_, vp, start_offset);
   }
 
   Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0) const {
-    Partition vp(num_nodes_);
+    Partition<NodeID_> vp(num_nodes_);
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
     return Neighborhood(n, in_index_, vp, start_offset);
   }
@@ -357,7 +300,7 @@ class CSRGraph {
 
   void PrintTopology(long* PRINT_LOCK) const {
     shmem_barrier_all();
-    Partition vp(num_nodes_);
+    Partition<NodeID_> vp(num_nodes_);
     shmem_set_lock(PRINT_LOCK);
     std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
     for (NodeID_ i = vp.start; i < vp.end; i++) {
@@ -371,9 +314,27 @@ class CSRGraph {
     shmem_barrier_all();
   }
 
+
+  void PrintTopology() {
+    Partition<NodeID_> vp(num_nodes_);
+    int* PRINTER = (int *) shmem_calloc(1, sizeof(int));                // init 0
+    shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
+    std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
+    for (NodeID_ i = vp.start; i < vp.end; i++) {
+      std::cout << i << ": ";
+      for (DestID_ j : out_neigh(i))
+        std::cout << j << " ";
+      std::cout << std::endl;
+    }
+    if (!(vp.pe == vp.npes-1))
+      shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
+    shmem_barrier_all();
+  }
+
+
   // offsets for given pe start from the pes first elem
   // some unused space - max_width = partition_width + remainder
-  static DestID_** GenIndex(const pvector<SGOffset> &offsets, DestID_* neighs, Partition* p) {
+  static DestID_** GenIndex(const pvector<SGOffset> &offsets, DestID_* neighs, Partition<NodeID_>* p) {
     //printf("PE %d is calling calloc with %d elems\n", p->pe, (p->max_width)+1);
     DestID_** index = (DestID_**) shmem_calloc((p->max_width)+1, sizeof(DestID_*)); 
     //if (squish)
@@ -396,7 +357,7 @@ class CSRGraph {
     return index;
   }
 
-  pvector<SGOffset> VertexOffsets(Partition* vp, bool in_graph = false) const {
+  pvector<SGOffset> VertexOffsets(Partition<NodeID_>* vp, bool in_graph = false) const {
     pvector<SGOffset> offsets(vp->partition_width+1);
     for (NodeID_ n = vp->start; n < vp->end+1; n++)
       if (in_graph)
