@@ -22,6 +22,58 @@ pvectors in symmetric memory are constructed when the symmetric boolean is true
 the internal arrays should be symmetric to support gets and puts
 */
 
+// bounds for partitioning nodes ~evenly across PEs like a naif (final PE gets remainder)
+// Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
+// Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
+// (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
+// should this be generically typed??
+template <typename T_=int64_t> struct Partition {
+  int64_t N; 
+  int pe, npes;
+  T_ start, end, partition_width, max_width;
+
+  Partition() {}
+
+  Partition(int64_t num_nodes) : N(num_nodes){
+    pe = shmem_my_pe();
+    npes = shmem_n_pes();
+    partition_width = N/npes;
+    max_width = N - (npes-1)*partition_width;
+    start = partition_width * pe;
+    if (pe == npes-1) {
+      end = N;  
+    } else {
+      end = start + partition_width; 
+    }
+  }
+  
+  // Given a node, determine which PE it belongs to
+  int recv(T_ node) {
+    int receiver = node / partition_width;
+    if (receiver >= npes) 
+      receiver = npes - 1;
+    return receiver;
+  }
+
+  // Given a node, determine the local position on assigned PE
+  T_ local_pos(T_ node) {
+    int rec = node / partition_width;
+    if (rec >= npes)
+      return(node - (npes-1)*partition_width);
+    else
+      return(node % partition_width);
+    //return(node - start);
+  }
+
+  // Given a local position, determine the global node number
+  T_ global_pos(T_ local_pos) {
+    return(start + local_pos);
+  }
+
+//  void PrintStats(long* PRINT_LOCK) {
+//    shmem_set_lock(PRINT_LOCK);
+};
+
 
 template <typename T_>
 class pvector {
@@ -221,6 +273,33 @@ class pvector {
       return dest;
     }
   }
+
+  // currently broken. do we even want to recombine? isnt the point of partitioning the node list is too long?
+  /*pvector<T_> combine(Partition<T_> vp, long* pSync, bool bfs = false) {
+    if (!symmetric_) {
+      printf("Can't combine pvectors that don't occur in symmetric memory!\n");
+      shmem_global_exit(1);
+      exit(1);
+    } else {
+      pvector<T_> dest(vp.N, true);
+      if (bfs) {
+        for (T_ n = vp.start; n < vp.end; n++) {
+          if (start_[vp.local_pos(n)] < -1) 
+            start_[vp.local_pos(n)] = -1;
+        }
+      }
+      printf("Address: %p\n", (void *) start_);
+      if (sizeof(T_) <= 32) {
+        shmem_collect32(dest.begin(), start_, vp.end-vp.start, 0, 0, vp.npes, pSync);
+      } else if (sizeof(T_) <= 64) {                                                                     // else pray it fits in 64 bits?
+        shmem_collect64(dest.begin(), start_, vp.end-vp.start, 0, 0, vp.npes, pSync);
+      } else {
+        printf("Requested type for NodeID is larger than 64 bits! pvector.h -> combine method cannot be used. Giving up.\n");
+        shmem_global_exit(1);
+        exit(1);
+      }
+    }
+  }*/
 
  private:
   T_* start_;
