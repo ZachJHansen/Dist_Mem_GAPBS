@@ -51,9 +51,19 @@ class Reader {
   EdgeList ReadInEL(std::ifstream &in) {
     EdgeList el(0, true);                                       // Initialize a zero length symmetric pvector
     NodeID_ u, v;
-    while (in >> u >> v) {
-      el.push_back(Edge(u, v));
+    printf("check 2.1\n");
+    int i = 0;
+    try {
+      while (in >> u >> v) {
+        i++;
+        el.push_back(Edge(u, v));
+      }
+    } catch (...){
+      printf("i = %d\n", i);
+      shmem_global_exit(0);
+      exit(0);
     }
+    printf("Check 2.2\n");
     return el;
   }
 

@@ -74,6 +74,8 @@ template <typename T_=int64_t> struct Partition {
 //    shmem_set_lock(PRINT_LOCK);
 };
 
+// Note: Previous partition expects zero-indexed NodeIDs
+// So does Round Robin, but it handles them like one-indexed IDs
 template <typename T_> struct RoundRobin {
   int pe, npes;
   T_ *local_width_, *max_width_;
@@ -89,6 +91,7 @@ template <typename T_> struct RoundRobin {
 
   // which PE should K be assigned to?
   int owner(T_ k) {
+    k++;                                // change to one-indexing
     if (k < 1) {
       printf("Can't partition < 1 element! Breaking...\n");
       shmem_global_exit(1);
@@ -152,7 +155,8 @@ class pvector {
 
   pvector() : start_(nullptr), end_size_(nullptr), end_capacity_(nullptr) {}
 
-  explicit pvector(size_t num_elements, bool symmetric = false) : symmetric_(symmetric) {
+  explicit pvector(size_t num_elements, bool symmetric = false,
+                  bool partitioned = false) : symmetric_(symmetric), partitioned_(partitioned) {
     if (symmetric_) {
       start_ = (T_ *) shmem_calloc(num_elements, sizeof(T_));
       end_size_ = start_ + num_elements;
@@ -238,6 +242,14 @@ class pvector {
 
   bool empty() {
     return end_size_ == start_;
+  }
+
+  bool symmetric() {
+    return symmetric_;
+  }
+
+  bool partitioned() {
+    return partitioned_;
   }
 
   void clear() {

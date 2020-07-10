@@ -47,6 +47,8 @@ bins.
 */
 
 
+// WARNING! Broken C&S
+
 using namespace std;
 
 const WeightT kDistInf = numeric_limits<WeightT>::max()/2;
@@ -54,50 +56,44 @@ const size_t kMaxBin = numeric_limits<size_t>::max()/2;
 const size_t kBinSizeThreshold = 1000;
 
 inline
-void RelaxEdges(const WGraph &g, NodeID u, WeightT delta, pvector<WeightT> &dist, vector <vector<NodeID>> &local_bins, Partition vp) {
+void RelaxEdges(const WGraph &g, NodeID u, WeightT delta, pvector<WeightT> &dist, vector <vector<NodeID>> &local_bins, Partition<NodeID> vp) {
   WeightT old_dist, new_dist;
   printf("Relaxing u: %d\n", u);
   //printf("sizeof(WeightT) == %lu\n", sizeof(WeightT));
   //printf("sizoef(int) == %lu\n", sizeof(int));
   for (WNode wn : g.out_neigh(u)) {
-    if (wn.v >= vp.start && wn.v < vp.end) { 
-      old_dist = dist[wn.v];            // should be local pos?
-      new_dist = dist[u] + wn.w;        // modifications to local data should also be atomic! 
-    } else {
-      shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(WeightT), vp.recv(wn.v));               // recv should be renamed owner, no?
-      shmem_getmem(&new_dist, dist.begin()+vp.local_pos(u), sizeof(WeightT), vp.recv(u));               // can a pe fetch data from itself?
-      new_dist += wn.w;
-      //printf("PE: %d | wn.v = %d | vp.start = %d | vp.end = %d\n", vp.pe, wn.v, vp.start, vp.end);
-      printf("New dist: %lu | old_dist: %lu\n", new_dist, old_dist);
-    }
-    printf("wn.v = %d | local_pos = %d | recv = %d \n", wn.v, vp.local_pos(wn.v), vp.recv(wn.v));
+    // modifications to local data should also be atomic! 
+    shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(WeightT), vp.recv(wn.v));               // recv should be renamed owner, no?
+    shmem_getmem(&new_dist, dist.begin()+vp.local_pos(u), sizeof(WeightT), vp.recv(u));               // can a pe fetch data from itself?
+    new_dist += wn.w;
+    //printf("PE: %d | wn.v = %d | vp.start = %d | vp.end = %d\n", vp.pe, wn.v, vp.start, vp.end);
+    printf("PE %d | New dist: %d | old_dist: %d\n", vp.pe, new_dist, old_dist);
+    //printf("wn.v = %d | local_pos = %d | recv = %d \n", wn.v, vp.local_pos(wn.v), vp.recv(wn.v));
     while (new_dist < old_dist) {
-      printf("Dist begins at %p, dist + local_pos(%d) = %p\n", (void *) dist.begin(), wn.v, (void *) (dist.begin()+vp.local_pos(wn.v))); 
+      /*printf("Dist begins at %p, dist + local_pos(%d) = %p\n", (void *) dist.begin(), wn.v, (void *) (dist.begin()+vp.local_pos(wn.v))); 
       if (shmem_addr_accessible(dist.begin()+vp.local_pos(wn.v), vp.recv(wn.v)))
         printf("C&S at %p on PE %d with cond = %d, val = %d\n", (void *) (dist.begin()+vp.local_pos(wn.v)), vp.pe, old_dist, new_dist);
-      if (shmem_int_atomic_compare_swap(dist.begin()+vp.local_pos(wn.v), (int) old_dist, (int) new_dist, vp.recv(wn.v))) {              // not sure how to generically type atomics...
+      */
+    //  if (shmem_int_atomic_compare_swap(dist.begin()+vp.local_pos(wn.v), (int) old_dist, (int) new_dist, vp.recv(wn.v))) {              // not sure how to generically type atomics...
       //long x;
       //if ((x = shmem_long_atomic_compare_swap(dist.begin()+vp.local_pos(wn.v), (long) 1, (long) 1, 1)) > 0) {
   //      printf("check! x = %d\n", x);
-    //  if (shmem_int_atomic_fetch(dist.begin()+vp.local_pos(wn.v), vp.recv(wn.v)) == old_dist) {          // these two atomics should really be combined into C&S...
-      //  shmem_int_atomic_swap(dist.begin()+vp.local_pos(wn.v), new_dist, vp.recv(wn.v));
-        printf("check\n");
+      if (shmem_int_atomic_fetch(dist.begin()+vp.local_pos(wn.v), vp.recv(wn.v)) == old_dist) {          // these two atomics should really be combined into C&S...
+        shmem_int_atomic_swap(dist.begin()+vp.local_pos(wn.v), new_dist, vp.recv(wn.v));
         size_t dest_bin = new_dist/delta;
         if (dest_bin >= local_bins.size())
           local_bins.resize(dest_bin+1);
         local_bins[dest_bin].push_back(wn.v);
-        printf("Check 2\n");
+        //printf("Check 2\n");
         break;
       }
-      printf("hello\n");
       if (wn.v >= vp.start && wn.v < vp.end)
         old_dist = dist[wn.v];      // swap failed, recheck dist update & retry
       else
         shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(WeightT), vp.recv(wn.v));               
     }
-    printf("check 3\n");
   }
-  printf("check 4\n");
+  printf("No more relaxing\n");
 }
 
 pvector<WeightT> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* VOTE_LOCK, long* SINGLE_LOCK) {
@@ -105,17 +101,17 @@ pvector<WeightT> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long
   WeightT init = 0;
   WeightT *old_dist, *new_dist;
   Timer t;
-  Partition vp(g.num_nodes());
-  printf("PE %d is init dist with width = %lu\n", vp.pe, vp.max_width);
+  Partition<NodeID> vp(g.num_nodes());
+  //printf("PE %d is init dist with width = %lu\n", vp.pe, vp.max_width);
 //  pvector<WeightT> dist(vp.max_width, kDistInf, true);                                 // Initialize symmetric partitioned pvector with +inf
-  pvector<int> dist(vp.max_width, kDistInf, true);
-  for (int d : dist)
-    printf("Init: %d\n", d);
+  pvector<WeightT> dist(vp.max_width, kDistInf, true);
+  //for (int d : dist)
+    //printf("Init: %d\n", d);
   if (source >= vp.start && source < vp.end)
     dist[vp.local_pos(source)] = init;
   else
     shmem_putmem(dist.begin()+vp.local_pos(source), &init, sizeof(WeightT), vp.recv(source));
-  printf("PE %d is init frontier with size = %lu\n", vp.pe, g.num_edges_directed());
+  //printf("PE %d is init frontier with size = %lu\n", vp.pe, g.num_edges_directed());
   pvector<NodeID> frontier(g.num_edges_directed(), true);                               // Symmetric frontier - intentionally overallocated. Do we want a space or performance hit?
   // two element arrays for double buffering curr=iter&1, next=(iter+1)&1
   size_t* shared_indexes = (size_t *) shmem_calloc(2, sizeof(size_t));                  // size_t shared_indexes[2] = {0, kMaxBin};
@@ -125,26 +121,31 @@ pvector<WeightT> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long
   frontier[0] = source;
   t.Start();                                                                    // Timer start and stops are synch points
   vector<vector<NodeID> > local_bins(0);                                      // vector of vector of node ids (thread local?)
-  size_t iter = 0;
-  NodeID* i = (NodeID *) shmem_malloc(sizeof(NodeID));                                  // Shared counter for next node
-  printf("PE %d | dist.begin = %p, dist.end = %p, front.begin = %p, front.end = %p\n", vp.pe, (void *) dist.begin(),  (void *) dist.end(), (void *) frontier.begin(), (void *) frontier.end());
-  while (shared_indexes[iter&1] != kMaxBin) {                                 // if iter is odd, iter bitwise and (&) 1 is 1, if iter is even iter&1 is 0 and enter loop
-    size_t &curr_bin_index = shared_indexes[iter&1];                          
-    size_t &next_bin_index = shared_indexes[(iter+1)&1];                      
-    size_t &curr_frontier_tail = frontier_tails[iter&1];
-    size_t &next_frontier_tail = frontier_tails[(iter+1)&1];
-    *i = 0;
-    Partition fp(curr_frontier_tail);                                            // I don't know how to do a dynamic schedule nowait, so I'm just gonna naively partition the work
-    printf("Everyone here? PE %d\n", vp.pe);
+  NodeID* iter = (NodeID *) shmem_calloc(1, sizeof(NodeID));                                  // Shared counter for next node (init 0)
+  //printf("PE %d | dist.begin = %p, dist.end = %p, front.begin = %p, front.end = %p\n", vp.pe, (void *) dist.begin(),  (void *) dist.end(), (void *) frontier.begin(), (void *) frontier.end());
+  while (shared_indexes[(*iter)&1] != kMaxBin) {                                 // if iter is odd, iter bitwise and (&) 1 is 1, if iter is even iter&1 is 0 and enter loop
+    //printf("PE %d | While start | iter = %d, curr_front = %lu\n", vp.pe, *iter, frontier_tails[(*iter)&1]);
+    // these all reference the shared data structs
+    size_t &curr_bin_index = shared_indexes[(*iter)&1];                          
+    size_t &next_bin_index = shared_indexes[((*iter)+1)&1];                      
+    size_t &curr_frontier_tail = frontier_tails[(*iter)&1];
+    size_t &next_frontier_tail = frontier_tails[((*iter)+1)&1];
+    //*aye = 0;
+    //printf("PE %d | post init | iter = %d, curr_front = %lu\n", vp.pe, *iter, curr_frontier_tail);
+    //printf("Pe %d | While start | iter = %d, shared_index[iter&1] = %lu\n", vp.pe, *iter, shared_indexes[(*iter)&1]);
+    Partition<NodeID> fp(curr_frontier_tail);                                            // I don't know how to do a dynamic schedule nowait, so I'm just gonna naively partition the work
+    //printf("Everyone here? PE %d\n", vp.pe);
     shmem_barrier_all();
-    printf("fp.start: %lu | fp.end: %lu\n", fp.start, fp.end);
+    //printf("fp.start: %lu | fp.end: %lu\n", fp.start, fp.end);
+    //printf("PE %d | Current frontier tail: %lu\n", vp.pe, frontier_tails[(*iter)&1]);
     for (size_t i = fp.start; i < fp.end; i++) {
       NodeID u = frontier[i];
       if (u >= vp.start && u < vp.end)
         udist = dist[u];
       else
         shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(WeightT), vp.recv(u));                       // does this represent a synch issue? does it need to be made atomic somehow?
-      printf("Udist: %d\n", udist);
+      //printf("Udist: %d\n", udist);
+      //printf("dist[%d] = %d, curr_bin_index = %d, delta = %d\n", u, udist, static_cast<WeightT>(curr_bin_index), delta);
       if (udist >= delta * static_cast<WeightT>(curr_bin_index))
         RelaxEdges(g, u, delta, dist, local_bins, vp);
     }
@@ -159,45 +160,86 @@ pvector<WeightT> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long
     shmem_barrier_all();
     //shmem_global_exit(0);
     //exit(0);
-    shmem_barrier_all();                                                      // OpenMP synchs automatically after parallel for
-    for (size_t i=curr_bin_index; i < local_bins.size(); i++) {
+    for (size_t i=curr_bin_index; i < local_bins.size(); i++) {         // this region could def be optimized, maybe each pe finds its local min b4 voting?
       if (!local_bins[i].empty()) {
         shmem_set_lock(VOTE_LOCK);                                            // critical region
-        next_bin_index = min(next_bin_index, i);
+        for (int p = 0; p < vp.npes; p++) {
+          size_t temp = min(shared_indexes[((*iter)+1)&1], i);
+      //    printf("PE %d is voting: temp = %lu\n", vp.pe, temp);
+          shmem_putmem(shared_indexes+(((*iter)+1)&1), &temp, sizeof(size_t), p);
+        }
         shmem_clear_lock(VOTE_LOCK);
         break;
       }      
     }
+    shmem_barrier_all();
+    //printf("PE %d | next chosen bin is %lu\n", vp.pe, shared_indexes[((*iter)+1)&1]);
+    //shmem_global_exit(0);
+    //exit(0);
     t.Stop();
     PrintStep(curr_bin_index, t.Millisecs(), curr_frontier_tail);
     t.Start();                                                          //REMEMBER! Everyone must particpate in timer and label printing stuff
-    if (shmem_test_lock(SINGLE_LOCK) == 0) {                                  // lock is not set, execute body 
-      curr_bin_index = kMaxBin;                                            // so since &curr_bin_index = shared_index, do changes to curr_bin_index affect (or should affect) the shared?
-      curr_frontier_tail = 0;
-      shmem_clear_lock(SINGLE_LOCK);
-    }
-    printf("PE %d checking in\n", vp.pe);
+    //if (shmem_test_lock(SINGLE_LOCK) == 0) {                                  // lock is not set, execute body 
+    //curr_bin_index = kMaxBin;                                            // so since &curr_bin_index = shared_index, do changes to curr_bin_index affect (or should affect) the shared?
+    shared_indexes[(*iter)&1] = kMaxBin;
+    //curr_frontier_tail = 0;
+    frontier_tails[(*iter)&1] = 0;
+    //printf("PE %d has set curr bin to kmax and curr front to 0\n", vp.pe);
+    //printf("PE %d | Curr bin index = %lu | curr_front = %lu | shared_indexes[iter&1] = %lu | shared_indexes[(iter+1)&1] = %lu\n", vp.pe, curr_bin_index, curr_frontier_tail, shared_indexes[(*iter)&1], shared_indexes[((*iter)+1)&1]);
+
+
+    //shmem_clear_lock(SINGLE_LOCK);
+    //}
+    //printf("PE %d checking in\n", vp.pe);
+    printf("PE %d | iter: %d \n", vp.pe, *iter);
     if (next_bin_index < local_bins.size()) {
+      printf("Frontier contents b4 copy: ");
+      for (WeightT t : frontier)
+        printf("%d ", t);
+      printf("\n");
+
       shmem_set_lock(SINGLE_LOCK);
       size_t copy_start;
       for (int i = 0; i < vp.npes; i++) {
-        if (vp.pe != i) {
-          copy_start = shmem_ulong_atomic_fetch_add(&next_frontier_tail, local_bins[next_bin_index].size(), i);
-          shmem_putmem(frontier.data() + copy_start, &*(local_bins[next_bin_index].begin()), sizeof(NodeID) * local_bins[next_bin_index].size(), i);
-        }
+        //if (vp.pe != i) {
+        copy_start = shmem_ulong_atomic_fetch_add(&next_frontier_tail, local_bins[next_bin_index].size(), i);
+        printf("Copy start: %lu\n", copy_start);
+        printf("local.begin = %d\n", *(local_bins[next_bin_index].begin()));
+        shmem_putmem(frontier.data() + copy_start, &*(local_bins[next_bin_index].begin()), sizeof(NodeID) * local_bins[next_bin_index].size(), i);
       }
+      printf("Frontier contents after copy: ");
+      for (WeightT t : frontier)
+        printf("%d ", t);
+      printf("\n");
+
       shmem_clear_lock(SINGLE_LOCK);
       local_bins[next_bin_index].resize(0);
     }
-    iter++;
+
+    printf("Pe %d | Prior to iter inc | iter = %d, shared_index[iter&1] = %lu, curr_front = %lu\n", vp.pe, *iter, shared_indexes[(*iter)&1], curr_frontier_tail);
+    //iter++;
+    if (vp.pe == 0) {
+      for (int i = 0; i < vp.npes; i++) {
+        shmem_int_atomic_inc(iter, i);
+        printf("PE %d just incremented iter on PE %d\n", vp.pe, i);
+      }
+    }
     shmem_barrier_all();
+    //printf("PE %d | While end | curr_front = %lu, next_front = %lu\n", vp.pe, 
+    //printf("Pe %d | While end | iter = %d, shared_index[iter&1] = %lu, curr_front = %lu\n", vp.pe, *iter, shared_indexes[(*iter)&1], curr_frontier_tail);
+    //printf("PE %d | While end | iter = %d, curr_frontier_tail = %lu\n", vp.pe, *iter, frontier_tails[(*iter)&1]); //curr_frontier_tail);
+    printf("Pe %d | After iter inc | iter = %d, shared_index[iter&1] = %lu, curr_front = %lu\n", vp.pe, *iter, shared_indexes[(*iter)&1], curr_frontier_tail);
   }
-  printf("hey\n");
+  //printf("PE %d is here\n", vp.pe);
   if (shmem_test_lock(SINGLE_LOCK) == 0) {
-    std::cout << "took " << iter << " iterations" << endl;
-    printf("Took %lu iterations\n", iter);
+    //std::cout << "took " << iter << " iterations" << endl;
+    printf("PE %d | Took %d iterations\n", vp.pe, *iter);
     shmem_clear_lock(SINGLE_LOCK);
   }
+  shmem_barrier_all();
+  printf("end Pe %d\n", vp.pe);
+  for (int i = vp.start; i < vp.end; i++)
+    printf("PE %d | dist(%d) = %lu\n", vp.pe, i, dist[vp.local_pos(i)]);
   return dist;                                                          // only pe 0 has a correct distance array
 }
  
@@ -349,7 +391,7 @@ pvector<WeightT> DeltaStep(const WGraph &g, NodeID source, WeightT delta) {
       }
       for (size_t i=curr_bin_index; i < local_bins.size(); i++) {
         if (!local_bins[i].empty()) {
-          #pragma omp critical
+          #pragma omp critical                                          // changing next bin index changes the shared indexex (which is shared)
           next_bin_index = min(next_bin_index, i);
           break;
         }

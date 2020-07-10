@@ -43,6 +43,8 @@ propagation phase.
 */
 
 
+// WARNING! MISSING ATOMIC CAS
+
 using namespace std;
 typedef float ScoreT;
 typedef double CountT;
@@ -69,7 +71,7 @@ void PBFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
         NodeID u = *q_iter;
         for (NodeID &v : g.out_neigh(u)) {
           if ((depths[v] == -1) &&
-              (compare_and_swap(depths[v], static_cast<NodeID>(-1), depth))) {
+              (compare_and_swap(depths[v], static_cast<NodeID>(-1), depth))) {          // is the depths[v] == -1 comparison just for short circuit evaluation?
             lqueue.push_back(v);
           }
           if (depths[v] == depth) {
@@ -91,16 +93,68 @@ void PBFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
   depth_index.push_back(queue.begin());
 }
 
+// path counts, depths are partitioned
+void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
+    Bitmap &succ, vector<SlidingQueue<NodeID>::iterator> &depth_index,
+    SlidingQueue<NodeID> &queue, Partition<NodeID> vp, long* PATH_LOCK) {
+  pvector<NodeID> depths(vp.max_width, -1);
+  if (source >= vp.start && source < vp.end) {
+    depths[vp.local_pos(source)] = 0;
+    path_counts[vp.local_pos(source)] = 1;
+    queue.push_back(source);                            // queue is symmetric but not partitioned, only one PE pushbacks
+    depth_index.push_back(queue.begin());
+  }
+  queue.slide_window();                                 // synch point
+  const NodeID* g_out_start = g.out_neigh(0).begin();   // this is the head of the neighbor array yeah? so how does partitioning affect this?
+  NodeID depth = 0;
+  QueueBuffer<NodeID> lqueue(queue);                    // each PE maintains a queue buffer 
+  while (!queue.empty()) {
+    depth++;                                            // Thread local so each PE should maintain and increment a copy
+    Partition<NodeID> qp(queue.size());                 // Divide processing of queue - if npes > q.size then pe npes-1 handles entire queue, not optimal for large npes
+    for (auto q_iter = qp.start; q_iter < qp.end; q_iter++) {
+      NodeID u = *q_iter;
+      for (NodeID &v : g.out_neigh(u)) {
+        if (shmem_int_atomic_fetch(depths.begin()+vp.local_pos(v), vp.recv(v)) == -1) {                 // needs to be CAS 
+          shmem_int_atomic_swap(depths.begin()+vp.local_pos(v), depth, vp.recv(v));
+        //if ((depths[v] == -1) &&
+        //    (compare_and_swap(depths[v], static_cast<NodeID>(-1), depth))) {          // is the depths[v] == -1 comparison just for short circuit evaluation?
+          lqueue.push_back(v);
+        }
+        if (shmem_int_atomic_fetch(depths.begin()+vp.local_pos(v), vp.recv(v)) == depth) {
+          //succ.set_bit_atomic(&v - g_out_start);                                // why does this have to be atomic? if its already set, resetting it shouldnt matter?
+          succ.set_bit(&v - g_out_start);               // g_out might be screwed up by the partitioning...
+          // this command is supposed to be atomic, but requires 2 shmem instructions at best:
+          // shmem_atomic_fetch to get path_counts[u], and shmem_atomic_add to add that value to path_counts[v]
+          // so is a lock the only solution?
+          shmem_set_lock(PATH_LOCK);            // should be test lock since we dont want everyone to exec this sequentially
+          CountT pc_u = shmem_double_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
+          for (int i = 0; i < npes; i++)                // doesnt have to be a loop since only one PE has a copy of paths[v]
+            shmem_double_atomic_add(path_counts.begin()+vp.local_pos(v), pc_u, i);
+          shmem_clear_lock(PATH_LOCK);
+          //path_counts[v] += path_counts[u];
+        }
+      }
+    }
+    lqueue.flush();
+    if (vp.pe == 0)
+      depth_index.push_back(queue.begin());
+    queue.slide_window();                               // synch point
+  }
+  if (vp.pe == 0)
+    depth_index.push_back(queue.begin());
+}
+
 
 pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
-                        NodeID num_iters) {
+                        NodeID num_iters, long* LOCK) {
   Timer t;
   t.Start();
-  pvector<ScoreT> scores(g.num_nodes(), 0);
-  pvector<CountT> path_counts(g.num_nodes());
-  Bitmap succ(g.num_edges_directed());
+  Partition<NodeID> vp(g.num_nodes());
+  pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
+  pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
+  Bitmap succ(g.num_edges_directed());                          // symmetric non-partitioned bitmap
   vector<SlidingQueue<NodeID>::iterator> depth_index;
-  SlidingQueue<NodeID> queue(g.num_nodes());
+  SlidingQueue<NodeID> queue(g.num_nodes());                    // really wish i knew how to get away with a smaller queue. resize when necessary?
   t.Stop();
   PrintStep("a", t.Seconds());
   const NodeID* g_out_start = g.out_neigh(0).begin();
@@ -112,8 +166,10 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     depth_index.resize(0);
     queue.reset();
     succ.reset();
-    PBFS(g, source, path_counts, succ, depth_index, queue);
-    t.Stop();
+    PBFS(g, source, path_counts, succ, depth_index, queue, vp, LOCK);
+    shmem_global_exit(0);
+    exit(0);
+    /*t.Stop();
     PrintStep("b", t.Seconds());
     pvector<ScoreT> deltas(g.num_nodes(), 0);
     t.Start();
@@ -132,16 +188,16 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
       }
     }
     t.Stop();
-    PrintStep("p", t.Seconds());
+    PrintStep("p", t.Seconds());*/
   }
   // normalize scores
-  ScoreT biggest_score = 0;
+  /*ScoreT biggest_score = 0;
   #pragma omp parallel for reduction(max : biggest_score)
   for (NodeID n=0; n < g.num_nodes(); n++)
     biggest_score = max(biggest_score, scores[n]);
   #pragma omp parallel for
   for (NodeID n=0; n < g.num_nodes(); n++)
-    scores[n] = scores[n] / biggest_score;
+    scores[n] = scores[n] / biggest_score;*/
   return scores;
 }
 
@@ -230,18 +286,38 @@ int main(int argc, char* argv[]) {
   CLIterApp cli(argc, argv, "betweenness-centrality", 1);
   if (!cli.ParseArgs())
     return -1;
+
   if (cli.num_iters() > 1 && cli.start_vertex() != -1)
     cout << "Warning: iterating from same source (-r & -i)" << endl;
-  Builder b(cli);
-  Graph g = b.MakeGraph();
-  SourcePicker<Graph> sp(g, cli.start_vertex());
-  auto BCBound =
-    [&sp, &cli] (const Graph &g) { return Brandes(g, sp, cli.num_iters()); };
-  SourcePicker<Graph> vsp(g, cli.start_vertex());
-  auto VerifierBound = [&vsp, &cli] (const Graph &g,
+
+  shmem_init();
+
+  long* LOCK = (long*) shmem_calloc(1, sizeof(long));
+  static long pSync[SHMEM_REDUCE_SYNC_SIZE];
+  static long lng_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+  static double dbl_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+
+  for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+    pSync[i] = SHMEM_SYNC_VALUE;
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) {
+    lng_pWrk[i] = SHMEM_SYNC_VALUE;
+    dbl_pWrk[i] = SHMEM_SYNC_VALUE;
+  }
+
+  {
+    Builder b(cli);
+    Graph g = b.MakeGraph(pSync, lng_pWrk);
+    SourcePicker<Graph> sp(g, cli.start_vertex());
+    auto BCBound =
+      [&sp, &cli] (const Graph &g) { return Brandes(g, sp, cli.num_iters(), LOCK); };
+    SourcePicker<Graph> vsp(g, cli.start_vertex());
+    auto VerifierBound = [&vsp, &cli] (const Graph &g,
                                      const pvector<ScoreT> &scores) {
-    return BCVerifier(g, vsp, cli.num_iters(), scores);
-  };
-  BenchmarkKernel(cli, g, BCBound, PrintTopScores, VerifierBound);
+      return BCVerifier(g, vsp, cli.num_iters(), scores);
+    };
+    BenchmarkKernel(cli, g, BCBound, PrintTopScores, VerifierBound);
+    shmem_free(LOCK);
+  }
+  shmem_finalize();
   return 0;
 }

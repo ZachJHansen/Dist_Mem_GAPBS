@@ -354,7 +354,7 @@ int main(int argc, char* argv[]) {
     ll_pWrk[i] = SHMEM_SYNC_VALUE;
   }
 
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=40000000";
+  char size_env[] = "SHMEM_SYMMETRIC_SIZE=16G";
   putenv(size_env);
   int npes = shmem_n_pes();
   int pe = shmem_my_pe();

@@ -328,78 +328,26 @@ class BuilderBase {
     CSRGraph<NodeID_, DestID_, invert> g;
     {  // extra scope to trigger earlier deletion of el (save memory)
       EdgeList el;
+      printf("check 1\n");
       if (cli_.filename() != "") {
         Reader<NodeID_, DestID_, WeightT_, invert> r(cli_.filename());
         if ((r.GetSuffix() == ".sg") || (r.GetSuffix() == ".wsg")) {
           return r.ReadSerializedGraph(pSync, pWrk);
         } else {
+          printf("check 2\n");
           el = r.ReadFile(needs_weights_);
+          printf("check 3\n");
         }
       } else if (cli_.scale() != -1) {
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
         el = gen.GenerateEL(cli_.uniform());
+        shmem_barrier_all();
       }
+      printf("EL is created\n");
       g = MakeGraphFromEL(el, &p, pSync, pWrk);
     }
     return SquishGraph(g, &p, pSync, pWrk);
   }
-
-
-  // Relabels (and rebuilds) graph by order of decreasing degree
- /* static
-  CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
-      const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync,long* pWrk) {
-    if (g.directed()) {
-      std::cout << "Cannot relabel directed graph" << std::endl;
-      std::exit(-11);
-    }
-    Timer t;
-    t.Start();
-    Partition<NodeID_> vp(g.num_nodes());
-    typedef std::pair<int64_t, NodeID_> degree_node_p;
-    pvector<degree_node_p> degree_id_pairs(g.num_nodes());
-    #pragma omp parallel for
-    for (NodeID_ n=0; n < g.num_nodes(); n++)
-      degree_id_pairs[n] = std::make_pair(g.out_degree(n), n);
-    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(),
-              std::greater<degree_node_p>());
-    pvector<NodeID_> degrees(g.num_nodes());
-    pvector<NodeID_> new_ids(g.num_nodes());
-    #pragma omp parallel for
-    for (NodeID_ n=0; n < g.num_nodes(); n++) {
-      degrees[n] = degree_id_pairs[n].first;
-      new_ids[degree_id_pairs[n].second] = n;
-    }
-    pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
-    DestID_* neighs = new DestID_[offsets[g.num_nodes()]];
-    //DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs);
-    DestID_** index = CSRGraph<NodeID_, DestID_>::OLDGenIndex(offsets, neighs);
-    #pragma omp parallel for
-    for (NodeID_ u=0; u < g.num_nodes(); u++) {
-      for (NodeID_ v : g.out_neigh(u))
-        neighs[offsets[new_ids[u]]++] = new_ids[v];
-      std::sort(index[new_ids[u]], index[new_ids[u]+1]);
-    }
-    size_t max_neigh = 0;
-    for (int i = 0; i < vp.npes; i++)
-      if (offsets[i * (vp.partition_width+1)] > max_neigh)
-        max_neigh = offsets[i * (vp.partition_width+1)];
-    pvector<SGOffset> sym_offsets(vp.max_width+1);
-    for (auto i = vp.start; i <= vp.end; i++)
-      sym_offsets[i-vp.start] = offsets[i];
-    printf("PE %d | Max neigh: %lu\n", vp.pe, max_neigh);
-    for (o : sym_offsets)
-      printf("PE %d | o = %lu\n", vp.pe, o);
-    DestID_* sym_neighs = (DestID_*) shmem_calloc(max_neigh, sizeof(DestID_));
-    DestID_** sym_index = CSRGraph<NodeID_, DestID_>::GenIndex(sym_offsets, sym_neighs, &vp);
-    for (auto i = vp.start; i < vp.end; i++)
-      sym_neighs[i-vp.start] = neighs[i];
-    t.Stop();
-    PrintTime("Relabel", t.Seconds());
-    return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), sym_index, sym_neighs, pSync, pWrk);
-  }
-};*/
-
 
 // UNOPTIMIZED! Possibly requires partitioned parallel sorting and partitioned pvectors for space efficiency.
   static
