@@ -340,6 +340,12 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
+
+  //char size_env[] = "SHMEM_SYMMETRIC_SIZE=16G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=8G";
+  putenv(size_env);
+
+
   static long FRONTIER_LOCK = 0;                                                      // Create a mutex lock in symmetric memory to control access to the frontier
   shmem_init();
 
@@ -354,8 +360,6 @@ int main(int argc, char* argv[]) {
     ll_pWrk[i] = SHMEM_SYNC_VALUE;
   }
 
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=16G";
-  putenv(size_env);
   int npes = shmem_n_pes();
   int pe = shmem_my_pe();
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
@@ -364,7 +368,10 @@ int main(int argc, char* argv[]) {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
     //printf("Last check\n");
-    //g.PrintTopology(LOCK);
+    shmem_barrier_all();
+    //g.PrintTopology();
+    //shmem_global_exit(0);
+    //exit(0);
 
     shmem_barrier_all();
     //printf("PE %d says out_index starts at %p\n", pe, g.out_index_);

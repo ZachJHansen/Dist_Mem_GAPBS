@@ -66,28 +66,51 @@ class BuilderBase {
     return NodeWeight<NodeID_, WeightT_>(e.u, e.v.w);
   }
 
-  // needs shmem parallelism
   NodeID_ FindMaxNodeID(const EdgeList &el) {
-    NodeID_ max_seen = 0;
-    #pragma omp parallel for reduction(max : max_seen)
-    for (auto it = el.begin(); it < el.end(); it++) {
+    //if (el.symmetric()) {
+    long* pSync = (long*) shmem_calloc(SHMEM_REDUCE_SYNC_SIZE, sizeof(long));
+    int* pWrk = (int*) shmem_calloc(SHMEM_REDUCE_MIN_WRKDATA_SIZE, sizeof(int));
+    for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+      pSync[i] = SHMEM_SYNC_VALUE;
+    for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) 
+      pWrk[i] = SHMEM_SYNC_VALUE;
+    shmem_barrier_all();                                      // not needed due to calloc?
+    NodeID_* max_seen = (NodeID_*) shmem_calloc(1, sizeof(NodeID_));
+    for (auto it = el.begin(); it < el.end(); it++) {              // find local max  - is el.end() max width (possibly uninit values) or local width?
       Edge e = *it;
-      max_seen = std::max(max_seen, e.u);
-      max_seen = std::max(max_seen, (NodeID_) e.v);
+      *max_seen = std::max(*max_seen, e.u);
+      *max_seen = std::max(*max_seen, (NodeID_) e.v);
     }
-    return max_seen;
+    shmem_barrier_all();
+    shmem_int_max_to_all(max_seen, max_seen, 1, 0, 0, shmem_n_pes(), pWrk, pSync);
+    return *max_seen;
+  /*  } else {
+      NodeID_ max_seen = 0;
+      #pragma omp parallel for reduction(max : max_seen)
+      for (auto it = el.begin(); it < el.end(); it++) {
+        Edge e = *it;
+        max_seen = std::max(max_seen, e.u);
+        max_seen = std::max(max_seen, (NodeID_) e.v);
+      }
+      return max_seen;
+    }*/
   }
 
   // Return pvector representing degrees for vertices assigned to local PE
   // pvector is symmetric and up-to-date but unsynched - do not synch!
   // pvectors on each pe should be concatenated to make a complete list (once unused remainder is trimmed off PEs != npes-1)
   // ASSUMES NODEIDS ARE INTS
-  pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition<NodeID_>* vp, Partition<>* ep) {
+  pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition<NodeID_>* vp, Partition<>* ep = NULL) {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
+    printf("Pe %d has max width %d and NodeID_ size %lu\n", vp->pe, vp->max_width, sizeof(NodeID_));
     //#pragma omp parallel for
-    for (auto it = el.begin()+(ep->start); it < el.begin()+(ep->end); it++) {
-      Edge e = *it;
+    Edge e;
+    /*shmem_barrier_all();
+    shmem_global_exit(0);
+    exit(0);*/
+    for (auto it = el.begin()/*+(ep->start)*/; it < el.end()/*.begin()+(ep->end)*/; it++) {
+      e = *it;
       if (symmetrize_ || (!symmetrize_ && !transpose)) {
         receiver = vp->recv(e.u);
         local_v = vp->local_pos(e.u);
@@ -100,6 +123,10 @@ class BuilderBase {
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
       }
     }
+    printf("I escaped!\n");
+    shmem_barrier_all();
+    //shmem_global_exit(0);
+    //exit(0);
     return degrees;
   }
 
@@ -228,11 +255,18 @@ class BuilderBase {
   */
   void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
                DestID_** neighs, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
+    printf("Entered MakeCSR\n");
     SGOffset neighbor;
     int64_t receiver, local_v;
     *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
-    Partition<> ep(el.size());                                                     // bounds for dividing work (edges to process) between PEs
-    pvector<NodeID_> degrees = CountDegrees(el, transpose, vp, &ep);                  // each pe maintains an array of degrees for the vertices assigned to that pe
+    printf("PE %d has partition start = %d and end = %d\n", vp->pe, vp->start, vp->end);
+    //long* num_edges = (long*) shmem_calloc(1, sizeof(long));
+    //shmem_long_sum_to_all(num_edges, el.local_width(), 1, 0, 0, shmem_n_pes(), pWrk, pSync);  
+    //Partition<> ep(el.size());                                                     // bounds for dividing work (edges to process) between PEs
+    pvector<NodeID_> degrees = CountDegrees(el, transpose, vp);                  // each pe maintains an array of degrees for the vertices assigned to that pe
+    printf("Degrees size = %lu\n", degrees.size());
+    //shmem_global_exit(0);
+    //exit(0);
     shmem_barrier_all();
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);                     // offset from start of local neighs array, NOT the global array (symmetric & unsynched)
     /*if (transpose) {
@@ -249,10 +283,13 @@ class BuilderBase {
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, offsets.begin()+(vp->end - vp->start), 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space?               
 
+    printf("oh boy here i go killin again\n");
+    //shmem_global_exit(0);
+    //exit(0);
     *neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
     *index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, *neighs, vp);
     shmem_barrier_all();
-    for (auto it = el.begin()+ep.start; it < el.begin()+ep.end; it++) {                           // if u || v are part of processing PE's partition, edge must be included on that PE
+    for (auto it = el.begin()/*+ep.start*/; it < el.end()/*el.begin()+ep.end*/; it++) {                           // if u || v are part of processing PE's partition, edge must be included on that PE
       Edge e = *it;
       if (symmetrize_ || (!symmetrize_ && !transpose)) {
         receiver = vp->recv(e.u);
@@ -297,16 +334,50 @@ class BuilderBase {
     printf("Coheck 2\n");*/
   }
 
-  CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition<NodeID_>* p, long* pSync, long* pWrk) {
+  CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition<NodeID_>* p, long* pSync, long* pWrk, int src_opt) {
     DestID_ **index = nullptr, **inv_index = nullptr;
     DestID_ *neighs = nullptr, *inv_neighs = nullptr;
     Timer t;
     t.Start();
     if (num_nodes_ == -1)
       num_nodes_ = FindMaxNodeID(el)+1;
-    if (needs_weights_)
-      Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el);
+    shmem_barrier_all();
+    printf("Max node is %lu\n", num_nodes_);
+    if (needs_weights_) {
+      printf("ing weights\n");
+      Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el, src_opt);
+    }
+    printf("PE %d | EL size inside MakeGraphFromEL: %lu\n", shmem_my_pe(), el.size());
+    shmem_barrier_all();
+    // transplanted logic
+    int local_v, receiver;
+    *p = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
+    pvector<NodeID_> degrees(p->max_width, 0, true);                                     // Symmetric pvector of size max partition width
+    printf("Pe %d has max width %d and NodeID_ size %lu\n", p->pe, p->max_width, sizeof(NodeID_));
+    Edge e;
+    for (auto it = el.begin()/*+(ep->start)*/; it < el.end()/*.begin()+(ep->end)*/; it++) {
+      e = *it;
+      if (symmetrize_ || (!symmetrize_ && !false)) {
+        receiver = p->recv(e.u);
+        local_v = p->local_pos(e.u);
+        shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.u on pe receiver (could be local PE) 
+      }
+      if (symmetrize_ || (!symmetrize_ && false)) {
+        receiver = p->recv(e.v);
+        local_v = p->local_pos(e.v);
+      //  printf("PE %d is about to increment degrees[%d] (node %d) on PE %d\n", vp->pe, local_v, e.v, receiver);
+        shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
+      }
+    }
+    printf("I escaped!\n");
+    BAIL();
+    // end transplant
+   // shmem_global_exit(0);
+    //exit(0);
     MakeCSR(el, false, &index, &neighs, p, pSync, pWrk);
+    printf("Made CSR\n");
+  //  shmem_global_exit(0);
+  //  exit(0);
     if (!symmetrize_ && invert) {
       MakeCSR(el, true, &inv_index, &inv_neighs, p, pSync, pWrk);
     }
@@ -324,28 +395,47 @@ class BuilderBase {
   }
 
   CSRGraph<NodeID_, DestID_, invert> MakeGraph(long* pWrk, long* pSync) {
+    int src_option;                                                             // was the EL from a el file or synthetic? matters for weight generation
     Partition<NodeID_> p; 
     CSRGraph<NodeID_, DestID_, invert> g;
     {  // extra scope to trigger earlier deletion of el (save memory)
-      EdgeList el;
-      printf("check 1\n");
+      EdgeList el;                                                              // each PE is assigned a portion of the edge list with rr partitioning
       if (cli_.filename() != "") {
         Reader<NodeID_, DestID_, WeightT_, invert> r(cli_.filename());
         if ((r.GetSuffix() == ".sg") || (r.GetSuffix() == ".wsg")) {
           return r.ReadSerializedGraph(pSync, pWrk);
         } else {
-          printf("check 2\n");
+          src_option = 0;
           el = r.ReadFile(needs_weights_);
-          printf("check 3\n");
+          printf("more are coming\n");
+        //  ~el;
+        //  shmem_global_exit(0);
+        //  exit(0);
         }
       } else if (cli_.scale() != -1) {
+        src_option = 1;
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
         el = gen.GenerateEL(cli_.uniform());
+        printf("check\n");
+        //BAIL();
         shmem_barrier_all();
       }
-      printf("EL is created\n");
-      g = MakeGraphFromEL(el, &p, pSync, pWrk);
+    //  shmem_barrier_all();
+     // printf("Here\n");
+    //} // extra scope, remove later
+    //shmem_barrier_all();
+    //shmem_global_exit(0);
+    //exit(0);
+      shmem_barrier_all();
+      printf("EL is created with size %lu, EL[0]: (%d, %d)\n", el.size(), (*(el.begin())).u, (*(el.begin())).v);
+      //for (EdgePair<int, int> x : el)
+      //  printf("PE %d | (%d, %d)\n", shmem_my_pe(), x.u, x.v);
+      //shmem_barrier_all();
+      g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
     }
+    shmem_barrier_all();
+    shmem_global_exit(0);
+    exit(0);
     return SquishGraph(g, &p, pSync, pWrk);
   }
 

@@ -93,7 +93,7 @@ template <typename T_> struct RoundRobin {
   int owner(T_ k) {
     k++;                                // change to one-indexing
     if (k < 1) {
-      printf("Can't partition < 1 element! Breaking...\n");
+      printf("Can't partition 1 element! Breaking...\n");
       shmem_global_exit(1);
       exit(1);
     }
@@ -135,6 +135,7 @@ template <typename T_> struct RoundRobin {
       temp_pWrk[i] = SHMEM_SYNC_VALUE;
     shmem_barrier_all();
     if (sizeof(T_) == sizeof(int)) {
+    //  printf("Huzzah- max_width_ = %p, local = %d\n", (void*) max_width_, *local_width_);
       shmem_int_max_to_all(max_width_, local_width_, 1, 0, 0, npes, temp_pWrk, temp_pSync);
     } else {
       printf("Haven't finished implementing generically typed RoundRobin\n");
@@ -155,10 +156,16 @@ class pvector {
 
   pvector() : start_(nullptr), end_size_(nullptr), end_capacity_(nullptr) {}
 
-  explicit pvector(size_t num_elements, bool symmetric = false,
-                  bool partitioned = false) : symmetric_(symmetric), partitioned_(partitioned) {
+  explicit pvector(size_t num_elements, bool symmetric = false) : symmetric_(symmetric) {
+    pe = shmem_my_pe();
+    npes = shmem_n_pes();
+    local_width_ = (long*) shmem_calloc(1, sizeof(long));
     if (symmetric_) {
-      start_ = (T_ *) shmem_calloc(num_elements, sizeof(T_));
+      printf("Instantiating a pvector\n");
+      if (num_elements == 0)
+        start_ = (T_ *) shmem_calloc(1, sizeof(T_));                            // is this going to cause problems? callocing with 0 elems returns nullptr
+      else 
+        start_ = (T_ *) shmem_calloc(num_elements, sizeof(T_));
       end_size_ = start_ + num_elements;
       end_capacity_ = end_size_;
     } else {
@@ -173,6 +180,7 @@ class pvector {
   }
 
   pvector(iterator copy_begin, iterator copy_end) : pvector(copy_end - copy_begin) {
+    printf("copying a pvector\n");
     #pragma omp parallel for
     for (size_t i=0; i < capacity(); i++)
       start_[i] = copy_begin[i];
@@ -185,6 +193,7 @@ class pvector {
   pvector(pvector &&other)
       : symmetric_(other.symmetric_), start_(other.start_), end_size_(other.end_size_),
         end_capacity_(other.end_capacity_) {
+    printf("moving a pvector\n");
     other.start_ = nullptr;
     other.end_size_ = nullptr;
     other.end_capacity_ = nullptr;
@@ -192,7 +201,9 @@ class pvector {
 
   // want move assignment
   pvector& operator= (pvector &&other) {
-    //printf("move\n");
+    printf("assigning (moving) a pvector\n");
+    local_width_ = other.local_width_;
+    max_width_ = other.max_width_;
     symmetric_ = other.symmetric_;
     start_ = other.start_;
     end_size_ = other.end_size_;
@@ -200,14 +211,17 @@ class pvector {
     other.start_ = nullptr;
     other.end_size_ = nullptr;
     other.end_capacity_ = nullptr;
+    other.local_width_ = nullptr;
     return *this;
   }
 
   ~pvector() {
     if (start_ != nullptr) {
       if (symmetric_) {
+        printf("PE %d is calling delete pvector\n", shmem_my_pe());
         shmem_free(start_);
       } else {
+        printf("PE %d is calling delete pvector\n", shmem_my_pe());
         delete[] start_;
       }
     }
@@ -217,22 +231,23 @@ class pvector {
   void reserve(size_t num_elements) {
     if (num_elements > capacity()) {
       if (symmetric_) { 
-        shmem_barrier_all();
+        printf("reserving a symmetric pvector\n");
         T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
         #pragma omp parallel for
         for (size_t i=0; i < size(); i++)
           new_range[i] = start_[i];
         end_size_ = new_range + size();
+        printf("PE %d is calling shmem free on pvector during reserve\n", shmem_my_pe());
         shmem_free(start_);
         start_ = new_range;
         end_capacity_ = start_ + num_elements;
-        shmem_barrier_all();
       } else {
         T_ *new_range = new T_[num_elements];
         #pragma omp parallel for
         for (size_t i=0; i < size(); i++)
           new_range[i] = start_[i];
         end_size_ = new_range + size();
+        printf("PE %d is calling delete on pvector during reserve\n", shmem_my_pe());
         delete[] start_;
         start_ = new_range;
         end_capacity_ = start_ + num_elements;
@@ -244,12 +259,8 @@ class pvector {
     return end_size_ == start_;
   }
 
-  bool symmetric() {
+  bool symmetric() const {
     return symmetric_;
-  }
-
-  bool partitioned() {
-    return partitioned_;
   }
 
   void clear() {
@@ -261,6 +272,31 @@ class pvector {
     end_size_ = start_ + num_elements;
   }
 
+  // Each PE only holds a portion of an edge list typically
+  // So it's useful to remember the combined el size to avoid broadcasts 
+  void set_combined_length(int64_t len) {
+    combined_size_ = len;
+  }
+
+  int64_t combined_length() {
+    return combined_size_;
+  }
+
+  // i know its a narrowing conversion but i really need v1 to work...
+  void set_widths(size_t max_width, size_t local_width) {
+    *local_width_ = (long) local_width;
+    max_width_ = max_width;
+    end_size_ = start_ + local_width;
+  }
+
+  T_ max_width() {
+    return max_width_;
+  }
+
+  long* local_width() const {
+    return local_width_;
+  }
+
   T_& operator[](size_t n) {
     return start_[n];
   }
@@ -270,16 +306,19 @@ class pvector {
   }
 
   void push_back(T_ val) {
-    if (size() == capacity()) {
-      size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
-      reserve(new_size);
-    }
-    if (symmetric_) {
+    if (symmetric_) {                          
+      if (size() == capacity()) {
+        size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
+        reserve(new_size);
+      }
       *end_size_ = val;
       end_size_++;
-      shmem_barrier_all();                                      // do we want all pes to push back the same element, or broadcast individual elements?
-      //shmem_broadcast
+      shmem_barrier_all();                                      // all pes push back the same element
     } else {
+      if (size() == capacity()) {
+        size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
+        reserve(new_size);
+      }
       *end_size_ = val;
       end_size_++;
     }
@@ -314,6 +353,7 @@ class pvector {
   }
 
   void swap(pvector &other) {
+    printf("swapping a pvector\n");
     std::swap(start_, other.start_);
     std::swap(end_size_, other.end_size_);
     std::swap(end_capacity_, other.end_capacity_);
@@ -388,7 +428,12 @@ class pvector {
   T_* start_;
   T_* end_size_;
   T_* end_capacity_;
+  int64_t combined_size_;
+  long* local_width_;
+  size_t max_width_;
   bool symmetric_;
+  int pe;
+  int npes;
   static const size_t growth_factor = 2;
 };
 
