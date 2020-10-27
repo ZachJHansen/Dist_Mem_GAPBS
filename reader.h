@@ -49,31 +49,41 @@ class Reader {
   }
 
   EdgeList ReadInEL(std::ifstream &in) {
-    EdgeList el(0, true);                                       // Initialize a zero length symmetric pvector
+    EdgeList el(0);                                       // Initialize a 0 element pvector on every PE
     NodeID_ u, v;
-    printf("check 2.1\n");
-    int i = 0;
-    try {
-      while (in >> u >> v) {
-        i++;
+    RoundRobin<NodeID_> rr;
+    int64_t i = 0;
+    while (in >> u >> v) {
+      if (rr.owner(i) == rr.pe) {                         // every PE pushes back to their local pvector (edgelist)
         el.push_back(Edge(u, v));
+        rr.inc_local();
       }
-    } catch (...){
-      printf("i = %d\n", i);
-      shmem_global_exit(0);
-      exit(0);
+      i++;
     }
-    printf("Check 2.2\n");
+    shmem_barrier_all();
+    size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
+    el.set_widths(max_width, (size_t) rr.local_width());
+    el.set_combined_length(i);
     return el;
   }
 
   EdgeList ReadInWEL(std::ifstream &in) {
-    EdgeList el(0, true);
+    EdgeList el(0);
     NodeID_ u;
     NodeWeight<NodeID_, WeightT_> v;
+    RoundRobin<NodeID_> rr;
+    int64_t i = 0;
     while (in >> u >> v) {
-      el.push_back(Edge(u, v));
+      if (rr.owner(i) == rr.pe) {                         // every PE pushes back to their local pvector (edgelist)
+        el.push_back(Edge(u, v));
+        rr.inc_local();
+      }
+      i++;
     }
+    shmem_barrier_all();
+    size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
+    el.set_widths(max_width, (size_t) rr.local_width());
+    el.set_combined_length(i);
     return el;
   }
 
