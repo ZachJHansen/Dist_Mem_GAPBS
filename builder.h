@@ -103,7 +103,6 @@ class BuilderBase {
   pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition<NodeID_>* vp, Partition<>* ep = NULL) {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
-    printf("Pe %d has max width %d and NodeID_ size %lu\n", vp->pe, vp->max_width, sizeof(NodeID_));
     //#pragma omp parallel for
     Edge e;
     int flush_counter = 0;
@@ -124,7 +123,6 @@ class BuilderBase {
       if (flush_counter % 2000000 == 0)
         shmem_barrier_all();
     }
-    printf("PE %d escaped count degrees!\n", vp->pe);
     shmem_barrier_all();
     return degrees;
   }
@@ -144,6 +142,7 @@ class BuilderBase {
   static
   pvector<SGOffset> ParallelPrefixSum(const pvector<NodeID_> &degrees) {
     const size_t block_size = 1<<20;
+    //const size_t block_size = 2;
     const size_t num_blocks = (degrees.size() + block_size - 1) / block_size;
     pvector<SGOffset> local_sums(num_blocks);
     #pragma omp parallel for
@@ -180,7 +179,6 @@ class BuilderBase {
   // Side effect: neighbor IDs will be sorted
   void SquishCSR(const CSRGraph<NodeID_, DestID_, invert> &g, bool transpose,
                  DestID_*** sq_index, DestID_** sq_neighs, Partition<NodeID_> vp, long* pSync, long* pWrk, bool debug_print = false) {
-    printf("made it to squishcsr\n");
     NodeID_ indx;
     pvector<NodeID_> diffs(vp.max_width);
     DestID_ *n_start, *n_end;
@@ -190,9 +188,11 @@ class BuilderBase {
 //      if (vp.pe == 0)
   //      printf("PE %d has indx %d and n %d\n", vp.pe, indx, n);
       if (transpose) {
+    //    printf(debug_print ? "Transpose - invert\n" : "Transpose - no invert\n");
         n_start = g.in_neigh(n).begin();
         n_end = g.in_neigh(n).end();
       } else {
+    //    printf(debug_print ? "no transpose - invert\n" : "No transpose - no invert\n");
         n_start = g.out_neigh(n).begin();
         n_end = g.out_neigh(n).end();
       }
@@ -203,43 +203,48 @@ class BuilderBase {
       //if (vp.pe == 0)
         //printf("PE %d has new_end %d and n_start %d\n", vp.pe, *new_end, *n_start);
     }
-    printf("PE %d says diffs.size = %lu\n", vp.pe, diffs.size());
+    //printf("PE %d says diffs.size = %lu\n", vp.pe, diffs.size());
     pvector<SGOffset> sq_offsets = ParallelPrefixSum(diffs);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    printf("sq_offsets: %p\n", (void*) sq_offsets.begin());
     shmem_long_max_to_all(max_neigh, sq_offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
     //*sq_neighs = new DestID_[sq_offsets[vp.end-vp.start]];
-    //printf("pe %d - squish neigh len = %lu\n", vp.pe, sq_offsets[vp.end-vp.start]);
+    printf("pe %d - squish neigh len = %lu | max_neigh = %lu\n", vp.pe, sq_offsets[vp.end-vp.start], *max_neigh);
     *sq_neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     *sq_index = CSRGraph<NodeID_, DestID_>::GenIndex(sq_offsets, *sq_neighs, &vp);
-    printf("PE %d | fking sq_indx: %p\n", vp.pe, (void*) *sq_index);
+    printf("sq_neigh: %p\n", (void*) sq_neighs);
+    //printf("PE %d | fking sq_indx: %p\n", vp.pe, (void*) *sq_index);
     shmem_barrier_all();
-    #pragma omp parallel for private(n_start)
+    //#pragma omp parallel for private(n_start)
     for (NodeID_ n=vp.start; n < vp.end; n++) {
       indx = n - vp.start;
       if (transpose)
-        n_start = g.in_neigh(n).begin();
+        n_start = g.in_neigh(n).begin();        // transpose for incoming neighbors
       else
         n_start = g.out_neigh(n).begin();
-      /*try {
-        std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);
-      } catch (...) {
-        printf("Pe %d | n_start: %p | n_start+diffs[%d]: %p | sq_index[%d]: %p\n", vp.pe, (void*) n_start, indx, (void*) (n_start+diffs[indx]), indx, (*sq_index)[indx]);
-      }*/
       if (n_start == nullptr)
         printf("N= %d | N start is a nullptr\n", n);
       if (diffs.begin()+indx == nullptr)
         printf("N = %d | diffs+indx is a nullptr\n", n);
       if ((*sq_index)+indx == nullptr)
         printf("N = %d | sq+indx is a nullptr\n", n);
-      if (!debug_print)
-        std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);
+      if (n_start+diffs[indx] != nullptr) {
+        for (NodeID_ i = 0; i <= diffs[indx]; i++) {                         
+          if (((*sq_index)[indx]+i) == nullptr || n_start+i == nullptr) {
+            printf("Is it too much to ask to have sharks with frickin laser beams?!\n");
+          } else {
+            *((*sq_index)[indx]+i) = *(n_start+i);
+          }
+        }
+        //std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);     // so n_start could be on a foreign PE, will that fuck up copying?
+      } else {
+        printf("PE %d ran into trouble with n = %d\n", vp.pe, n);
+      }
     }
     shmem_barrier_all();
-    printf("Look we are finally free!\n");
     if (debug_print) {
       int* temp = (int*) shmem_malloc(sizeof(int));
       printf("PE %d thinks temp is %p\n", vp.pe, (void*) temp);
-    //  BAIL();
     }
   }
 
@@ -248,14 +253,12 @@ class BuilderBase {
     DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
     SquishCSR(g, false, &out_index, &out_neighs, *vp, pSync, pWrk);
     shmem_barrier_all();
-    printf("left first squishCSR\n");
     //shmem_set_lock(PRINT_LOCK);
     //for (int i = vp->start; i <= vp->end; i++)
       //printf("PE: %d Node %d has out_index %p\n", vp->pe, i, (void *) out_index[i-vp->start]); /* *(out_index[i-vp->start]));*/
     //shmem_clear_lock(PRINT_LOCK);
     //printf("PE %d has out_index start: %p\n", vp->pe, (void*) &out_index);
     if (g.directed()) {
-      printf("Entering g directed block\n");
       shmem_barrier_all();
       // issue lies below
       if (invert)
@@ -266,7 +269,6 @@ class BuilderBase {
                                                 out_neighs, in_index,
                                                 in_neighs, pSync, pWrk);
     } else {
-      printf("Entering g undirected block\n");
       shmem_barrier_all();
       return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), out_index,
                                                 out_neighs, pSync, pWrk);
@@ -285,16 +287,13 @@ class BuilderBase {
     SGOffset neighbor;
     int64_t receiver, local_v;
     *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
-    printf("PE %d has partition start = %d and end = %d\n", vp->pe, vp->start, vp->end);
+  //  printf("PE %d has partition start = %d and end = %d\n", vp->pe, vp->start, vp->end);
     pvector<NodeID_> degrees = CountDegrees(el, transpose, vp);                  // each pe maintains an array of degrees for the vertices assigned to that pe
-    printf("Degrees size = %lu\n", degrees.size());
+  //  printf("Degrees size = %lu\n", degrees.size());
     shmem_barrier_all();
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);                     // offset from start of local neighs array, NOT the global array (symmetric & unsynched)
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, offsets.begin()+(vp->end - vp->start), 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space?               
-
-    printf("oh boy here i go killin again\n");
-    //BAIL();
     *neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
     *index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, *neighs, vp);
     shmem_barrier_all();
@@ -315,12 +314,13 @@ class BuilderBase {
         // why wont shmem_int64 work?
         neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);                     
         NodeID_ src = GetSource(e);
+        //printf("e.v = %d | src = %d\n", e.v, src); 
         //shmem_int_put((*neighs)+neighbor, &src, 1, receiver);                        
         shmem_putmem((*neighs)+neighbor, &src, sizeof(DestID_), receiver);
       }
       //shmem_barrier_all();              // are these necessary?
     }
-    printf("I'm PE %d, and I escaped the neighbor construction\n", vp->pe);
+    shmem_barrier_all();
   }
 
   CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition<NodeID_>* p, long* pSync, long* pWrk, int src_opt) {
@@ -331,16 +331,12 @@ class BuilderBase {
     if (num_nodes_ == -1)
       num_nodes_ = FindMaxNodeID(el)+1;
     shmem_barrier_all();
-    printf("Max node is %lu\n", num_nodes_);
-    if (needs_weights_) {
-      printf("inserting weights\n");
+    if (needs_weights_)
       Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el, src_opt);
-    }
-    printf("PE %d | EL size inside MakeGraphFromEL: %lu\n", shmem_my_pe(), el.size());
     shmem_barrier_all();
     MakeCSR(el, false, &index, &neighs, p, pSync, pWrk);
-    printf("Made CSR\n");
     if (!symmetrize_ && invert) {
+      printf("new flag\n");
       MakeCSR(el, true, &inv_index, &inv_neighs, p, pSync, pWrk);
     }
     //printf("check\n");
