@@ -97,7 +97,7 @@ class Generator {
       edge_count = blocks_per_pe * block_size;
     }
     EdgeList el(edge_count);
-    printf("PE %d | EL creation with %lu edges\n", pe, edge_count);
+  //  printf("PE %d | EL creation with %lu edges\n", pe, edge_count);
     Partition<int64_t> block_partition(num_blocks);
     shmem_barrier_all();
     printf("PE %d has bp start %lu, bp end %lu, block size %lu for num_edges_ %lu and num blocks %lu\n", pe, block_partition.start, block_partition.end, block_size, num_edges_, num_blocks); 

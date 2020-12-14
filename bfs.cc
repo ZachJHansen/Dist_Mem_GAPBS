@@ -283,11 +283,12 @@ void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
 bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   if (shmem_my_pe() == 0) {
     ofstream shmem_out;
-    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
     for (auto it = parent.begin(); it < parent.end(); it++) {
       shmem_out << *it << endl;
   //  *it = 15;           // scramble
     }
+    shmem_out.close();
   }
 /*  pvector<int> depth(g.num_nodes(), -1);
   depth[source] = 0;
@@ -342,7 +343,7 @@ int main(int argc, char* argv[]) {
 
 
   //char size_env[] = "SHMEM_SYMMETRIC_SIZE=16G";
-  char size_env[] = "SMA_SYMMETRIC_SIZE=8G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
 
@@ -367,26 +368,8 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
-    //printf("Last check\n");
     shmem_barrier_all();
     //g.PrintTopology();
-    //shmem_global_exit(0);
-    //exit(0);
-
-    shmem_barrier_all();
-    //printf("PE %d says out_index starts at %p\n", pe, g.out_index_);
-    //printf("PE %d says out_neigh starts at %p\n", pe, g.out_neighbors_);
-    /*int64_t x;
-    for (v : g.vertices()) {
-      x = g.out_degree(v);
-      printf("PE %d | degree of %d: %lu\n", pe, v, x);
-    }*/
-    /*if (pe == 0) {
-      for (int y = 0; y < 10; y++) {
-        for (int x : g.in_neigh(y, 0))
-          printf("%d neighbor: %d\n", y, x);
-      }
-    }*/
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS, ll_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());

@@ -4,13 +4,13 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 #include "benchmark.h"
 #include "builder.h"
 #include "command_line.h"
 #include "graph.h"
 #include "pvector.h"
-
 
 /*
 GAP Benchmark Suite
@@ -57,8 +57,8 @@ pvector<ScoreT> PageRankPull(const Graph &g, int max_iters,
     }
     shmem_barrier_all();                                        // is this needed? or will the reduction sync before starting?
     shmem_double_sum_to_all(error, error, 1, 0, 0, vp.npes, pWrk, pSync);      // Reduction : +
-    if (vp.pe == 0)
-      printf(" %2d    %lf\n", iter, *error);
+    //if (vp.pe == 0)
+      //printf(" %2d    %lf\n", iter, *error);
     if (*error < epsilon)
       break;
   }
@@ -88,9 +88,9 @@ bool PRVerifier(const Graph &g, const pvector<ScoreT> &scores,
   shmem_barrier_all();
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/pr_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
-    shmem_out << scores[vp.local_pos(n)] << endl;
+    shmem_out << std::setprecision (5) << scores[vp.local_pos(n)] << std::endl;
   }
   shmem_out.close();
   if (!(vp.pe == vp.npes-1))
@@ -119,6 +119,9 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  putenv(size_env);
+
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
@@ -132,9 +135,6 @@ int main(int argc, char* argv[]) {
     dbl_pWrk[i] = SHMEM_SYNC_VALUE;
   }
 
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=2048M";
-  putenv(size_env);
-
   static long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long)); 
   {
     Builder b(cli);
@@ -144,12 +144,12 @@ int main(int argc, char* argv[]) {
     };
     auto scores = PRBound(g);
     Partition<NodeID> vp(g.num_nodes());
-    for (NodeID i = vp.start; i < vp.end; i++)
-      printf("PE %d | score(%d) = %f\n", vp.pe, i, scores[vp.local_pos(i)]);
-  /*  auto VerifierBound = [&cli] (const Graph &g, const pvector<ScoreT> &scores) {
+  //  for (NodeID i = vp.start; i < vp.end; i++)
+  //    printf("PE %d | score(%d) = %f\n", vp.pe, i, scores[vp.local_pos(i)]);
+    auto VerifierBound = [&cli] (const Graph &g, const pvector<ScoreT> &scores) {
       return PRVerifier(g, scores, cli.tolerance());
     };
-    BenchmarkKernel(cli, g, PRBound, PrintTopScores, VerifierBound);*/
+    BenchmarkKernel(cli, g, PRBound, PrintTopScores, VerifierBound);
   }
   shmem_free(PRINT_LOCK);
   shmem_finalize();

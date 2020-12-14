@@ -26,7 +26,6 @@
 GAP Benchmark Suite
 Class:  BuilderBase
 Author: Scott Beamer
-
 Given arguements from the command line (cli), returns a built graph
  - MakeGraph() will parse cli and obtain edgelist and call
    MakeGraphFromEL(edgelist) to perform actual graph construction
@@ -178,21 +177,17 @@ class BuilderBase {
   // Removes self-loops and redundant edges
   // Side effect: neighbor IDs will be sorted
   void SquishCSR(const CSRGraph<NodeID_, DestID_, invert> &g, bool transpose,
-                 DestID_*** sq_index, DestID_** sq_neighs, Partition<NodeID_> vp, long* pSync, long* pWrk, bool debug_print = false) {
+                 DestID_*** sq_index, DestID_** sq_neighs, Partition<NodeID_> vp, long* pSync, long* pWrk) {
     NodeID_ indx;
     pvector<NodeID_> diffs(vp.max_width);
     DestID_ *n_start, *n_end;
     //#pragma omp parallel for private(n_start, n_end)
     for (NodeID_ n = vp.start; n < vp.end; n++) {
       indx = n - vp.start;
-//      if (vp.pe == 0)
-  //      printf("PE %d has indx %d and n %d\n", vp.pe, indx, n);
       if (transpose) {
-    //    printf(debug_print ? "Transpose - invert\n" : "Transpose - no invert\n");
         n_start = g.in_neigh(n).begin();
         n_end = g.in_neigh(n).end();
       } else {
-    //    printf(debug_print ? "no transpose - invert\n" : "No transpose - no invert\n");
         n_start = g.out_neigh(n).begin();
         n_end = g.out_neigh(n).end();
       }
@@ -200,19 +195,14 @@ class BuilderBase {
       DestID_ *new_end = std::unique(n_start, n_end);
       new_end = std::remove(n_start, new_end, n);
       diffs[indx] = new_end - n_start;
-      //if (vp.pe == 0)
-        //printf("PE %d has new_end %d and n_start %d\n", vp.pe, *new_end, *n_start);
     }
-    //printf("PE %d says diffs.size = %lu\n", vp.pe, diffs.size());
     pvector<SGOffset> sq_offsets = ParallelPrefixSum(diffs);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
-    printf("sq_offsets: %p\n", (void*) sq_offsets.begin());
     shmem_long_max_to_all(max_neigh, sq_offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
     //*sq_neighs = new DestID_[sq_offsets[vp.end-vp.start]];
-    printf("pe %d - squish neigh len = %lu | max_neigh = %lu\n", vp.pe, sq_offsets[vp.end-vp.start], *max_neigh);
     *sq_neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     *sq_index = CSRGraph<NodeID_, DestID_>::GenIndex(sq_offsets, *sq_neighs, &vp);
-    printf("sq_neigh: %p\n", (void*) sq_neighs);
+    //printf("sq_neigh: %p\n", (void*) sq_neighs);
     //printf("PE %d | fking sq_indx: %p\n", vp.pe, (void*) *sq_index);
     shmem_barrier_all();
     //#pragma omp parallel for private(n_start)
@@ -222,30 +212,9 @@ class BuilderBase {
         n_start = g.in_neigh(n).begin();        // transpose for incoming neighbors
       else
         n_start = g.out_neigh(n).begin();
-      if (n_start == nullptr)
-        printf("N= %d | N start is a nullptr\n", n);
-      if (diffs.begin()+indx == nullptr)
-        printf("N = %d | diffs+indx is a nullptr\n", n);
-      if ((*sq_index)+indx == nullptr)
-        printf("N = %d | sq+indx is a nullptr\n", n);
-      if (n_start+diffs[indx] != nullptr) {
-        for (NodeID_ i = 0; i <= diffs[indx]; i++) {                         
-          if (((*sq_index)[indx]+i) == nullptr || n_start+i == nullptr) {
-            printf("Is it too much to ask to have sharks with frickin laser beams?!\n");
-          } else {
-            *((*sq_index)[indx]+i) = *(n_start+i);
-          }
-        }
-        //std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);     // so n_start could be on a foreign PE, will that fuck up copying?
-      } else {
-        printf("PE %d ran into trouble with n = %d\n", vp.pe, n);
-      }
+      std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);     // so n_start could be on a foreign PE, will that fuck up copying?
     }
     shmem_barrier_all();
-    if (debug_print) {
-      int* temp = (int*) shmem_malloc(sizeof(int));
-      printf("PE %d thinks temp is %p\n", vp.pe, (void*) temp);
-    }
   }
 
   CSRGraph<NodeID_, DestID_, invert> SquishGraph(
@@ -253,18 +222,10 @@ class BuilderBase {
     DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
     SquishCSR(g, false, &out_index, &out_neighs, *vp, pSync, pWrk);
     shmem_barrier_all();
-    //shmem_set_lock(PRINT_LOCK);
-    //for (int i = vp->start; i <= vp->end; i++)
-      //printf("PE: %d Node %d has out_index %p\n", vp->pe, i, (void *) out_index[i-vp->start]); /* *(out_index[i-vp->start]));*/
-    //shmem_clear_lock(PRINT_LOCK);
-    //printf("PE %d has out_index start: %p\n", vp->pe, (void*) &out_index);
     if (g.directed()) {
       shmem_barrier_all();
-      // issue lies below
       if (invert)
-        SquishCSR(g, true, &in_index, &in_neighs, *vp, pSync, pWrk, true);
-      printf("PE %d | out index: %p => %d | in index: %p => %d\n", vp->pe, (void *) out_index, **out_index, (void *) in_index, **in_index);
-      //BAIL();
+        SquishCSR(g, true, &in_index, &in_neighs, *vp, pSync, pWrk);
       return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), out_index,
                                                 out_neighs, in_index,
                                                 in_neighs, pSync, pWrk);
@@ -335,14 +296,9 @@ class BuilderBase {
       Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el, src_opt);
     shmem_barrier_all();
     MakeCSR(el, false, &index, &neighs, p, pSync, pWrk);
-    if (!symmetrize_ && invert) {
-      printf("new flag\n");
+    if (!symmetrize_ && invert) 
       MakeCSR(el, true, &inv_index, &inv_neighs, p, pSync, pWrk);
-    }
-    //printf("check\n");
-    //std::cout << std::flush;
     shmem_barrier_all();
-    //BAIL();
     t.Stop();
     PrintTime("Build Time", t.Seconds());
     if (symmetrize_)
@@ -372,10 +328,6 @@ class BuilderBase {
         el = gen.GenerateEL(cli_.uniform());
       }
       shmem_barrier_all();
-      //printf("EL is created with size %lu, EL[0]: (%d, %d)\n", el.size(), (*(el.begin())).u, (*(el.begin())).v);
-      //for (EdgePair<int, int> x : el)
-      //  printf("PE %d | (%d, %d)\n", shmem_my_pe(), x.u, x.v);
-      //shmem_barrier_all();
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
     }
     return SquishGraph(g, &p, pSync, pWrk);

@@ -118,7 +118,6 @@ class CSRGraph {
           printf("%p is accessible on %d\n", (void*) g_index_, owner);
         printf("Thing: %p\n", (void *) *thing);*/
         max_offset = *foreign_end - *foreign_start; 
-        //printf("Done\n");
       }
       start_offset_ = std::min(start_offset, max_offset);
     }
@@ -131,6 +130,7 @@ class CSRGraph {
       } else {
         DestID_ * neigh_start = (DestID_ *) shmem_ptr(*foreign_start + start_offset_, owner);
         return (neigh_start);
+        //return(*foreign_start + start_offset_);
       }
     }
 
@@ -139,6 +139,7 @@ class CSRGraph {
         return g_index_[local+1]; 
       else
         return ((DestID_*) shmem_ptr(*foreign_end, owner));
+        //return(*foreign_end);
     }
   };
 
@@ -315,20 +316,35 @@ class CSRGraph {
   }
 
 
-  void PrintTopology() {
+  void PrintTopology(bool outgoing = true) {
     Partition<NodeID_> vp(num_nodes_);
     int* PRINTER = (int *) shmem_calloc(1, sizeof(int));                // init 0
     shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
-    std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
-    for (NodeID_ i = vp.start; i < vp.end; i++) {
-      std::cout << i << ": ";
-      for (DestID_ j : out_neigh(i))
-        std::cout << j << " ";
-      std::cout << std::endl;
+    if (outgoing) {
+      std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
+      for (NodeID_ i = vp.start; i < vp.end; i++) {
+        std::cout << i << ": ";
+        for (DestID_ j : out_neigh(i))
+          std::cout << j << " ";
+        //std::cout << std::endl;
+        printf("\n");
+      }
+      if (!(vp.pe == vp.npes-1))
+        shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
+      shmem_barrier_all();
+    } else {
+      std::cout << "########################  Graph Topology (Incoming): PE " << vp.pe <<  " #######################" << std::endl;
+      for (NodeID_ i = vp.start; i < vp.end; i++) {
+        std::cout << i << ": ";
+        for (DestID_ j : in_neigh(i))
+          std::cout << j << " ";
+        //std::cout << std::endl;
+        printf("\n");
+      }
+      if (!(vp.pe == vp.npes-1))
+        shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
+      shmem_barrier_all();
     }
-    if (!(vp.pe == vp.npes-1))
-      shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
-    shmem_barrier_all();
   }
 
 

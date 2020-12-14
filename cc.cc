@@ -219,7 +219,7 @@ bool CCVerifier(const Graph &g, const pvector<NodeID> &comp) {
   shmem_barrier_all();
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/cc_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
     shmem_out << comp[vp.local_pos(n)] << endl;
   //  *it = 15;           // scramble
@@ -274,6 +274,9 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;   
 
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  putenv(size_env);
+
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
@@ -283,9 +286,6 @@ int main(int argc, char* argv[]) {
     pSync[i] = SHMEM_SYNC_VALUE;
   for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++)
     pWrk[i] = SHMEM_SYNC_VALUE;
-
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=1024M";
-  putenv(size_env);
 
   int npes = shmem_n_pes();
   int pe = shmem_my_pe();

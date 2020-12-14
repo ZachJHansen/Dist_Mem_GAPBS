@@ -115,7 +115,7 @@ void PrintTriangleStats(const Graph &g, size_t total_triangles) {
 bool TCVerifier(const Graph &g, size_t test_total) {
   if (shmem_my_pe() == 0) {
     ofstream shmem_out;
-    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_output.txt", ios::app);
+    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/tc_output.txt", ios::app);
     shmem_out << test_total << endl;
     shmem_out.close();
   }
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
 //    printf("Check 1\n");
     Graph g = b.MakeGraph(pSync, lng_pWrk);
 //    printf("Check 2\n");
-    //g.PrintTopology();
+    g.PrintTopology();
     //Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
     //gee.PrintTopology();
     if (g.directed()) {
