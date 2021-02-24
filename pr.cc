@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
     auto PRBound = [&cli] (const Graph &g) {
       return PageRankPull(g, cli.max_iters(), pSync, dbl_pWrk, cli.tolerance());
     };
-    auto scores = PRBound(g);
+    //auto scores = PRBound(g);
     Partition<NodeID> vp(g.num_nodes());
   //  for (NodeID i = vp.start; i < vp.end; i++)
   //    printf("PE %d | score(%d) = %f\n", vp.pe, i, scores[vp.local_pos(i)]);

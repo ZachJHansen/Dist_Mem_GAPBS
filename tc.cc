@@ -45,6 +45,8 @@ to relabel the graph, we use the heuristic in WorthRelabelling.
 using namespace std;
 
 size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
+  printf("here\n");
+  shmem_barrier_all();
   Partition<NodeID> vp(g.num_nodes());
   long* total = (long *) shmem_calloc(1, sizeof(long));
   for (NodeID u = vp.start; u < vp.end; u++) {
@@ -84,13 +86,22 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   Partition<int> sample_part(num_samples);
   pvector<int64_t> samples(sample_part.max_width, true);                         // symmetric partitioned overallocated pvector
   pvector<int64_t> dest(num_samples, true);                             // symmetric overallocated pvector
-  for (int64_t trial = sample_part.start; trial < sample_part.end; trial++) {
-    samples[sample_part.local_pos(trial)] = g.out_degree(sp.PickNext());
-    *sample_total += samples[sample_part.local_pos(trial)];
+  pvector<NodeID> nodes(num_samples);
+  shmem_barrier_all();
+  for (NodeID n = 0; n < num_samples; n++)
+    nodes[n] = sp.PickNext();                                                   // PEs work together during PickNext
+  shmem_barrier_all();
+  int64_t lp;
+  for (int64_t trial = sample_part.start; trial < sample_part.end; trial++) {   // now PES can divide up the work, selecting from node candidates
+    lp = sample_part.local_pos(trial);
+    samples[lp] = g.out_degree(nodes[trial]);
+    *sample_total += samples[lp];
   }
-  shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, sample_part.npes, pSync);
-  shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, sample_part.npes, pWrk, pSync);
+  shmem_barrier_all();
+  shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, shmem_n_pes(), pSync);
+  shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, shmem_n_pes(), pWrk, pSync);
   sort(dest.begin(), dest.end());
+  shmem_barrier_all();  // not needed?
   double sample_average = static_cast<double>(*sample_total) / num_samples;
   double sample_median = dest[num_samples/2];
   return sample_average / 1.3 > sample_median;
@@ -149,7 +160,7 @@ int main(int argc, char* argv[]) {
 
   static long PRINT_LOCK = 0;
 
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=8192M";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
   shmem_init();
@@ -169,10 +180,9 @@ int main(int argc, char* argv[]) {
     Builder b(cli);
 //    printf("Check 1\n");
     Graph g = b.MakeGraph(pSync, lng_pWrk);
-//    printf("Check 2\n");
-    g.PrintTopology();
-    //Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
-    //gee.PrintTopology();
+    //g.PrintTopology();
+  //  Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
+  //  gee.PrintTopology();
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;
