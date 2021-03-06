@@ -119,7 +119,7 @@ class BuilderBase {
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
       }
       flush_counter++;
-      if (flush_counter % 2000000 == 0)
+      if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
         shmem_barrier_all();
     }
     shmem_barrier_all();
@@ -159,7 +159,7 @@ class BuilderBase {
       total += local_sums[block];
     }
     bulk_prefix[num_blocks] = total;
-  //  printf("PE %d allocating prefix with size %lu\n", shmem_my_pe(), degrees.size());
+    //printf("PE %d allocating prefix with size %lu\n", shmem_my_pe(), degrees.size());
     pvector<SGOffset> prefix(degrees.size() + 1, true);
     #pragma omp parallel for
     for (size_t block=0; block < num_blocks; block++) {
@@ -248,14 +248,42 @@ class BuilderBase {
     SGOffset neighbor;
     int64_t receiver, local_v;
     *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
-  //  printf("PE %d has partition start = %d and end = %d\n", vp->pe, vp->start, vp->end);
+    //printf("PE %d has partition start = %d and end = %d\n", vp->pe, vp->start, vp->end);
     pvector<NodeID_> degrees = CountDegrees(el, transpose, vp);                  // each pe maintains an array of degrees for the vertices assigned to that pe
-  //  printf("Degrees size = %lu\n", degrees.size());
+    //printf("Degrees size = %lu\n", degrees.size());
     shmem_barrier_all();
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);                     // offset from start of local neighs array, NOT the global array (symmetric & unsynched)
-    SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
-    shmem_long_max_to_all(max_neigh, offsets.begin()+(vp->end - vp->start), 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space?               
+    //printf("PE %d has offsets.begin+len: %p => %lu\n", vp->pe, (void*) (offsets.begin()+(vp->end-vp->start)), *(offsets.begin()+(vp->end-vp->start)));
+    printf("Offset: %d | last offset = %lu\n", vp->end-vp->start, *(offsets.begin()+(vp->end-vp->start)));
+    //SGOffset* local_max = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    long* local_max = (long *) shmem_malloc(sizeof(long));
+    *local_max = (long) *(offsets.begin()+(vp->end-vp->start));
+    //SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    long* max_neigh = (long *) shmem_malloc(sizeof(long));
+    printf("max_neigh: %p | local_max: %p | npes: %d\n", (void*) max_neigh, (void*) local_max, vp->npes);
+
+    //static long ps[SHMEM_REDUCE_SYNC_SIZE];
+    //static int pw[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+    /*long* ps = (long *) shmem_calloc(SHMEM_REDUCE_SYNC_SIZE, sizeof(long));
+    long* pw = (long *) shmem_calloc(SHMEM_REDUCE_MIN_WRKDATA, sizeof(long));
+
+    for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
+      ps[i] = SHMEM_SYNC_VALUE;
+    for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA; i++) {
+      pw[i] = SHMEM_SYNC_VALUE;
+    }*/
+    /*int* test1 = (int*) shmem_malloc(sizeof(int));
+    int* test2 = (int*) shmem_malloc(sizeof(int));
+    *test2 = vp->pe;
+    printf("i'm deeply confused - local max = %lu, npes = %d\n", *local_max, vp->npes);*/
+    shmem_barrier_all();
+    //shmem_int_max_to_all(test1, test2, 1, 0, 0, vp->npes, pw, ps);
+    shmem_long_max_to_all(max_neigh, local_max, 1, 0, 0, vp->npes, pWrk, pSync);
+    //shmem_long_max_to_all(max_neigh, offsets.begin()+(vp->end - vp->start), 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space?               
+    printf("the max to all isn't broken after all!\n");
+    shmem_barrier_all();
     *neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
+    shmem_barrier_all();
     *index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, *neighs, vp);
     shmem_barrier_all();
     for (auto it = el.begin(); it < el.end(); it++) {                           // if u || v are part of processing PE's partition, edge must be included on that PE
@@ -274,8 +302,9 @@ class BuilderBase {
         local_v = vp->local_pos(static_cast<NodeID_>(e.v));
         // why wont shmem_int64 work?
         neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);                     
-        NodeID_ src = GetSource(e);
-        //printf("e.v = %d | src = %d\n", e.v, src); 
+        DestID_ src = GetSource(e);
+        //std::cout << src 
+        //printf("e.v.v = %d | e.v.w = %d\n", e.v.v, e.v.w); 
         //shmem_int_put((*neighs)+neighbor, &src, 1, receiver);                        
         shmem_putmem((*neighs)+neighbor, &src, sizeof(DestID_), receiver);
       }
@@ -328,7 +357,10 @@ class BuilderBase {
         el = gen.GenerateEL(cli_.uniform());
       }
       shmem_barrier_all();
+      //for (auto wait : el)
+        //printf("PE %d | u = %lu v = %lu w = %lu\n", shmem_my_pe(), wait.u, wait.v.v, wait.v.w);
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
+      //g.PrintTopology();
     }
     return SquishGraph(g, &p, pSync, pWrk);
   }
@@ -337,6 +369,7 @@ class BuilderBase {
   static
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
       const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
+    shmem_barrier_all();
     if (g.directed()) {
       std::cout << "Cannot relabel directed graph" << std::endl;
       std::exit(-11);
@@ -346,23 +379,24 @@ class BuilderBase {
     t.Start();
     Partition<NodeID_> vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
-    pvector<degree_node_p> degree_id_pairs(g.num_nodes(), true);        // up to date on PE 0
+    pvector<degree_node_p> degree_id_pairs(g.num_nodes(), true);        // complete symmetric list of ids and their degrees, up to date on PE 0
+
     for (NodeID_ n = vp.start; n < vp.end; n++)
       degree_id_pairs[n] = std::make_pair(g.out_degree(n), n);
+    shmem_barrier_all();
     shmem_putmem(degree_id_pairs.begin()+vp.start, degree_id_pairs.begin()+vp.start, (vp.end - vp.start)*sizeof(degree_node_p), 0); // collect on PE 0
     shmem_barrier_all();
     if (vp.pe == 0) {
       std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>());           // sort on PE 0
     //shmem_broadcast32(degree_id_pairs.begin(), degree_id_pairs.begin(), g.num_nodes(), 0, 0, 0, vp.npes, pSync);        // broadcast sorted list
-      for (int i = 0; i < vp.npes; i++)
-        if (vp.pe != i)
+      for (int i = 1; i < vp.npes; i++)
           shmem_putmem(degree_id_pairs.begin(), degree_id_pairs.begin(), g.num_nodes()*sizeof(degree_node_p), i);
     }
     shmem_barrier_all();
     //if (vp.pe == 1)
       //for (auto it : degree_id_pairs)
         //printf("degree(%d) = %lu\n", it.second, it.first);
-    printf("Check x\n");
+    //printf("Check x\n");
     pvector<NodeID_> temp_degrees(g.num_nodes());
     pvector<NodeID_> temp_new_ids(g.num_nodes());
     for (NodeID_ n=0; n < g.num_nodes(); n++) {
@@ -370,6 +404,7 @@ class BuilderBase {
       temp_new_ids[degree_id_pairs[n].second] = n;
     }
     shmem_barrier_all();
+
    // for (int i = 0; i < g.num_nodes(); i++)
    //   printf("PE %d | degree = %d, NodeID = %d\n", vp.pe, temp
     pvector<NodeID_> degrees(vp.max_width);
@@ -380,14 +415,17 @@ class BuilderBase {
     }
     //for (int i = 0; i < vp.max_width; i++)
       //printf("PE %d | degrees[%d] = %d, new_ids[%d] = %d\n", vp.pe, i, degrees[i], i, new_ids[i]);
+
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
+
     //for (o : offsets)
       //printf("Pe: %d | o = %d\n", vp.pe, o);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
-    printf("PE %d | Max neigh: %lu\n", vp.pe, *max_neigh);
+    //printf("PE %d | Max neigh: %lu\n", vp.pe, *max_neigh);
     DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
+
     shmem_barrier_all();
     for (NodeID_ u = vp.start; u < vp.end; u++) {
       for (NodeID_ v : g.out_neigh(u)) {
@@ -415,12 +453,14 @@ class BuilderBase {
       }
     }
     //printf("hey\n");
+
     //shmem_clear_lock(LOCK);
     shmem_barrier_all();
     //for (int n = 0; n < *max_neigh; n++)
     //  printf("PE %d | n = %d\n", 
     for (int i = 0; i < vp.end-vp.start/*)+1vp.max_width*/; i++)
       std::sort(index[i], index[i+1]);
+
     shmem_barrier_all(); 
     //printf("what\n");
     //for (int n = 0; n < *max_neigh; n++)
@@ -429,6 +469,7 @@ class BuilderBase {
     shmem_free(max_neigh);
     PrintTime("Relabel", t.Seconds());
     //return CSRGraph<NodeID_, DestID_, invert>();
+
     return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), index, neighs, pSync, pWrk);
   }
 };

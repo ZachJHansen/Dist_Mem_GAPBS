@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cinttypes>
+#include <iostream>
 #include <random>
 
 #include "graph.h"
@@ -61,22 +62,6 @@ class Generator {
     }
   }
 
-  // Return the number of elements that would be allocated to PE
-  // p with NPES n using round robin partitioning
-  NodeID_ round_robin_size(NodeID_ num_edges, int p, int n) {
-    NodeID_ k = num_edges - (num_edges % n);
-    NodeID_ r = num_edges - (n * k);
-    int counts[n];
-    for (int i = 0; i < n; i++)
-      counts[i] = k;
-    int j = 0;
-    while (j < r) {
-      counts[j]++;
-      j++;
-    }
-    return counts[p];
-  }
-
   // All PEs except the last one get X blocks of edges
   // The last PE gets X*block size + the remaining edges
   // So PEs have unbalanced edge lists, reducing the block size should help
@@ -97,10 +82,11 @@ class Generator {
       edge_count = blocks_per_pe * block_size;
     }
     EdgeList el(edge_count);
+    el.set_combined_length(num_edges_);
   //  printf("PE %d | EL creation with %lu edges\n", pe, edge_count);
-    Partition<int64_t> block_partition(num_blocks);
+    Partition<int64_t> block_partition(num_blocks, true);
     shmem_barrier_all();
-    printf("PE %d has bp start %lu, bp end %lu, block size %lu for num_edges_ %lu and num blocks %lu\n", pe, block_partition.start, block_partition.end, block_size, num_edges_, num_blocks); 
+    //printf("PE %d has bp start %lu, bp end %lu, block size %lu for num_edges_ %lu and num blocks %lu\n", pe, block_partition.start, block_partition.end, block_size, num_edges_, num_blocks); 
     for (int64_t block = (block_size*block_partition.start); block < (block_size*block_partition.end); block += block_size) {
       rng.seed(kRandSeed + block/block_size);
       for (int64_t e=block; e < std::min(block+block_size, num_edges_); e++) {
@@ -132,8 +118,10 @@ class Generator {
     } else {
       edge_count = blocks_per_pe * block_size;
     }
-    EdgeList el(edge_count);
-    Partition<int64_t> block_partition(num_blocks);
+    EdgeList el(edge_count);                            // partitioned edge list
+    el.set_combined_length(num_edges_);                 // complete size of edge list
+    Partition<int64_t> block_partition(num_blocks, true);
+    printf("PE %d | num_edges=%lu, block_size=%lu, num_blocks=%lu, blocks_per_pe=%lu, bp.start=%lu, bp.end=%lu\n", pe, num_edges_, block_size, num_blocks, blocks_per_pe, block_partition.start, block_partition.end);
     for (int64_t block = (block_size*block_partition.start); block < (block_size*block_partition.end); block += block_size) {
       rng.seed(kRandSeed + block/block_size);
       for (int64_t e=block; e < std::min(block+block_size, num_edges_); e++) {
@@ -175,9 +163,117 @@ class Generator {
 
   // Overwrites existing weights with random from [1,255]
   static void InsertWeights(pvector<WEdge> &el, int option) {
+    printf("inserting weights\n");
     int pe = shmem_my_pe();
     int npes = shmem_n_pes();
-    int64_t num_edges = el.combined_size();
+    int64_t num_edges = el.combined_length();
+    std::mt19937 rng;
+    std::uniform_int_distribution<int> udist(1, 255);
+    // calculate el position within combined el
+    NodeID_ el_offset = 0;
+    int64_t num_blocks = num_edges / block_size;
+    printf("num_edgwa: %lu please num_blocks: %lu\n", num_edges, num_blocks);
+    if (num_edges % block_size != 0)
+      num_blocks++;
+    // if el was read in from a file, the el was partitioned round robin
+    if (option == 0) {
+      int i = 0;
+      while (i < pe)
+        el_offset += round_robin_size(num_edges, i++, npes);
+      //printf("round_robin_size: %d\n", round_robin_size(num_edges, 0, npes));
+    } else if (option == 1) { // if el was generated, then pes 0 - (npes-2) got n*block_size edges, PE npes-1 got remainder
+      printf("check\n");
+      int64_t blocks_per_pe = num_blocks / npes;
+      printf("num_blocks: %lu blocks per pe: %lu\n", num_blocks, blocks_per_pe); 
+      int i = 0;
+      while (i < pe){
+        el_offset += blocks_per_pe * block_size;
+        i++;
+      }
+    } else {
+      printf("Other graph formats not yet supported\n");
+      shmem_global_exit(0);
+      exit(1);
+    }
+    printf("PE %d | el_offset = %d\n", pe, el_offset);
+    // determine the block the edge would belong to
+    int64_t previous_block_count = el_offset / block_size;              // How many complete blocks belonged to previous el partitions?
+    int64_t block = previous_block_count * block_size;                  // where does this block begin?
+    if (false/*el_offset % block_size == 0*/) {                                  // Edge partitions are aligned with block boundaries
+      while ((block-el_offset) < el.size()) {
+        rng.seed(kRandSeed + block/block_size);
+        if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+          rng.discard(el_offset - block);
+        for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()); e++) {
+          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+        }      
+        block += block_size;
+      }
+    } else {                                                            // Edge partition splits the block
+      rng.seed(kRandSeed + block/block_size);
+    //  printf("PE %d | seed = %lu\n", pe, kRandSeed + block/block_size);
+      if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+        rng.discard(el_offset - block);
+      int64_t e = el_offset;
+      if (el_offset + el.size() > block + block_size) {                                         // Edge list extends past this block's boundary
+        int64_t remainder = (block+block_size) - el_offset;
+        for (int64_t r = 0; r < remainder; r++) {                                               // Process remaining portion of block with current seed 
+          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+          e++;
+        }
+        block += block_size;                                                    // Now e and block should be aligned
+//        printf("E: %d | Block: %d\n", e, block);
+        while ((block-el_offset) < el.size()) {
+          rng.seed(kRandSeed + block/block_size);
+          if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+            rng.discard(el_offset - block);
+  //        printf("PE %d | seed = %lu\n", pe, kRandSeed + block/block_size);
+          for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()+el_offset); e++) {
+            el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+          }      
+          block += block_size;
+        }
+      } else {                                                                  // Block extends past EL boundary
+        for (int64_t remainder = 0; remainder < el.size(); remainder++) {       // Process entire edge list with current seed 
+          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+          e++;
+        }
+      }
+      /*for (int64_t remainder = 0; remainder < (el_offset % block_size); remainder++) {  // Process remaining portion of block with initial rng
+        el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+        e++;
+      }
+      printf("E: %d | Block: %d\n", e, block);
+      while ((block-el_offset) < el.size()) {
+        rng.seed(kRandSeed + block/block_size);
+        if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+          rng.discard(el_offset - block);
+        printf("PE %d | seed = %lu\n", pe, kRandSeed + block/block_size);
+        for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()); e++) {
+          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+        }      
+        block += block_size;
+      }*/
+    }
+    std::ofstream orig_out;
+    int* PRINTER = (int*) shmem_calloc(1, sizeof(int));
+    shmem_barrier_all();
+    pe = shmem_my_pe();
+    shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, pe);           // wait until previous PE puts your pe # in PRINTER
+    orig_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/weights_output.txt", std::ios::app);
+    for(WEdge wait : el)
+      orig_out << wait.v.w << std::endl;
+    orig_out.close();
+    if (pe != shmem_n_pes()-1)
+      shmem_int_p(PRINTER, pe+1, pe+1);             // who's next?
+    //for (WEdge wait : el)
+      //printf("PE %d | e.v.w = %lu\n", shmem_my_pe(), wait.v.w);
+  }
+
+  /*static void InsertWeights(pvector<WEdge> &el, int option) {
+    int pe = shmem_my_pe();
+    int npes = shmem_n_pes();
+    int64_t num_edges = el.combined_length();
     std::mt19937 rng;
     std::uniform_int_distribution<int> udist(1, 255);
     // calculate el position within combined el
@@ -189,45 +285,39 @@ class Generator {
     if (option == 0) {
       int i = 0;
       while (i < pe)
-        el_offset += round_robin_size(num_edges, i, npes);
+        el_offset += round_robin_size(num_edges, i++, npes);
+      //printf("round_robin_size: %d\n", round_robin_size(num_edges, 0, npes));
     } else if (option == 1) { // if el was generated, then pes 0 - (npes-2) got n*block_size edges, PE npes-1 got remainder
       int64_t blocks_per_pe = num_blocks / npes;
       int i = 0;
-      while (i < pe)
+      while (i < pe){
         el_offset += blocks_per_pe * block_size;
+        i++;
+      }
     } else {
       printf("Other graph formats not yet supported\n");
       shmem_global_exit(0);
       exit(1);
     }
+    printf("PE %d | el_offset = %d\n", pe, el_offset);
     // determine the block the edge would belong to
     int64_t previous_block_count = el_offset / block_size;              // How many complete blocks belonged to previous el partitions?
     int64_t block = previous_block_count * block_size;                  // where does this block begin?
     bool start = true;
-    if (el_offset % block_size == 0) {                                  // Edge partitions are aligned with block boundaries
-      while ((block-el_offset) < el.size()) {
-        rng.seed(kRandSeed + block/block_size);
-        for (int64_t e = block; e < std::min(block+block_size, el.size()); e++) {
-          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-        }      
-        block += block_size;
-      }
-    } else {                                                            // Edge partition splits the block
+    while ((block-el_offset) < el.size()) {
+      //printf("PE %d | seed = %lu\n", pe, kRandSeed + block/block_size);
       rng.seed(kRandSeed + block/block_size);
-      int64_t e = el_offset;
-      for (int64_t remainder = 0; remainder < (el_offset % block_size); remainder++) {  // Process remaining portion of block with initial rng
+      if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+        rng.discard(el_offset - block);
+      for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()); e++) {
         el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-        e++;
-      }
-      block += block_size;                                              // Now e and block should be aligned
-      while ((block-el_offset) < el.size()) {
-        rng.seed(kRandSeed + block/block_size);
-        for (int64_t e = block; e < std::min(block+block_size, el.size()); e++) {
-          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-        }      
-      }
+      }      
+      block += block_size;
     }
-  }
+    for (WEdge wait : el)
+      printf("PE %d | e.v.w = %lu\n", shmem_my_pe(), wait.v.w);
+  }*/
+
 
   // Overwrites existing weights with random from [1,255]
 /*  static void InsertWeights(pvector<WEdge> &el) {
@@ -252,6 +342,7 @@ class Generator {
   int64_t num_nodes_;
   int64_t num_edges_;
   static const int64_t block_size = 1<<18;
+  //static const int64_t block_size = 3;
 };
 
 #endif  // GENERATOR_H_
