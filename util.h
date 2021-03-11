@@ -91,4 +91,23 @@ class Range{
   RangeIter<T_> end() const { return RangeIter<T_>(to_); }
 };
 
+// Return the number of elements that would be allocated to PE
+// p with NPES n using round robin partitioning
+template <typename T_>
+T_ round_robin_size(T_ num_edges, int p, int n) {
+  T_ k = num_edges - (num_edges % n);
+  T_ I = k / n;
+  T_ r = num_edges - k;
+  T_ counts[n];
+  for (int i = 0; i < n; i++)
+    counts[i] = I;
+  int j = 0;
+  while (j < r) {
+    counts[j]++;
+    j++;
+  }
+  return counts[p];  
+}
+
+
 #endif  // UTIL_H_

@@ -27,47 +27,78 @@ the internal arrays should be symmetric to support gets and puts
 // Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
 // (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
 // should this be generically typed??
+// it would be nice if this incorporated the edge case where num nodes < npes, then first numnodes PEs get 1 node
 template <typename T_=int64_t> struct Partition {
   int64_t N; 
   int pe, npes;
+  bool small;
   T_ start, end, partition_width, max_width;
 
   Partition() {}
 
-  Partition(int64_t num_nodes) : N(num_nodes){
+  Partition(int64_t num_nodes, bool ignore=false) : N(num_nodes){
     pe = shmem_my_pe();
     npes = shmem_n_pes();
-    partition_width = N/npes;
-    max_width = N - (npes-1)*partition_width;
-    start = partition_width * pe;
-    if (pe == npes-1) {
-      end = N;  
+    small = false;
+    if (num_nodes < npes && !ignore) {
+      small = true;
+      if (pe < num_nodes) {
+        partition_width = 1;
+        start = pe;
+        end = pe+1;
+      } else {
+        partition_width = 0;
+        start = 0;
+        end = 0;
+      }
+      max_width = 1;
     } else {
-      end = start + partition_width; 
+      small = false;
+      partition_width = N/npes;
+      max_width = N - (npes-1)*partition_width;
+      start = partition_width * pe;
+      if (pe == npes-1) {
+        end = N;  
+      } else {
+        end = start + partition_width; 
+      }
     }
   }
   
   // Given a node, determine which PE it belongs to
   int recv(T_ node) {
-    int receiver = node / partition_width;
-    if (receiver >= npes) 
-      receiver = npes - 1;
+    int receiver;
+    if (small) {
+      receiver = node;
+    } else {
+      receiver = node / partition_width;
+      if (receiver >= npes) 
+        receiver = npes - 1;
+    }
     return receiver;
   }
 
   // Given a node, determine the local position on assigned PE
   T_ local_pos(T_ node) {
-    int rec = node / partition_width;
-    if (rec >= npes)
-      return(node - (npes-1)*partition_width);
-    else
-      return(node % partition_width);
-    //return(node - start);
+    if (small) {
+      return 0;
+    } else {
+      int rec = node / partition_width;
+      if (rec >= npes)
+        return(node - (npes-1)*partition_width);
+      else
+        return(node % partition_width);
+    }
   }
 
   // Given a local position, determine the global node number
   T_ global_pos(T_ local_pos) {
     return(start + local_pos);
+  }
+  
+  // Return the first node assigned to PE p
+  T_ first_node(int p) {
+    return partition_width*p;
   }
 
 //  void PrintStats(long* PRINT_LOCK) {
@@ -116,7 +147,7 @@ template <typename T_> struct RoundRobin {
   }
 
   T_ max_width() {
-    if (max_width_ == -1) {
+    if (*max_width_ == -1) {
       printf("Max width has not been finalized yet!\n");
       return -1;
     } else {
@@ -161,7 +192,6 @@ class pvector {
     npes = shmem_n_pes();
     local_width_ = (long*) shmem_calloc(1, sizeof(long));
     if (symmetric_) {
-      printf("Instantiating a pvector\n");
       if (num_elements == 0)
         start_ = (T_ *) shmem_calloc(1, sizeof(T_));                            // is this going to cause problems? callocing with 0 elems returns nullptr
       else 
@@ -180,7 +210,6 @@ class pvector {
   }
 
   pvector(iterator copy_begin, iterator copy_end) : pvector(copy_end - copy_begin) {
-    printf("copying a pvector\n");
     #pragma omp parallel for
     for (size_t i=0; i < capacity(); i++)
       start_[i] = copy_begin[i];
@@ -193,7 +222,6 @@ class pvector {
   pvector(pvector &&other)
       : symmetric_(other.symmetric_), start_(other.start_), end_size_(other.end_size_),
         end_capacity_(other.end_capacity_) {
-    printf("moving a pvector\n");
     other.start_ = nullptr;
     other.end_size_ = nullptr;
     other.end_capacity_ = nullptr;
@@ -201,7 +229,7 @@ class pvector {
 
   // want move assignment
   pvector& operator= (pvector &&other) {
-    printf("assigning (moving) a pvector\n");
+    combined_size_ = other.combined_size_;
     local_width_ = other.local_width_;
     max_width_ = other.max_width_;
     symmetric_ = other.symmetric_;
@@ -218,10 +246,8 @@ class pvector {
   ~pvector() {
     if (start_ != nullptr) {
       if (symmetric_) {
-        printf("PE %d is calling delete pvector\n", shmem_my_pe());
         shmem_free(start_);
       } else {
-        printf("PE %d is calling delete pvector\n", shmem_my_pe());
         delete[] start_;
       }
     }
@@ -231,13 +257,11 @@ class pvector {
   void reserve(size_t num_elements) {
     if (num_elements > capacity()) {
       if (symmetric_) { 
-        printf("reserving a symmetric pvector\n");
         T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
         #pragma omp parallel for
         for (size_t i=0; i < size(); i++)
           new_range[i] = start_[i];
         end_size_ = new_range + size();
-        printf("PE %d is calling shmem free on pvector during reserve\n", shmem_my_pe());
         shmem_free(start_);
         start_ = new_range;
         end_capacity_ = start_ + num_elements;
@@ -247,7 +271,6 @@ class pvector {
         for (size_t i=0; i < size(); i++)
           new_range[i] = start_[i];
         end_size_ = new_range + size();
-        printf("PE %d is calling delete on pvector during reserve\n", shmem_my_pe());
         delete[] start_;
         start_ = new_range;
         end_capacity_ = start_ + num_elements;
@@ -353,76 +376,48 @@ class pvector {
   }
 
   void swap(pvector &other) {
-    printf("swapping a pvector\n");
     std::swap(start_, other.start_);
     std::swap(end_size_, other.end_size_);
     std::swap(end_capacity_, other.end_capacity_);
   }
   
   // Combines the parent pvector from all PEs into a single pvector, which is returned
-  pvector<T_> combine(int num_nodes, int pe, int npes, long* pSync) {
+  pvector<long> combine(int64_t num_nodes, long* pSync) {
     if (!symmetric_) {
       printf("Can't combine pvectors that don't occur in symmetric memory!\n");
       shmem_global_exit(1);
       exit(1);
     } else {
-      int start, end;
-      int offset = num_nodes/npes;
-      start = offset * pe;
-      if (pe == npes-1) {
-        end = num_nodes;  
-      } else {
-        end = start + offset; 
-      }
-      T_* src = (T_ *) shmem_calloc(offset + npes - 1, sizeof(T_));        // Max number of elems any pe can have (offset + max remainder)
-      pvector<T_> dest(num_nodes, true);
-      #pragma omp parallel for
-      for (int n = start; n < end; n++) {
-        if (start_[n-start] < -1) {
-          src[n-start] = -1;
-        } else {
-          src[n-start] = start_[n-start];
-        }
-      }
-      if (sizeof(T_) <= 32) {
-        shmem_collect32(dest.begin(), src, end-start, 0, 0, npes, pSync);
-      } else if (sizeof(T_) <= 64) {                                                                     // else pray it fits in 64 bits?
-        shmem_collect64(dest.begin(), src, end-start, 0, 0, npes, pSync);
-      } else {
-        printf("Requested type for NodeID is larger than 64 bits! pvector.h -> combine method cannot be used. Giving up.\n");
-        shmem_global_exit(1);
-        exit(1);
-      }
+      Partition<int> vp(num_nodes);
+      pvector<long> dest(num_nodes, true);
+      shmem_collect64(dest.begin(), start_, vp.end-vp.start, 0, 0, vp.npes, pSync); 
+      shmem_barrier_all();
       return dest;
     }
   }
 
-  // currently broken. do we even want to recombine? isnt the point of partitioning the node list is too long?
-  /*pvector<T_> combine(Partition<T_> vp, long* pSync, bool bfs = false) {
+  pvector<int> combine(int64_t num_nodes, int pe, int npes, long* pSync) {
     if (!symmetric_) {
       printf("Can't combine pvectors that don't occur in symmetric memory!\n");
       shmem_global_exit(1);
       exit(1);
     } else {
-      pvector<T_> dest(vp.N, true);
-      if (bfs) {
-        for (T_ n = vp.start; n < vp.end; n++) {
-          if (start_[vp.local_pos(n)] < -1) 
-            start_[vp.local_pos(n)] = -1;
+      Partition<int> vp(num_nodes);
+      T_* src = (T_ *) shmem_calloc(vp.max_width, sizeof(T_));        // Max number of elems any pe can have (offset + max remainder)
+      pvector<int> dest(num_nodes, true);
+      #pragma omp parallel for
+      for (int n = vp.start; n < vp.end; n++) {
+        if (start_[n-vp.start] < -1) {
+          src[n-vp.start] = -1;
+        } else {
+          src[n-vp.start] = start_[n-vp.start];
         }
       }
-      printf("Address: %p\n", (void *) start_);
-      if (sizeof(T_) <= 32) {
-        shmem_collect32(dest.begin(), start_, vp.end-vp.start, 0, 0, vp.npes, pSync);
-      } else if (sizeof(T_) <= 64) {                                                                     // else pray it fits in 64 bits?
-        shmem_collect64(dest.begin(), start_, vp.end-vp.start, 0, 0, vp.npes, pSync);
-      } else {
-        printf("Requested type for NodeID is larger than 64 bits! pvector.h -> combine method cannot be used. Giving up.\n");
-        shmem_global_exit(1);
-        exit(1);
-      }
+      shmem_collect32(dest.begin(), src, vp.end-vp.start, 0, 0, npes, pSync);
+      shmem_barrier_all();
+      return dest;
     }
-  }*/
+  }
 
  private:
   T_* start_;

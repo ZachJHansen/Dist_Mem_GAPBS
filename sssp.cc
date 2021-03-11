@@ -33,10 +33,12 @@ void RelaxEdges(const WGraph &g, NodeID u, long delta, pvector<long> &dist, vect
         local_bins[dest_bin].push_back(wn.v);
         break;
       }
-      if (wn.v >= vp.start && wn.v < vp.end)
+      shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));               
+/*      if (wn.v >= vp.start && wn.v < vp.end)
         old_dist = dist[vp.local_pos(wn.v)];      // swap failed, recheck dist update & retry
       else
         shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));               
+*/
     }
   }
 }
@@ -69,7 +71,7 @@ void dist_scheme(long* distributions, long* bin_sizes, long* indices, Partition<
   }
 }
 
-bool dist_heuristic(long* bin_sizes, int npes) {
+bool dist_heuristic(long* bin_sizes, int npes, long iter) {
   bool redistribute = false;
   long cumulative = 0;
   for (int i = 0; i < npes; i++) {                     // Sum local bin sizes
@@ -92,7 +94,11 @@ bool dist_heuristic(long* bin_sizes, int npes) {
     for (int i = 0; i < npes; i++)
       shmem_int_p(redist, 1, i);
   }*/
-  printf("Cumulative: %lu | redist: %d\n", cumulative, (int) redistribute);
+  ofstream out;
+  out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_counts.txt", ios::app);
+  out << iter << " " << cumulative << endl;
+  out.close();
+  //printf("Cumulative: %lu | redist: %d\n", cumulative, (int) redistribute);
   return(redistribute);
 }
 
@@ -100,7 +106,7 @@ bool dist_heuristic(long* bin_sizes, int npes) {
 // Otherwise distribute bin contents among PEs
 // Calculate the new frontier size for each PE and return it
 long distribute_frontier(pvector<long> &frontier, vector <vector<NodeID>> &local_bins, 
-                  long* bin_sizes, long next_bin_index, long next_frontier_tail, Partition<NodeID> vp, Partition<NodeID> ep, long* indices, long* distributions) {
+                  long* bin_sizes, long next_bin_index, long next_frontier_tail, Partition<NodeID> vp, Partition<NodeID> ep, long* indices, long* distributions, long iter) {
   long return_val;
   static long local_pSync[SHMEM_BCAST_SYNC_SIZE];
   for (int i = 0; i < SHMEM_BCAST_SYNC_SIZE; i++)
@@ -120,7 +126,7 @@ long distribute_frontier(pvector<long> &frontier, vector <vector<NodeID>> &local
   // Determine if work must be re-balanced
   int* redistribute = (int*) shmem_calloc(1, sizeof(int));
   if (vp.pe == 0) {
-    if (dist_heuristic(bin_sizes, vp.npes)) { 
+    if (dist_heuristic(bin_sizes, vp.npes, iter)) { 
       for (int i = 0; i < vp.npes; i++)
         shmem_int_p(redistribute, 1, i);
     }
@@ -148,6 +154,10 @@ long distribute_frontier(pvector<long> &frontier, vector <vector<NodeID>> &local
     shmem_barrier_all();
     long binsize = 0;
     if (next_bin_index < local_bins.size()) {
+      /*ofstream out;
+      out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_counts.txt", ios::app);
+      out << iter << " " << local_bins[next_bin_index].size() << endl;
+      out.close();*/
       binsize = local_bins[next_bin_index].size();
       //printf("check 2.4\n");
       copy(local_bins[next_bin_index].begin()+count, local_bins[next_bin_index].end(), frontier.data()+indices[vp.pe]); // copy the edges you didn't give away into frontier starting at how many edges you received
@@ -163,6 +173,10 @@ long distribute_frontier(pvector<long> &frontier, vector <vector<NodeID>> &local
   } else {                                              // Copy contents of local bin into personal frontier
     //printf("check 4\n");
     if (next_bin_index < local_bins.size()) {
+      /*ofstream out;
+      out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/shmem_counts.txt", ios::app);
+      out << iter << " " << local_bins[next_bin_index].size() << endl;
+      out.close();*/
       long binsize = local_bins[next_bin_index].size();
       copy(local_bins[next_bin_index].begin(), local_bins[next_bin_index].end(), frontier.data());
       local_bins[next_bin_index].resize(0);
@@ -180,6 +194,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* V
   long init = 0;
   long *old_dist, *new_dist;
   Timer t;
+  printf("Delta: %d | source: %d\n", delta, source);
   Partition<NodeID> vp(g.num_nodes());                                  // Partition nodes: each PE is assigned a subset of nodes to process
   pvector<long> dist(vp.max_width, kDistInf, true);                     // Symmetric partitioned array of distances, initialized at infinity
   if (source >= vp.start && source < vp.end)                            // If src falls in your range of vertices, init distance to source as 0
@@ -211,10 +226,11 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* V
 
     for (long i = 0; i < curr_frontier_tail; i++) {                     // Each PE processes their own frontier (asynchronous)
       NodeID u = frontier[i];
-      if (u >= vp.start && u < vp.end)
+      /*if (u >= vp.start && u < vp.end)
         udist = dist[vp.local_pos(u)];
       else
-        shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                       
+        shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                      */
+      shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                      
       if (udist >= delta * static_cast<long>(curr_bin_index))
         RelaxEdges(g, u, delta, dist, local_bins, vp);
     }
@@ -239,6 +255,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* V
     }
     //shmem_long_min_to_all(shared_indexes+(((*iter)+1)&1), local_min, 1, 0, 0, vp.npes, pWrk, pSync); // next_bin_index = min of local_mins
     shmem_long_min_to_all(&next_bin_index, local_min, 1, 0, 0, vp.npes, pWrk, pSync); // next_bin_index = min of local_mins
+    //printf("Next bin: %lu\n", next_bin_index);
     t.Stop();                                                          
     PrintStep(curr_bin_index, t.Millisecs(), curr_frontier_tail);       // End of phase 1
 
@@ -253,7 +270,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* V
       shmem_long_p(bin_sizes+vp.pe, 0, 0);
     }
     shmem_barrier_all();
-    next_frontier_tail = distribute_frontier(frontier, local_bins, bin_sizes, next_bin_index, next_frontier_tail, vp, ep, indices, distributions);       // Each PE gets their own frontier tail representing size of local frontier
+    next_frontier_tail = distribute_frontier(frontier, local_bins, bin_sizes, next_bin_index, next_frontier_tail, vp, ep, indices, distributions, *iter);       // Each PE gets their own frontier tail representing size of local frontier
     //(*iter)++;
     shmem_barrier_all();
     if (vp.pe == 0) {                                                           // couldn't every PE just update iter themselves?
@@ -345,7 +362,7 @@ int main(int argc, char* argv[]) {
     //g.PrintTopology();
     //g.PrintTopology(false);
     SourcePicker<WGraph> sp(g, cli.start_vertex());
-    auto discard = sp.PickNext();
+    //auto discard = sp.PickNext();
     /*Partition vp(g.num_nodes());
     printf("PE %d is init dist with width = %lu\n", vp.pe, vp.max_width);
     pvector<WeightT> dist(vp.max_width, kDistInf, true);                                 // Initialize symmetric partitioned pvector with +inf

@@ -52,14 +52,6 @@ int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bit
   next.reset();
   long long* awake_count = (long long *) shmem_malloc(sizeof(long long));               // Synchonization point?
   *awake_count = 0;
-  /*int parent_offset = g.num_nodes() / npes;
-  int upper_bound, relative;                                                            // Each element of the complete parent array has a relative position in the local array
-  int lower_bound = parent_offset * pe;                                                 // Distribute graph processing ~evenly
-  if (pe == npes-1){
-    upper_bound = g.num_nodes();                
-  } else {
-    upper_bound = lower_bound + parent_offset;
-  }*/
   for (NodeID u = vp.start; u < vp.end; u++) {                                  // PE N has parent array[lower : upper] and is responsible for processing nodes lower-upper
     relative = vp.local_pos(u);
     if (parent[relative] < 0) {
@@ -137,7 +129,6 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
   }
   lqueue.flush();
   shmem_longlong_sum_to_all(scout_count, scout_count, 1, 0, 0, npes, pWrk, pSync);           // Reduction: + (represents a synchronization point)
-  //printf("PE %d has scout count %lu\n", pe, *scout_count);
   return (*scout_count); 
 }
 
@@ -177,15 +168,6 @@ void BitmapToQueue(const Graph &g, const Bitmap &bm, SlidingQueue<NodeID> &queue
 // Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
 // (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
 pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
-  /*int start, end;
-  int offset = g.num_nodes()/npes;
-  size_t max_size = g.num_nodes() - (npes-1)*offset;
-  start = offset * pe;
-  if (pe == npes-1) {
-    end = g.num_nodes();  
-  } else {
-    end = start + offset; 
-  }*/
   Partition<NodeID> p(g.num_nodes());
   pvector<NodeID> parent(p.max_width, true);                               // The last PE contains the remainding elements, so the symmetric parent array must be at least this large on each PE
   #pragma omp parallel for                                              // But even though the parent array is symmetric, the elements aren't the same across PEs
@@ -217,10 +199,6 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *
   front.reset();                                        // All PEs are synched at this point
   int64_t edges_to_check = g.num_edges_directed();
   int64_t scout_count = g.out_degree(source);
-  //printf("Pe %d thin edges = %lu & scout = %lu\n", pe, edges_to_check, scout_count);
-  /*shmem_barrier_all();
-  shmem_global_exit(0);
-  exit(0);*/
   while (!frontier->empty()) {
     if (scout_count > edges_to_check / alpha) {
       int64_t awake_count, old_awake_count;
@@ -248,13 +226,8 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long *
       PrintStep("td", t.Seconds(), frontier->size());
     }
   }
-  //for (int i = 0; i < vp.max_width; i++) 
-    //printf("PE %d | Node %d has parent %d\n", vp.pe, vp.global_pos(i), parent[i]);
-  //for (p : parent)
-    //printf("PE: %d | p - %d\n", vp.pe, p);
-  // Do we care about the time required to combine parent arrays?
-  // If not, it may be better to just fill a pvector with NodeIDs instead of 32 bit ints
-  return(parent.combine(g.num_nodes(), pe, npes, pSync));
+  //return(parent.combine(g.num_nodes(), pe, npes, pSync));
+  return(parent);
 }
 
 void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
@@ -281,58 +254,29 @@ void PrintBFSStats(const Graph &g, const pvector<NodeID> &bfs_tree) {
 // graph built on PE 0. So verifier won't work on graphs that require partitioning
 // output generated parent arrays to a file, then have the original BFS verify them
 bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
-  if (shmem_my_pe() == 0) {
+  /*if (shmem_my_pe() == 0) {
     ofstream shmem_out;
     shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
     for (auto it = parent.begin(); it < parent.end(); it++) {
       shmem_out << *it << endl;
-  //  *it = 15;           // scramble
     }
     shmem_out.close();
   }
-/*  pvector<int> depth(g.num_nodes(), -1);
-  depth[source] = 0;
-  vector<NodeID> to_visit;
-  to_visit.reserve(g.num_nodes());
-  to_visit.push_back(source);
-  for (auto it = to_visit.begin(); it != to_visit.end(); it++) {
-    NodeID u = *it;
-    for (NodeID v : g.out_neigh(u)) {
-      if (depth[v] == -1) {
-        depth[v] = depth[u] + 1;
-        to_visit.push_back(v);
-      }
-    }
+  return true;*/
+  Partition<NodeID> vp(g.num_nodes());
+  int* PRINTER = (int *) shmem_malloc(sizeof(int));
+  *PRINTER = 0;
+  shmem_barrier_all();
+  shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
+  ofstream shmem_out;
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
+  for (NodeID n = vp.start; n < vp.end; n++) {
+    shmem_out << parent[vp.local_pos(n)] << endl;
   }
-  for (NodeID u : g.vertices()) {
-    if ((depth[u] != -1) && (parent[u] != -1)) {
-      if (u == source) {
-        if (!((parent[u] == u) && (depth[u] == 0))) {
-          cout << "Source wrong" << endl;
-          return false;
-        }
-        continue;
-      }
-      bool parent_found = false;
-      for (NodeID v : g.in_neigh(u)) {
-        if (v == parent[u]) {
-          if (depth[v] != depth[u] - 1) {
-            cout << "Wrong depths for " << u << " & " << v << endl;
-            return false;
-          }
-          parent_found = true;
-          break;
-        }
-      }
-      if (!parent_found) {
-        cout << "Couldn't find edge from " << parent[u] << " to " << u << endl;
-        return false;
-      }
-    } else if (depth[u] != parent[u]) {
-      cout << "Reachability mismatch" << endl;
-      return false;
-    }
-  }*/
+  shmem_out.close();
+  if (!(vp.pe == vp.npes-1))
+    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);
+  shmem_free(PRINTER);
   return true;
 }
 
@@ -341,8 +285,6 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-
-  //char size_env[] = "SHMEM_SYMMETRIC_SIZE=16G";
   char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
@@ -361,15 +303,11 @@ int main(int argc, char* argv[]) {
     ll_pWrk[i] = SHMEM_SYNC_VALUE;
   }
 
-  int npes = shmem_n_pes();
-  int pe = shmem_my_pe();
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
-  static long* LOCK = (long *) shmem_calloc(1, sizeof(long)); 
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();
-    //g.PrintTopology();
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS, ll_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());
@@ -379,7 +317,6 @@ int main(int argc, char* argv[]) {
     BenchmarkKernel(cli, g, BFSBound, PrintBFSStats, VerifierBound);
   }                                                                                            // Extra scope to trigger deletion of graph, otherwise shmem destructor is screwy
   shmem_free(PLOCKS);
-  shmem_free(LOCK);
   shmem_finalize();
   return 0;
 }

@@ -45,32 +45,25 @@ to relabel the graph, we use the heuristic in WorthRelabelling.
 using namespace std;
 
 size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
-  printf("here\n");
-  shmem_barrier_all();
   Partition<NodeID> vp(g.num_nodes());
   long* total = (long *) shmem_calloc(1, sizeof(long));
   for (NodeID u = vp.start; u < vp.end; u++) {
     for (NodeID v : g.out_neigh(u)) {
-  //    printf("Pe %d | U = %d, V = %d\n", vp.pe, u, v);
       if (v > u)
         break;
       auto it = g.out_neigh(u).begin();
       for (NodeID w : g.out_neigh(v)) {
-        //printf("\tV = %d, W = %d\n", v, w);
         if (w > v)
           break;
         while (*it < w) {
-    //      printf("\t\tOut neigh(%d) = %d\n", u, *it);
           it++;
         }
         if (w == *it) {
-      //    printf("\t\t\tIterating: u = %d, v = %d, w = %d\n", u, v, w);
           (*total)++;
         }
       }
     }
   }
-//  printf("Pe %d: Total = %lu\n", vp.pe, *total);
   shmem_long_sum_to_all(total, total, 1, 0, 0, vp.npes, pWrk, pSync);                   // double should fit size_t regardless of 32 vs 64 bit system?
   return ((size_t) *total);
 }
@@ -130,25 +123,6 @@ bool TCVerifier(const Graph &g, size_t test_total) {
     shmem_out << test_total << endl;
     shmem_out.close();
   }
-/*
-  size_t total = 0;
-  vector<NodeID> intersection;
-  intersection.reserve(g.num_nodes());
-  for (NodeID u : g.vertices()) {
-    for (NodeID v : g.out_neigh(u)) {
-      auto new_end = set_intersection(g.out_neigh(u).begin(),
-                                      g.out_neigh(u).end(),
-                                      g.out_neigh(v).begin(),
-                                      g.out_neigh(v).end(),
-                                      intersection.begin());
-      intersection.resize(new_end - intersection.begin());
-      total += intersection.size();
-    }
-  }
-  total = total / 6;  // each triangle was counted 6 times
-  if (total != test_total)
-    cout << total << " != " << test_total << endl;
-  return total == test_total;*/
   return true;
 }
 
@@ -158,39 +132,27 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  static long PRINT_LOCK = 0;
-
   char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long lng_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
-  static double dbl_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
-  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) {
-    lng_pWrk[i] = SHMEM_SYNC_VALUE;
-    dbl_pWrk[i] = SHMEM_SYNC_VALUE;
-  }
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) 
+    pWrk[i] = SHMEM_SYNC_VALUE;
 
   {
     Builder b(cli);
-//    printf("Check 1\n");
-    Graph g = b.MakeGraph(pSync, lng_pWrk);
-    //g.PrintTopology();
-  //  Graph gee = Builder::RelabelByDegree(g, pSync, lng_pWrk);
-  //  gee.PrintTopology();
+    Graph g = b.MakeGraph(pWrk, pSync);
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;
     } 
-    auto TCBound = [] (const Graph &g) { return Hybrid(g, lng_pWrk, pSync); };
-
-    //size_t result = TCBound(gee);//Hybrid(g, pSync, lng_pWrk);
-    //printf("Result: %lu\n", result);
+    auto TCBound = [] (const Graph &g) { return Hybrid(g, pSync, pWrk); };
     BenchmarkKernel(cli, g, TCBound, PrintTriangleStats, TCVerifier);
   }
   shmem_finalize();

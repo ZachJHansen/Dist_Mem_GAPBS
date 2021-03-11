@@ -49,6 +49,23 @@ class Bitmap {
     shmem_barrier_all();
   }
 
+  // Bitmap of complete adjacency list is not partitioned
+  // Graph itself is partitioned, however
+  // So each PE maintains a record of which region of the bitmap it's assigned nodes belong to
+  // If PE 0 handles nodes 0-2, PE 0 handles Adj[0], Adj[1], Adj[2]
+  void init_bitmap_offsets(const Graph &g, Partition<NodeID> vp) {
+    NodeID node_interval_start, node_interval_end;
+    adj_start_ = (size_t *) shmem_calloc(1, sizeof(size_t));
+    size_t ptrdiff = 0;                                 
+    for (int i = 0; i < vp.pe; i++) {
+      node_interval_start = vp.partition_width * i;
+      node_interval_end = vp.partition_width * (i+1) - 1;
+      ptrdiff += (g.out_neigh(node_interval_end).end() - g.out_neigh(node_interval_start).begin());
+    }
+    *adj_start_ = ptrdiff;                                      // Cumulative ptrdiff of adjacency lists on all preceding PEs
+    shmem_barrier_all();
+  }
+
   void set_bit(size_t pos) {
     start_[word_offset(pos)] |= ((uint64_t) 1l << bit_offset(pos));
   }
@@ -61,7 +78,27 @@ class Bitmap {
     } while (!compare_and_swap(start_[word_offset(pos)], old_val, new_val));
   }
 
+  // Exists for one use case: v is in u's adjacency list, but the
+  // complete adjacency list is partitioned across PEs. The bitmap is
+  // not partitioned, so <u,v>'s location in a complete adj list must be reconstructed
+  // Each PE maintains its own bitmap, so setting a bit is necessarily atomic (no PE accesses someone elses bitmap)
+  // Eventually they are merged with an or to all
+  void set_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
+    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
+    size_t pos = u_start + local_size;
+    start_[word_offset(pos)] |= ((uint64_t) 1l << bit_offset(pos));
+  }
+
   bool get_bit(size_t pos) const {
+    return (start_[word_offset(pos)] >> bit_offset(pos)) & 1l;
+  }
+
+  // so much communication overhead for one bit...
+  bool get_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
+    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
+    size_t pos = u_start + local_size;
     return (start_[word_offset(pos)] >> bit_offset(pos)) & 1l;
   }
 
@@ -86,6 +123,7 @@ class Bitmap {
   bool symmetric_;
   uint64_t *start_;
   uint64_t *end_;
+  size_t *adj_start_;
   uint64_t num_words;
   static const uint64_t kBitsPerWord = 64;
   static uint64_t word_offset(size_t n) { return n / kBitsPerWord; }

@@ -16,6 +16,7 @@ Double-buffered queue so appends aren't seen until SlideWindow() called
     Reworked in such a way that an individual PE does the work of a thread
     When the sliding queue in symmetric memory is updated by one PE, other PEs must wait to access
     Sliding queues should be symmetric and synched - every PE has the same contents
+    Queue buffers are not synched or symmetric
 */
 
 
@@ -70,7 +71,6 @@ class SlidingQueue {
   }
 
   void slide_window() {                         // Sync point
-    //printf("PE %d says start = %lu, end = %lu, in: %p => %lu\n", shmem_my_pe(), shared_out_start, shared_out_end, (void *) shared_in, *shared_in);
     shmem_barrier_all();
     shared_out_start = shared_out_end;
     shared_out_end = *shared_in;

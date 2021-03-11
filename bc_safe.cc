@@ -44,12 +44,9 @@ typedef double CountT;
 
 
 // path counts, depths are partitioned
-// an array of locks controls access to path counts
-// each address i in pathlocks could be locked by at least npes vertices v st local_pos(v) = i
-// so if v=50 needs to be protected, lp_v = 5, lock(5) blocks access to the pathcounts of all vertices whose local pos in partitioned array is 5
 void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
     Bitmap &succ, vector<SlidingQueue<NodeID>::iterator> &depth_index,
-    SlidingQueue<NodeID> &queue, Partition<NodeID> vp, long* PATH_LOCKS) {
+    SlidingQueue<NodeID> &queue, Partition<NodeID> vp, long* PATH_LOCK) {
 
   static long BFSpSync[SHMEM_REDUCE_SYNC_SIZE];
   static long long BFSpWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
@@ -79,15 +76,21 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
         NodeID lp_v = vp.local_pos(v);
         if ((shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == -1) &&
             (shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
+        //if ((depths[v] == -1) &&
+        //    (compare_and_swap(depths[v], static_cast<NodeID>(-1), depth))) {          // is the depths[v] == -1 comparison just for short circuit evaluation?
           lqueue.push_back(v);
         }
         if (shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == depth) {
           succ.set_bit_partitioned(g, u, v, vp);
+          // this command is supposed to be atomic, but requires 2 shmem instructions at best:
+          // shmem_atomic_fetch to get path_counts[u], and shmem_atomic_add to add that value to path_counts[v]
+          // so is a lock the only solution? maybe two locks, like lock 5 and lock 8 becomes 58
+          shmem_set_lock(PATH_LOCK);            // should be test lock since we dont want everyone to exec this sequentially
           CountT pc_u = shmem_double_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
-          shmem_set_lock(PATH_LOCKS+lp_v);            
           CountT pc_v = shmem_double_g(path_counts.begin()+lp_v, vp.recv(v));
           shmem_double_p(path_counts.begin()+lp_v, pc_u+pc_v, vp.recv(v));
-          shmem_clear_lock(PATH_LOCKS+lp_v);
+          shmem_clear_lock(PATH_LOCK);
+          //path_counts[v] += path_counts[u];
         }
       }
     }
@@ -96,6 +99,7 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
     depth_index.push_back(queue.begin());
     queue.slide_window();                               // synch point
   }
+  //lqueue.flush();
   shmem_barrier_all();
   succ.merge(BFSpWrk, BFSpSync);
   depth_index.push_back(queue.begin());
@@ -103,11 +107,10 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
 
 
 pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
-                        NodeID num_iters, long* QLOCK, float* pWrk, long* pSync) {
+                        NodeID num_iters, long* PATHLOCK, long* QLOCK, float* pWrk, long* pSync) {
   Timer t;
   t.Start();
   Partition<NodeID> vp(g.num_nodes());
-  long* PATHLOCKS = (long *) shmem_calloc(vp.max_width, sizeof(long));
   pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
   pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
   Bitmap succ(g.num_edges_directed(), true);                          // symmetric non-partitioned bitmap
@@ -124,7 +127,16 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     depth_index.resize(0);
     queue.reset();
     succ.reset();
-    shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp, PATHLOCKS);
+    shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp, PATHLOCK);
+    /*printf("Pe %d Path counts: ", vp.pe);
+    for (NodeID n = vp.start; n < vp.end; n++)
+      printf("%f ", path_counts[vp.local_pos(n)]);
+    printf("\n");
+    printf("PE %d successors: ", vp.pe);
+    for (NodeID n = 0; n < g.num_edges_directed(); n++)
+      printf("%d ", succ.get_bit(n));
+    printf("\n");
+    shmem_barrier_all();*/
     t.Stop();
     PrintStep("b", t.Seconds());
     pvector<ScoreT> deltas(g.num_nodes(), 0, true);
@@ -146,19 +158,20 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
       }
       shmem_barrier_all();              // synchronize between depths
     }
-    for (int i = 0; i < vp.max_width; i++)      // reset locks to 0 before next BFS
-      PATHLOCKS[i] = 0;
     t.Stop();
     PrintStep("p", t.Seconds());
   }
 
+  //for (auto t : scores)
+    //printf("PE %d | %f\n", vp.pe, t);
+  // normalize scores
   ScoreT* biggest_score = (float *) shmem_malloc(sizeof(float));
   *biggest_score = 0;
-  #pragma omp parallel for reduction(max : biggest_score)
+  //#pragma omp parallel for reduction(max : biggest_score)
   for (NodeID n=vp.start; n < vp.end; n++)
     *biggest_score = max(*biggest_score, scores[vp.local_pos(n)]);
   shmem_float_max_to_all(biggest_score, biggest_score, 1, 0, 0, vp.npes, pWrk, pSync);
-  #pragma omp parallel for
+  //#pragma omp parallel for
   for (NodeID n=vp.start; n < vp.end; n++)
     scores[vp.local_pos(n)] = scores[vp.local_pos(n)] / *biggest_score;
   return scores;
@@ -176,7 +189,11 @@ void PrintTopScores(const Graph &g, const pvector<ScoreT> &scores) {
 }
 
 
-// Prints result to file to be read by original verifier
+// Still uses Brandes algorithm, but has the following differences:
+// - serial (no need for atomics or dynamic scheduling)
+// - uses vector for BFS queue
+// - regenerates farthest to closest traversal order from depths
+// - regenerates successors from depths
 bool BCVerifier(const Graph &g, SourcePicker<Graph> &sp, NodeID num_iters,
                 const pvector<ScoreT> &scores_to_test) {
   Partition<NodeID> vp(g.num_nodes());
@@ -193,7 +210,6 @@ bool BCVerifier(const Graph &g, SourcePicker<Graph> &sp, NodeID num_iters,
   shmem_out.close();
   if (!(vp.pe == vp.npes-1))
     shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);     
-  shmem_free(PRINTER);
   return true;
 }
 
@@ -209,6 +225,7 @@ int main(int argc, char* argv[]) {
   char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
+  static long PATHLOCK = 0;
   static long QLOCK = 0;
 
   shmem_init();
@@ -226,10 +243,10 @@ int main(int argc, char* argv[]) {
 
   {
     Builder b(cli);
-    Graph g = b.MakeGraph(lng_pWrk, pSync);
+    Graph g = b.MakeGraph(pSync, lng_pWrk);
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BCBound =
-      [&sp, &cli] (const Graph &g) { return Brandes(g, sp, cli.num_iters(), &QLOCK, flt_pWrk, pSync); };
+      [&sp, &cli] (const Graph &g) { return Brandes(g, sp, cli.num_iters(), &PATHLOCK, &QLOCK, flt_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());
     auto VerifierBound = [&vsp, &cli] (const Graph &g,
                                      const pvector<ScoreT> &scores) {

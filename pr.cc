@@ -57,8 +57,6 @@ pvector<ScoreT> PageRankPull(const Graph &g, int max_iters,
     }
     shmem_barrier_all();                                        // is this needed? or will the reduction sync before starting?
     shmem_double_sum_to_all(error, error, 1, 0, 0, vp.npes, pWrk, pSync);      // Reduction : +
-    //if (vp.pe == 0)
-      //printf(" %2d    %lf\n", iter, *error);
     if (*error < epsilon)
       break;
   }
@@ -78,8 +76,7 @@ void PrintTopScores(const Graph &g, const pvector<ScoreT> &scores) {
 }
 
 
-// Verifies by asserting a single serial iteration in push direction has
-//   error < target_error
+// Prints result to file to be read by original verifier
 bool PRVerifier(const Graph &g, const pvector<ScoreT> &scores,
                         double target_error) {
   Partition<NodeID> vp(g.num_nodes());
@@ -95,21 +92,6 @@ bool PRVerifier(const Graph &g, const pvector<ScoreT> &scores,
   shmem_out.close();
   if (!(vp.pe == vp.npes-1))
     shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
-
-/*  const ScoreT base_score = (1.0f - kDamp) / g.num_nodes();
-  pvector<ScoreT> incomming_sums(g.num_nodes(), 0);
-  double error = 0;
-  for (NodeID u : g.vertices()) {
-    ScoreT outgoing_contrib = scores[u] / g.out_degree(u);
-    for (NodeID v : g.out_neigh(u))
-      incomming_sums[v] += outgoing_contrib;
-  }
-  for (NodeID n : g.vertices()) {
-    error += fabs(base_score + kDamp * incomming_sums[n] - scores[n]);
-    incomming_sums[n] = 0;
-  }
-  PrintTime("Total Error", error);
-  return error < target_error;*/
   return true;
 }
 
@@ -142,10 +124,6 @@ int main(int argc, char* argv[]) {
     auto PRBound = [&cli] (const Graph &g) {
       return PageRankPull(g, cli.max_iters(), pSync, dbl_pWrk, cli.tolerance());
     };
-    //auto scores = PRBound(g);
-    Partition<NodeID> vp(g.num_nodes());
-  //  for (NodeID i = vp.start; i < vp.end; i++)
-  //    printf("PE %d | score(%d) = %f\n", vp.pe, i, scores[vp.local_pos(i)]);
     auto VerifierBound = [&cli] (const Graph &g, const pvector<ScoreT> &scores) {
       return PRVerifier(g, scores, cli.tolerance());
     };

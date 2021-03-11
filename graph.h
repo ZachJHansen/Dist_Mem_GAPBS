@@ -345,17 +345,18 @@ class CSRGraph {
         shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
       shmem_barrier_all();
     }
+    shmem_free(PRINTER);
   }
 
 
   // offsets for given pe start from the pes first elem
   // some unused space - max_width = partition_width + remainder
   static DestID_** GenIndex(const pvector<SGOffset> &offsets, DestID_* neighs, Partition<NodeID_>* p) {
-    //printf("PE %d is calling calloc with %d elems\n", p->pe, (p->max_width)+1);
+    printf("PE %d is calling calloc with %d elems\n", p->pe, (p->max_width)+1);
     DestID_** index = (DestID_**) shmem_calloc((p->max_width)+1, sizeof(DestID_*)); 
     //if (squish)
     //  printf("PE %d | Index address %p\n", p->pe, (void*) index);
-    #pragma omp parallel for
+    //#pragma omp parallel for
     for (NodeID_ n = p->start; n <= p->end; n++) {
       index[n-p->start] = neighs + offsets[n-p->start];
       //if (squish)
