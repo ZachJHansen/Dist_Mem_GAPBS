@@ -4,6 +4,7 @@
 #ifndef GENERATOR_H_
 #define GENERATOR_H_
 
+#include <cmath>
 #include <algorithm>
 #include <cinttypes>
 #include <iostream>
@@ -151,9 +152,67 @@ class Generator {
   }
 
   static void InsertWeights(pvector<EdgePair<NodeID_, NodeID_>> &el, int option) {}
+  
+  static void InsertWeightsEdgeList(pvector<WEdge> &el) {
+    std::mt19937 rng;
+    std::uniform_int_distribution<int> udist(1, 255);
+    int64_t num_edges = el.combined_length();
+    int64_t num_blocks = num_edges / block_size;
+    if (num_edges % block_size != 0)
+      num_blocks++;
+    //printf("num_edges %d block size %d num_blocks %lu\n", num_edges, block_size, num_blocks);
+    Partition<int64_t> bp(num_blocks);
+    int* weights = (int *) shmem_calloc(bp.max_width * block_size, sizeof(int));                        // Allocate, on each PE, enough space for ~num_blocks/npes * block size weights
+    //printf("PE %d | num blocks = %d, bp.max_width = %d, bp.part_width = %d, block_size = %d", bp.pe, num_blocks, bp.max_width, bp.partition_width, block_size);
+    for (int64_t block=bp.start; block < bp.max_width+bp.start; block++) {                           // Divide processing of blocks naively between PEs
+      //printf("PE %d | start = %d\n, end = %d\n", bp.pe, bp.start, bp.max_width+bp.start);
+      rng.seed(kRandSeed + block);
+      //printf("PE %d | SEEd: %d\n", bp.pe, kRandSeed+block);
+      int64_t local_block = (block - bp.start) * block_size;                                              // Calculate local block ID (block is the global block ID within a non-partitioned array)
+      //printf("PE %d block %d local block %d\n", bp.pe, block, local_block);
+      for (int64_t e=local_block; e < local_block+block_size; e++) {                          // Fill symmetric weights array using local block ID, seeding based on global block ID
+        weights[e] = udist(rng);
+      }
+    }
+    /*printf("PE %d ", bp.pe);
+    for (int i = 0; i < bp.max_width*block_size; i++)
+      printf("%d ", weights[i]);
+    printf("\n");*/
+    Partition<int64_t> ep(num_edges);                                      // 
+    for (int64_t i = 0; i < el.size(); i++) {                                           // Update local region of edge list from weights stored in symmetric memory
+      int64_t global_edge = ep.npes * i + ep.pe;                                                            // Position of round-robin partitioned edge i within complete edge list
+      int owner = -1;      
+      int64_t count = 0;
+      for (int k = 0; k < bp.npes-1; k++) {                                       // Find the first PE where the weight associated with edge global_edge is saved
+        if (count <= global_edge && global_edge < (count + bp.partition_width*block_size)) {
+          owner = k;
+          break;
+        }
+        //count += bp.max_width * block_size;
+        count += bp.partition_width * block_size;
+      }
+      if (owner == -1) 
+        owner = bp.npes-1;
+      //printf("PE %d | edge %lu has global pos %lu with local pos %lu and owner %d\n", bp.pe, i, global_edge, global_edge-count, owner);
+      //shmem_get64(dest, weights+(global_edge-count), 1, owner);
+      el[i].v.w = static_cast<WeightT_>(shmem_int_g(weights+(global_edge-count), owner));
+      //el[i].v.w = *dest;
+    }
+    /*for (auto e : el)
+      printf("PE %d) = %d ", bp.pe, e.v.w);
+    printf("\n");*/
+  }
 
   // Overwrites existing weights with random from [1,255]
   static void InsertWeights(pvector<WEdge> &el, int option) {
+    if (option == 0) {
+      InsertWeightsEdgeList(el);
+    } else {
+      InsertWeightsSynthetic(el, option);
+    }
+  }
+
+  static void InsertWeightsSynthetic(pvector<WEdge> &el, int option) {
     int pe = shmem_my_pe();
     int npes = shmem_n_pes();
     int64_t num_edges = el.combined_length();
@@ -164,12 +223,7 @@ class Generator {
     int64_t num_blocks = num_edges / block_size;
     if (num_edges % block_size != 0)
       num_blocks++;
-    // if el was read in from a file, the el was partitioned round robin
-    if (option == 0) {
-      int i = 0;
-      while (i < pe)
-        el_offset += round_robin_size(num_edges, i++, npes);
-    } else if (option == 1) { // if el was generated, then pes 0 - (npes-2) got n*block_size edges, PE npes-1 got remainder
+    if (option == 1) { // if el was generated, then pes 0 - (npes-2) got n*block_size edges, PE npes-1 got remainder
       int64_t blocks_per_pe = num_blocks / npes;
       int i = 0;
       while (i < pe){
