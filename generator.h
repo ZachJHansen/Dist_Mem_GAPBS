@@ -84,7 +84,7 @@ class Generator {
     EdgeList el(edge_count);
     el.set_combined_length(num_edges_);
   //  printf("PE %d | EL creation with %lu edges\n", pe, edge_count);
-    Partition<int64_t> block_partition(num_blocks, true);
+    Partition<int64_t> block_partition(num_blocks);/*, true);*/
     shmem_barrier_all();
     //printf("PE %d has bp start %lu, bp end %lu, block size %lu for num_edges_ %lu and num blocks %lu\n", pe, block_partition.start, block_partition.end, block_size, num_edges_, num_blocks); 
     for (int64_t block = (block_size*block_partition.start); block < (block_size*block_partition.end); block += block_size) {
@@ -120,7 +120,7 @@ class Generator {
     }
     EdgeList el(edge_count);                            // partitioned edge list
     el.set_combined_length(num_edges_);                 // complete size of edge list
-    Partition<int64_t> block_partition(num_blocks, true);
+    Partition<int64_t> block_partition(num_blocks);/*, true);*/
     printf("PE %d | num_edges=%lu, block_size=%lu, num_blocks=%lu, blocks_per_pe=%lu, bp.start=%lu, bp.end=%lu\n", pe, num_edges_, block_size, num_blocks, blocks_per_pe, block_partition.start, block_partition.end);
     for (int64_t block = (block_size*block_partition.start); block < (block_size*block_partition.end); block += block_size) {
       rng.seed(kRandSeed + block/block_size);
