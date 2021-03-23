@@ -264,6 +264,7 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   }
   return true;*/
   Partition<NodeID> vp(g.num_nodes());
+  NodeID vertex;
   int* PRINTER = (int *) shmem_malloc(sizeof(int));
   *PRINTER = 0;
   shmem_barrier_all();
@@ -271,7 +272,12 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   ofstream shmem_out;
   shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
-    shmem_out << parent[vp.local_pos(n)] << endl;
+    vertex = parent[vp.local_pos(n)];
+    if (vertex < -1) {
+      shmem_out << -1 << endl;
+    } else {
+      shmem_out << parent[vp.local_pos(n)] << endl;
+    }
   }
   shmem_out.close();
   if (!(vp.pe == vp.npes-1))
