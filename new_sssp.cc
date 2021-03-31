@@ -49,14 +49,15 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
   if (source >= vp.start && source < vp.end)                            // If src falls in your range of vertices, init distance to source as 0
     dist[vp.local_pos(source)] = init;
   Partition<NodeID> ep(g.num_edges_directed());                         // Partition edges: frontier is divided among PEs
-  pvector<NodeID> frontier(g.num_edges_directed(), true);                 // Very, very bad! But the alternative is concurrent, resizable symmetric array 
+  pvector<NodeID> frontier(ep.max_width, true);
 
   long* local_min = (long *) shmem_malloc(sizeof(long));
   size_t* frontier_tails = (size_t *) shmem_calloc(2, sizeof(size_t));        // init frontier tails to {1, 0}
   frontier_tails[0] = 1;
   long* shared_indexes = (long *) shmem_calloc(2, sizeof(long));        // size_t shared_indexes[2] = {0, kMaxBin};
   shared_indexes[1] = kMaxBin;
-  frontier[0] = source;
+  if (vp.pe == 0)                                                // The PE 0 always controls the first node in a length 1 array (current partition scheme)
+    frontier[0] = source;
   t.Start();                                                            // Timer start and stops are synch points
   vector<vector<NodeID> > local_bins(0);                                // Local vector of vector of node ids 
   NodeID* iter = (NodeID *) shmem_calloc(1, sizeof(NodeID));            // Shared counter for iteration (init 0)
@@ -68,14 +69,14 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     size_t &curr_frontier_tail = frontier_tails[(*iter)&1];                     // frontier_tails[0]
     size_t &next_frontier_tail = frontier_tails[((*iter)+1)&1];                 // frontier_tails[1]
 
-    Partition<size_t> fp(curr_frontier_tail);
-    for (size_t i = fp.start; i < fp.end; i++) {
+    Partition<size_t> fp(curr_frontier_tail);                           // All PEs process a portion of edges added to the frontier in the previous iteration
+    for (size_t i = 0; i < fp.end-fp.start; i++) {
       NodeID u = frontier[i];
       shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                      
       if (udist >= delta * static_cast<long>(curr_bin_index))
         RelaxEdges(g, u, delta, dist, local_bins, vp);
     }
-
+    shmem_barrier_all();
     while (curr_bin_index < local_bins.size() &&
              !local_bins[curr_bin_index].empty() &&
              local_bins[curr_bin_index].size() < kBinSizeThreshold) {
@@ -100,17 +101,44 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     t.Start();                                                                  // REMEMBER! Everyone must particpate in timer and label printing stuff
     curr_bin_index = kMaxBin;                                                   // Every PE updates current frontier tails and bin indexes to the same values
     curr_frontier_tail = 0;
-    if (next_bin_index < local_bins.size()) {
+    shmem_barrier_all();
+    if (next_bin_index < local_bins.size())
       copy_start = shmem_ulong_atomic_fetch_add(&next_frontier_tail, local_bins[next_bin_index].size(), 0);       // PEs establish copying ranges using PE 0's copy of next frontier tail
-      for (int i = 0; i < vp.npes; i++) {                                         // Copy your data into everyone's frontiers
-        shmem_putmem(frontier.data() + copy_start, &*(local_bins[next_bin_index].begin()), sizeof(NodeID) * local_bins[next_bin_index].size(), i);
+    shmem_barrier_all();
+    // Distribute next_frontier_tail weighted nodes over a partitioned frontier
+    if (vp.pe == 0) { 
+      for (int i = 0; i < vp.npes; i++) 
+        shmem_size_put(&next_frontier_tail, &next_frontier_tail, 1, i);
+    }
+    shmem_barrier_all();
+    Partition<size_t> nftp(next_frontier_tail);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
+    //printf("PE %d | owner = %d, lcs = %lu \n", nftp.pe, owner, local_copy_start);
+    if (next_bin_index < local_bins.size()) {
+      int owner = nftp.recv(copy_start);                                          // which PE to dump on
+      size_t local_copy_start = nftp.local_pos(copy_start);                              // where the partitioned copy_start would be
+      size_t prior = 0;                                           // how many edges (weighted nodes) have you added to previous pes
+      size_t bin_remainder, partition_remainder;
+      for (int i = owner; i < nftp.npes; i++) {
+        bin_remainder = local_bins[next_bin_index].size() - prior;
+        if (i < nftp.npes - 1)                                                  // it's not the last PE
+          partition_remainder = nftp.partition_width - local_copy_start;
+        else
+          partition_remainder = nftp.max_width - local_copy_start;
+        if (partition_remainder < bin_remainder) {                                              // local bins contents won't fit only on this PE
+          shmem_putmem(frontier.data() + local_copy_start, &*(local_bins[next_bin_index].begin() + prior), sizeof(NodeID) * partition_remainder, owner);
+          prior += partition_remainder;
+          owner++;
+          local_copy_start = 0; 
+        } else {                                                // remaining bin contents will fit on this PE's partitioned array
+          shmem_putmem(frontier.data() + local_copy_start, &*(local_bins[next_bin_index].begin() + prior), sizeof(NodeID) * bin_remainder, owner);
+          break;
+        }
       }
       local_bins[next_bin_index].resize(0);
     }
     shmem_barrier_all();
     if (vp.pe == 0) {                                                           // couldn't every PE just update iter themselves?
       for (int i = 0; i < vp.npes; i++) {
-        shmem_size_put(&next_frontier_tail, &next_frontier_tail, 1, i);
         shmem_int_atomic_inc(iter, i);
       }
     }
