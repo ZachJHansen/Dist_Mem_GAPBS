@@ -71,7 +71,7 @@ size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
 // heuristic to see if sufficently dense power-law graph                        Does this still hold for the partitioned version?
 bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   int64_t average_degree = g.num_edges() / g.num_nodes();
-  if (average_degree < 10)
+  if (true/*average_degree < 10*/)
     return false;
   SourcePicker<Graph> sp(g);
   int64_t num_samples = min(int64_t(1000), g.num_nodes());
@@ -118,25 +118,27 @@ void PrintTriangleStats(const Graph &g, size_t total_triangles) {
 // Compares with simple serial implementation that uses std::set_intersection
 bool TCVerifier(const Graph &g, size_t test_total) {
   if (shmem_my_pe() == 0) {
-    ofstream shmem_out;
-    shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/tc_output.txt", ios::app);
+  	printf("Triangles: %lu\n", test_total);
+    /*ofstream shmem_out;
+    shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/tc_output.txt", ios::app);
     shmem_out << test_total << endl;
-    shmem_out.close();
+    shmem_out.close();*/
   }
   return true;
 }
 
 
 int main(int argc, char* argv[]) {
+	printf("check 0\n");
   CLApp cli(argc, argv, "triangle count");
   if (!cli.ParseArgs())
     return -1;
-
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+	printf("check 0.5\n");
+  char size_env[] = "SMA_SYMMETRIC_SIZE=1G";
   putenv(size_env);
-
+	printf("check 0.75\n");
   shmem_init();
-
+	printf("check 1\n");
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
   static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
 
