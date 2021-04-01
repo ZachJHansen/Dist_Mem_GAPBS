@@ -80,6 +80,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     while (curr_bin_index < local_bins.size() &&
              !local_bins[curr_bin_index].empty() &&
              local_bins[curr_bin_index].size() < kBinSizeThreshold) {
+      printf("check\n");
       vector<NodeID> curr_bin_copy = local_bins[curr_bin_index];
       local_bins[curr_bin_index].resize(0);
       for (NodeID u : curr_bin_copy) {
@@ -111,16 +112,18 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
         shmem_size_put(&next_frontier_tail, &next_frontier_tail, 1, i);
     }
     shmem_barrier_all();
-    Partition<size_t> nftp(next_frontier_tail);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
-    //printf("PE %d | owner = %d, lcs = %lu \n", nftp.pe, owner, local_copy_start);
+    Partition<size_t> nftp(next_frontier_tail, true);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
+    printf("check\n");
     if (next_bin_index < local_bins.size()) {
       int owner = nftp.recv(copy_start);                                          // which PE to dump on
+      printf("check 1\n");
       size_t local_copy_start = nftp.local_pos(copy_start);                              // where the partitioned copy_start would be
+      printf("check 2\n");
       size_t prior = 0;                                           // how many edges (weighted nodes) have you added to previous pes
       size_t bin_remainder, partition_remainder;
       for (int i = owner; i < nftp.npes; i++) {
         bin_remainder = local_bins[next_bin_index].size() - prior;
-        if (i < nftp.npes - 1)                                                  // it's not the last PE
+        if (i != nftp.npes - 1)                                                  // it's not the last PE
           partition_remainder = nftp.partition_width - local_copy_start;
         else
           partition_remainder = nftp.max_width - local_copy_start;
