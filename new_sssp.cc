@@ -56,7 +56,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
   frontier_tails[0] = 1;
   long* shared_indexes = (long *) shmem_calloc(2, sizeof(long));        // size_t shared_indexes[2] = {0, kMaxBin};
   shared_indexes[1] = kMaxBin;
-  if (vp.pe == 0)                                                // The PE 0 always controls the first node in a length 1 array (current partition scheme)
+  if (vp.pe == vp.npes-1)                                                // The PE 0 always controls the first node in a length 1 array (current partition scheme)
     frontier[0] = source;
   t.Start();                                                            // Timer start and stops are synch points
   vector<vector<NodeID> > local_bins(0);                                // Local vector of vector of node ids 
@@ -69,7 +69,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     size_t &curr_frontier_tail = frontier_tails[(*iter)&1];                     // frontier_tails[0]
     size_t &next_frontier_tail = frontier_tails[((*iter)+1)&1];                 // frontier_tails[1]
 
-    Partition<size_t> fp(curr_frontier_tail);                           // All PEs process a portion of edges added to the frontier in the previous iteration
+    OldePartition<size_t> fp(curr_frontier_tail);                           // All PEs process a portion of edges added to the frontier in the previous iteration
     for (size_t i = 0; i < fp.end-fp.start; i++) {
       NodeID u = frontier[i];
       shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                      
@@ -112,7 +112,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
         shmem_size_put(&next_frontier_tail, &next_frontier_tail, 1, i);
     }
     shmem_barrier_all();
-    Partition<size_t> nftp(next_frontier_tail, true);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
+    OldePartition<size_t> nftp(next_frontier_tail);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
     printf("check\n");
     if (next_bin_index < local_bins.size()) {
       int owner = nftp.recv(copy_start);                                          // which PE to dump on
@@ -120,11 +120,12 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
       size_t local_copy_start = nftp.local_pos(copy_start);                              // where the partitioned copy_start would be
       printf("check 2\n");
       size_t prior = 0;                                           // how many edges (weighted nodes) have you added to previous pes
-      size_t bin_remainder, partition_remainder;
+      size_t bin_remainder, partition_remainder;                // what if npes > |E|/npes? then they all get assigned to last pe but theres not enough space
       for (int i = owner; i < nftp.npes; i++) {
         bin_remainder = local_bins[next_bin_index].size() - prior;
         if (i != nftp.npes - 1)                                                  // it's not the last PE
           partition_remainder = nftp.partition_width - local_copy_start;
+          //partition_remainder = nftp.p_width(owner) - local_copy_start;
         else
           partition_remainder = nftp.max_width - local_copy_start;
         if (partition_remainder < bin_remainder) {                                              // local bins contents won't fit only on this PE
