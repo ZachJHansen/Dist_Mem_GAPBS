@@ -39,7 +39,11 @@ template <typename T_=int64_t> struct Partition {
   Partition(int64_t num_nodes, bool ignore=false) : N(num_nodes){
     pe = shmem_my_pe();
     npes = shmem_n_pes();
-    small = false;
+    if (ignore)
+      printf("npes = %d\n", npes);
+    if (ignore)
+      small = false;
+    //  shmem_barrier_all();    why does this cause deadlock?
     if (num_nodes < npes && !ignore) {
       small = true;
       if (pe < num_nodes) {
@@ -63,6 +67,7 @@ template <typename T_=int64_t> struct Partition {
         end = start + partition_width; 
       }
     }
+    printf("pw: %lu\n", partition_width);
   }
   
   // Given a node, determine which PE it belongs to

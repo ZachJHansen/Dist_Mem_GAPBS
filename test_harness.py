@@ -102,7 +102,7 @@ else:
     commands = generate_el_commands(kernel)
     commands = commands + generate_synthetic_commands(kernel)
     commands = commands + generate_real_commands(kernel)
-execute_tests(kernel, variety, commands)
+#execute_tests(kernel, variety, commands)
 prettify(commands, kernel)
 
                         
