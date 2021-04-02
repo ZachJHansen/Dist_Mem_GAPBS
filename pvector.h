@@ -21,6 +21,46 @@ Vector class with ability to not initialize or do initialize in parallel
 pvectors in symmetric memory are constructed when the symmetric boolean is true
 the internal arrays should be symmetric to support gets and puts
 */
+template <typename T_>  struct OldePartition {
+  int64_t N;
+  int pe, npes;
+  T_ start, end, partition_width, max_width;
+
+  OldePartition(int64_t num_nodes) : N(num_nodes){
+    pe = shmem_my_pe();
+    npes = shmem_n_pes();
+    partition_width = N/npes;
+    max_width = N - (npes-1)*partition_width;
+    start = partition_width * pe;
+    if (pe == npes-1) {
+      end = N;
+    } else {
+      end = start + partition_width;
+    }
+  }
+
+  // Given a node, determine which PE it belongs to
+  int recv(T_ node) {
+    if (partition_width == 0)
+      return npes-1;
+    int receiver = node / partition_width;
+    if (receiver >= npes)
+      receiver = npes - 1;
+    return receiver;
+  }
+
+  // Given a node, determine the local position on assigned PE
+  T_ local_pos(T_ node) {
+    if (partition_width == 0)
+      return node;
+    int rec = node / partition_width;
+    if (rec >= npes)
+      return(node - (npes-1)*partition_width);
+    else
+      return(node % partition_width);
+    //return(node - start);
+  }
+};
 
 // bounds for partitioning nodes ~evenly across PEs like a naif (final PE gets remainder)
 // Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
@@ -39,10 +79,6 @@ template <typename T_=int64_t> struct Partition {
   Partition(int64_t num_nodes, bool ignore=false) : N(num_nodes){
     pe = shmem_my_pe();
     npes = shmem_n_pes();
-    if (ignore)
-      printf("npes = %d\n", npes);
-    if (ignore)
-      small = false;
     //  shmem_barrier_all();    why does this cause deadlock?
     if (num_nodes < npes && !ignore) {
       small = true;
@@ -106,8 +142,20 @@ template <typename T_=int64_t> struct Partition {
     return partition_width*p;
   }
 
-//  void PrintStats(long* PRINT_LOCK) {
-//    shmem_set_lock(PRINT_LOCK);
+  // Return the partition width of PE p
+  T_ p_width(int p) {
+    if (small) {
+      if (pe < N)
+        return 1;
+      else
+        return 0;
+    } else {
+      if (pe == npes-1)
+        return(N - (npes-1)*partition_width);
+      else
+        return N/npes;
+    }
+  }
 };
 
 // Note: Previous partition expects zero-indexed NodeIDs
