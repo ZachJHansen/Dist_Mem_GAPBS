@@ -223,7 +223,6 @@ class BuilderBase {
   */
   void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
                DestID_** neighs, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
-    printf("makecsr\n");
     SGOffset neighbor;
     int64_t receiver, local_v;
     *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
@@ -245,6 +244,7 @@ class BuilderBase {
       if (max_neighbors[i] > maxn)
         maxn = max_neighbors[i];
     }
+    shmem_barrier_all();
     *neighs = (DestID_ *) shmem_calloc(maxn, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
     //*neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
     shmem_barrier_all();
@@ -268,7 +268,6 @@ class BuilderBase {
       }
     }
     shmem_barrier_all();
-    printf("end csr\n");
   }
 
   CSRGraph<NodeID_, DestID_, invert> MakeGraphFromEL(EdgeList &el, Partition<NodeID_>* p, long* pSync, long* pWrk, int src_opt) {
@@ -316,6 +315,7 @@ class BuilderBase {
       }
       shmem_barrier_all();
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
+      shmem_barrier_all();
     }
     return SquishGraph(g, &p, pSync, pWrk);
   }

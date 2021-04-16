@@ -1,0 +1,650 @@
+PE: 0 | Generate Time:       15.29979
+PE 6 is calling calloc with 524289 elems
+PE 7 is calling calloc with 524289 elems
+PE 8 is calling calloc with 524289 elems
+PE 9 is calling calloc with 524289 elems
+PE 10 is calling calloc with 524289 elems
+PE 11 is calling calloc with 524289 elems
+PE 12 is calling calloc with 524289 elems
+PE 13 is calling calloc with 524289 elems
+PE 14 is calling calloc with 524289 elems
+PE 15 is calling calloc with 524289 elems
+PE 16 is calling calloc with 524289 elems
+PE 17 is calling calloc with 524289 elems
+PE 18 is calling calloc with 524289 elems
+PE 19 is calling calloc with 524289 elems
+PE 20 is calling calloc with 524289 elems
+PE 21 is calling calloc with 524289 elems
+PE 22 is calling calloc with 524289 elems
+PE 23 is calling calloc with 524289 elems
+PE 24 is calling calloc with 524289 elems
+PE 25 is calling calloc with 524289 elems
+PE 26 is calling calloc with 524289 elems
+PE 27 is calling calloc with 524289 elems
+PE 28 is calling calloc with 524289 elems
+PE 29 is calling calloc with 524289 elems
+PE 30 is calling calloc with 524289 elems
+PE 31 is calling calloc with 524289 elems
+PE 0 is calling calloc with 524289 elems
+PE 1 is calling calloc with 524289 elems
+PE 2 is calling calloc with 524289 elems
+PE 3 is calling calloc with 524289 elems
+PE 4 is calling calloc with 524289 elems
+PE 5 is calling calloc with 524289 elems
+PE 50 is calling calloc with 524289 elems
+PE 51 is calling calloc with 524289 elems
+PE 52 is calling calloc with 524289 elems
+PE 53 is calling calloc with 524289 elems
+PE 54 is calling calloc with 524289 elems
+PE 55 is calling calloc with 524289 elems
+PE 56 is calling calloc with 524289 elems
+PE 57 is calling calloc with 524289 elems
+PE 58 is calling calloc with 524289 elems
+PE 59 is calling calloc with 524289 elems
+PE 60 is calling calloc with 524289 elems
+PE 61 is calling calloc with 524289 elems
+PE 62 is calling calloc with 524289 elems
+PE 63 is calling calloc with 524289 elems
+PE 32 is calling calloc with 524289 elems
+PE 33 is calling calloc with 524289 elems
+PE 34 is calling calloc with 524289 elems
+PE 35 is calling calloc with 524289 elems
+PE 36 is calling calloc with 524289 elems
+PE 37 is calling calloc with 524289 elems
+PE 38 is calling calloc with 524289 elems
+PE 39 is calling calloc with 524289 elems
+PE 40 is calling calloc with 524289 elems
+PE 41 is calling calloc with 524289 elems
+PE 42 is calling calloc with 524289 elems
+PE 43 is calling calloc with 524289 elems
+PE 44 is calling calloc with 524289 elems
+PE 45 is calling calloc with 524289 elems
+PE 46 is calling calloc with 524289 elems
+PE 47 is calling calloc with 524289 elems
+PE 48 is calling calloc with 524289 elems
+PE 49 is calling calloc with 524289 elems
+PE: 0 | Build Time:          112.25635
+PE 14 is calling calloc with 524289 elems
+PE 59 is calling calloc with 524289 elems
+PE 21 is calling calloc with 524289 elems
+PE 58 is calling calloc with 524289 elems
+PE 20 is calling calloc with 524289 elems
+PE 2 is calling calloc with 524289 elems
+PE 35 is calling calloc with 524289 elems
+PE 8 is calling calloc with 524289 elems
+PE 18 is calling calloc with 524289 elems
+PE 47 is calling calloc with 524289 elems
+PE 4 is calling calloc with 524289 elems
+PE 9 is calling calloc with 524289 elems
+PE 45 is calling calloc with 524289 elems
+PE 22 is calling calloc with 524289 elems
+PE 55 is calling calloc with 524289 elems
+PE 53 is calling calloc with 524289 elems
+PE 16 is calling calloc with 524289 elems
+PE 41 is calling calloc with 524289 elems
+PE 19 is calling calloc with 524289 elems
+PE 34 is calling calloc with 524289 elems
+PE 11 is calling calloc with 524289 elems
+PE 38 is calling calloc with 524289 elems
+PE 17 is calling calloc with 524289 elems
+PE 12 is calling calloc with 524289 elems
+PE 15 is calling calloc with 524289 elems
+PE 5 is calling calloc with 524289 elems
+PE 44 is calling calloc with 524289 elems
+PE 62 is calling calloc with 524289 elems
+PE 40 is calling calloc with 524289 elems
+PE 1 is calling calloc with 524289 elems
+PE 52 is calling calloc with 524289 elems
+PE 24 is calling calloc with 524289 elems
+PE 25 is calling calloc with 524289 elems
+PE 26 is calling calloc with 524289 elems
+PE 30 is calling calloc with 524289 elems
+PE 6 is calling calloc with 524289 elems
+PE 10 is calling calloc with 524289 elems
+PE 3 is calling calloc with 524289 elems
+PE 57 is calling calloc with 524289 elems
+PE 23 is calling calloc with 524289 elems
+PE 39 is calling calloc with 524289 elems
+PE 31 is calling calloc with 524289 elems
+PE 37 is calling calloc with 524289 elems
+PE 43 is calling calloc with 524289 elems
+PE 32 is calling calloc with 524289 elems
+PE 29 is calling calloc with 524289 elems
+PE 33 is calling calloc with 524289 elems
+PE 0 is calling calloc with 524289 elems
+PE 36 is calling calloc with 524289 elems
+PE 27 is calling calloc with 524289 elems
+PE 51 is calling calloc with 524289 elems
+PE 63 is calling calloc with 524289 elems
+PE 48 is calling calloc with 524289 elems
+PE 56 is calling calloc with 524289 elems
+PE 13 is calling calloc with 524289 elems
+PE 61 is calling calloc with 524289 elems
+PE 60 is calling calloc with 524289 elems
+PE 7 is calling calloc with 524289 elems
+PE 49 is calling calloc with 524289 elems
+PE 42 is calling calloc with 524289 elems
+PE 46 is calling calloc with 524289 elems
+PE 50 is calling calloc with 524289 elems
+PE 54 is calling calloc with 524289 elems
+PE 28 is calling calloc with 524289 elems
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+Graph has 33554432 nodes and 523609129 undirected edges for degree: 15
+[cpu-24-52:60662:0:60662] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60635:0:60635] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60649:0:60649] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60648:0:60648] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60659:0:60659] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60657:0:60657] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60638:0:60638] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60636:0:60636] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60643:0:60643] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60641:0:60641] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60642:0:60642] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60640:0:60640] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60647:0:60647] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60645:0:60645] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60646:0:60646] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60644:0:60644] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60651:0:60651] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60660:0:60660] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60650:0:60650] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60655:0:60655] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60653:0:60653] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60654:0:60654] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60652:0:60652] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60658:0:60658] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60656:0:60656] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60663:0:60663] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60661:0:60661] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60632:0:60632] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60634:0:60634] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60633:0:60633] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60639:0:60639] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[cpu-24-52:60637:0:60637] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+==== backtrace (tid:  60647) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60662) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60638) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60646) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60642) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60655) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60639) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60651) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60652) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60636) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60661) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60653) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60644) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60633) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60649) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60658) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60634) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60641) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60635) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60645) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60632) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60637) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60660) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60640) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60650) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60654) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60648) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60659) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60656) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60663) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60657) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+==== backtrace (tid:  60643) ====
+ 0 0x0000000000055b73 ucs_debug_print_backtrace()  /build-result/src/hpcx-v2.7.0-gcc-MLNX_OFED_LINUX-5.0-1.0.0.0-redhat8.1-x86_64/ucx-v1.9.x/src/ucs/debug/debug.c:656
+ 1 0x0000000000012dc0 .annobin_sigaction.c()  sigaction.c:0
+ 2 0x0000000000407960 CSRGraph<int, int, true>::Neighborhood::Neighborhood()  ???:0
+ 3 0x0000000000406187 CSRGraph<int, int, true>::out_neigh()  ???:0
+ 4 0x00000000004036aa OrderedCount()  ???:0
+ 5 0x0000000000403861 Hybrid()  ???:0
+ 6 0x0000000000403938 main::{lambda(CSRGraph<int, int, true> const&)#1}::operator()()  tc.cc:0
+ 7 0x0000000000403c34 BenchmarkKernel<CSRGraph<int, int, true>, main::{lambda(CSRGraph<int, int, true> const&)#1}, void (*)(CSRGraph<int, int, true> const&, unsigned long), bool (*)(CSRGraph<int, int, true> const&, unsigned long)>()  tc.cc:0
+ 8 0x0000000000403af9 main()  ???:0
+ 9 0x0000000000023873 __libc_start_main()  ???:0
+10 0x00000000004031ae _start()  ???:0
+=================================
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+oshrun noticed that process rank 49 with PID 60649 on node cpu-24-52 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------
+Trial 1 Complete!

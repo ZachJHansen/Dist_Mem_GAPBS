@@ -111,6 +111,7 @@ size_t Hybrid(const Graph &g, long* pSync, long* pWrk) {
 
 
 void PrintTriangleStats(const Graph &g, size_t total_triangles) {
+	if (shmem_my_pe() == 0)
   cout << total_triangles << " triangles" << endl;
 }
 
@@ -129,16 +130,12 @@ bool TCVerifier(const Graph &g, size_t test_total) {
 
 
 int main(int argc, char* argv[]) {
-	printf("check 0\n");
   CLApp cli(argc, argv, "triangle count");
   if (!cli.ParseArgs())
     return -1;
-	printf("check 0.5\n");
-  char size_env[] = "SMA_SYMMETRIC_SIZE=1G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=4G";
   putenv(size_env);
-	printf("check 0.75\n");
   shmem_init();
-	printf("check 1\n");
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
   static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
 
@@ -150,6 +147,7 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
+    shmem_barrier_all();
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;
