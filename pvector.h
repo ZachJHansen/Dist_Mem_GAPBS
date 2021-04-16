@@ -103,7 +103,6 @@ template <typename T_=int64_t> struct Partition {
         end = start + partition_width; 
       }
     }
-    printf("pw: %lu\n", partition_width);
   }
   
   // Given a node, determine which PE it belongs to
