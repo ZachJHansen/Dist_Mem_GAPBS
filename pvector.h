@@ -103,6 +103,7 @@ template <typename T_=int64_t> struct Partition {
         end = start + partition_width; 
       }
     }
+    shmem_barrier_all();
   }
   
   // Given a node, determine which PE it belongs to
@@ -218,7 +219,6 @@ template <typename T_> struct RoundRobin {
       temp_pWrk[i] = SHMEM_SYNC_VALUE;
     shmem_barrier_all();
     if (sizeof(T_) == sizeof(int)) {
-    //  printf("Huzzah- max_width_ = %p, local = %d\n", (void*) max_width_, *local_width_);
       shmem_int_max_to_all(max_width_, local_width_, 1, 0, 0, npes, temp_pWrk, temp_pSync);
     } else {
       printf("Haven't finished implementing generically typed RoundRobin\n");
@@ -243,6 +243,8 @@ class pvector {
     pe = shmem_my_pe();
     npes = shmem_n_pes();
     local_width_ = (long*) shmem_calloc(1, sizeof(long));
+    resize_flag_ = (long *) shmem_calloc(1, sizeof(long));	// 0 means no PE needs to resize, 1 means a PE is requesting a resize
+    fence_counter_ = (int *) shmem_calloc(1, sizeof(int));	// the number of PEs that have escaped a pushback region
     if (symmetric_) {
       if (num_elements == 0)
         start_ = (T_ *) shmem_calloc(1, sizeof(T_));                            // is this going to cause problems? callocing with 0 elems returns nullptr
@@ -382,13 +384,25 @@ class pvector {
 
   void push_back(T_ val) {
     if (symmetric_) {                          
-      if (size() == capacity()) {
-        size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
+      if (shmem_test_lock(resize_flag_) == 1) {                                 // a foreign PE has run out of space and is requesting a resize
+        size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;    
         reserve(new_size);
+        *end_size_ = val;
+        end_size_++;
+      } else {
+        if (size() == capacity()) {                                             // the calling PE needs to request a resize
+	  shmem_set_lock(resize_flag_);                                         // alerts other PEs that a resize is required
+          if (size() < capacity()) {                                            // corner case: two PEs request a resize simultaneously, one acquires lock and tries to redundantly resize
+            shmem_clear_lock(resize_flag_);
+          } else {
+            size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor; // if capacity == 0 newsize = 1 else newsize = cap*gf
+            reserve(new_size);
+            shmem_clear_lock(resize_flag_);
+          }
+        }
+        *end_size_ = val;
+        end_size_++;
       }
-      *end_size_ = val;
-      end_size_++;
-      shmem_barrier_all();                                      // all pes push back the same element
     } else {
       if (size() == capacity()) {
         size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;     // if capacity == 0 newsize = 1 else newsize = cap*gf
@@ -397,6 +411,22 @@ class pvector {
       *end_size_ = val;
       end_size_++;
     }
+  }
+
+  // This method must be called after a region where PEs push back elements to symmetric pvectors
+  // If some PEs are done pushing back, but others are not and need help resizing, this method avoids the deadlock
+  void push_back_fence() {
+    int arrived = shmem_int_atomic_fetch_inc(fence_counter_, 0) + 1;            // register arrival at fence with counter on PE 0
+    while (arrived < npes) {
+      if (shmem_test_lock(resize_flag_) == 1) {                                 // a foreign PE has run out of space and is requesting a resize
+        size_t new_size = capacity() == 0 ? 1 : capacity() * growth_factor;    
+        reserve(new_size);
+      }
+      arrived = shmem_int_atomic_fetch(fence_counter_, 0);
+    }
+    shmem_barrier_all();
+    if (pe == 0)
+      *fence_counter_ = 0;                                                      // reset the counter
   }
 
   void fill(T_ init_val) {
@@ -479,6 +509,8 @@ class pvector {
   long* local_width_;
   size_t max_width_;
   bool symmetric_;
+  long* resize_flag_;
+  int* fence_counter_;
   int pe;
   int npes;
   static const size_t growth_factor = 2;
