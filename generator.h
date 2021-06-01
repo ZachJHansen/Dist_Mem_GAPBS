@@ -51,15 +51,33 @@ class Generator {
     }
   }
 
-  void PermuteIDs(EdgeList &el) {
+  // Haven't thought of a way to make this deterministic with the original without taking O(V) space
+  // so if deterministic=false then it takes less space but can't be verified with the current system
+  void PermuteIDs(EdgeList &el, bool deterministic = true) {
     NodeID_ global_e, owner, offset;
-    pvector<NodeID_> permutation(num_nodes_);
     std::mt19937 rng(kRandSeed);
-    for (NodeID_ n=0; n < num_nodes_; n++)
-      permutation[n] = n;
-    shuffle(permutation.begin(), permutation.end(), rng);
-    for (int64_t e = 0; e < el.size(); e++) {
-      el[e] = Edge(permutation[el[e].u], permutation[el[e].v]);
+    if (deterministic) {
+      pvector<NodeID_> permutation(num_nodes_);
+      for (NodeID_ n=0; n < num_nodes_; n++)
+        permutation[n] = n;
+      shuffle(permutation.begin(), permutation.end(), rng);
+      for (int64_t e = 0; e < el.size(); e++) {
+        el[e] = Edge(permutation[el[e].u], permutation[el[e].v]);
+      }
+    } else {
+      Partition<NodeID_> vp(num_nodes_);
+      pvector<NodeID_> permutation(vp.max_width, true);
+      for (NodeID_ n=vp.start; n < vp.end; n++)
+        permutation[vp.local_pos(n)] = n;
+      shuffle(permutation.begin(), permutation.end(), rng);
+      shmem_barrier_all();
+      for (int64_t e = 0; e < el.size(); e++) {
+        NodeID_ lp_u = vp.local_pos(el[e].u);
+        NodeID_ lp_v = vp.local_pos(el[e].v);
+        NodeID_ perm_u = shmem_int_g(permutation.begin()+lp_u, vp.recv(el[e].u));
+        NodeID_ perm_v = shmem_int_g(permutation.begin()+lp_v, vp.recv(el[e].v));
+        el[e] = Edge(perm_u, perm_v);
+      }
     }
   }
 
