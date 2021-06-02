@@ -320,6 +320,27 @@ class BuilderBase {
     return SquishGraph(g, &p, pSync, pWrk);
   }
 
+  // distributed k-way merge
+  /*static 
+  CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
+      const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
+    if (g.directed()) {
+      std::cout << "Cannot relabel directed graph" << std::endl;
+      std::exit(-11);
+    }
+    printf("Rebuilding the graph\n");
+    Timer t;
+    t.Start();
+    Partition<NodeID_> vp(g.num_nodes());
+    typedef std::pair<int64_t, NodeID_> degree_node_p;
+    pvector<degree_node_p> degree_id_pairs(vp.max_width, true);                               // symmetric partitioned array of <node, degree> pairs
+    for (NodeID_ n = vp.start; n < vp.end; n++)
+      degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
+    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array
+    shmem_barrier_all();
+
+  }*/
+
 // UNOPTIMIZED! Possibly requires partitioned parallel sorting and partitioned pvectors for space efficiency.
   static
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
