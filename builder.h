@@ -321,7 +321,7 @@ class BuilderBase {
   }
 
   // distributed k-way merge
-  /*static 
+  static 
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
       const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
     if (g.directed()) {
@@ -331,15 +331,46 @@ class BuilderBase {
     printf("Rebuilding the graph\n");
     Timer t;
     t.Start();
+    /* Phase 1: Sort partitioned vectors */
     Partition<NodeID_> vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(vp.max_width, true);                               // symmetric partitioned array of <node, degree> pairs
+    pvector<degree_node_p> temp_pairs(vp.max_width, true);                                    // symmetric partitioned array for storing merged result
     for (NodeID_ n = vp.start; n < vp.end; n++)
       degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
     std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array
-    shmem_barrier_all();
+    /* Phase 2: K-way merge with tournament trees */
+    int* LEADER = (int *) shmem_calloc(1, sizeof(int));                                       // Each PE is the leader while filling their own temp array
+    if (vp.pe == 0) {                                                                         // Initialize tree with first element from each array
+    
+    }
+    shmem_int_wait_until(LEADER, SHMEM_CMP_EQ, vp.pe);                                        // wait until previous PE puts your pe # in LEADER
 
-  }*/
+
+
+    for (int pe = 0; pe < vp.npes; pe++) {                                                    // Fill each PE's temp array with merged results
+      if (vp.pe == pe) {                                                                      
+        for ( 
+      }
+    }
+
+  *PRINTER = 0;
+  shmem_barrier_all();
+  shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
+  ofstream shmem_out;
+  shmem_out.precision(17);
+  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bc_output.txt", ios::app);
+  for (NodeID n = vp.start; n < vp.end; n++) {
+    shmem_out << scores_to_test[vp.local_pos(n)] << endl;
+  }
+  shmem_out.close();
+  if (!(vp.pe == vp.npes-1))
+    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);
+  shmem_free(PRINTER);
+  return true;
+
+
+  }
 
 // UNOPTIMIZED! Possibly requires partitioned parallel sorting and partitioned pvectors for space efficiency.
   static
