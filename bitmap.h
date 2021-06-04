@@ -60,7 +60,7 @@ class Bitmap {
     for (int i = 0; i < vp.pe; i++) {
       node_interval_start = vp.partition_width * i;
       node_interval_end = vp.partition_width * (i+1) - 1;
-      ptrdiff += (g.out_neigh(node_interval_end).end() - g.out_neigh(node_interval_start).begin());
+      ptrdiff += (g.out_neigh(node_interval_end).finish() - g.out_neigh(node_interval_start).start());
     }
     *adj_start_ = ptrdiff;                                      // Cumulative ptrdiff of adjacency lists on all preceding PEs
     shmem_barrier_all();
@@ -85,7 +85,7 @@ class Bitmap {
   // Eventually they are merged with an or to all
   void set_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
     size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
-    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).start();
     size_t pos = u_start + local_size;
     start_[word_offset(pos)] |= ((uint64_t) 1l << bit_offset(pos));
   }
@@ -97,7 +97,7 @@ class Bitmap {
   // so much communication overhead for one bit...
   bool get_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
     size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
-    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).start();
     size_t pos = u_start + local_size;
     return (start_[word_offset(pos)] >> bit_offset(pos)) & 1l;
   }
