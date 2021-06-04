@@ -84,7 +84,8 @@ typedef int32_t SGID;
 typedef EdgePair<SGID> SGEdge;
 typedef int64_t SGOffset;
 
-
+// If 2 PEs share a memory space, it is more efficient to use the shmem_ptrs
+// But PEs on separate machines need to use the get/put mems
 
 template <class NodeID_, class DestID_ = NodeID_, bool MakeInverse = true>
 class CSRGraph {
@@ -97,49 +98,133 @@ class CSRGraph {
     NodeID_ n_;                 // relative
     NodeID_ local;
     DestID_** g_index_;
+    DestID_** ptr_start;
+    DestID_** ptr_end;
     OffsetT start_offset_;
-    NodeID_** foreign_start;
-    NodeID_** foreign_end;
+    DestID_* foreign_start;
+    DestID_* foreign_end;
+    DestID_* beginning;
+    DestID_* ending;
    public:
+    DestID_* current;           // Current position of iterator within neighborhood
+    DestID_ curr_val;           // Current value pointed at by iterator
+
     Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset) :
         n_(n), g_index_(g_index), start_offset_(0) {
       OffsetT max_offset;
       local = vp.local_pos(n_);
       owner = vp.recv(n_);
+      //printf("PE %d | g_index: %p, globeql %d local %d\n", shmem_my_pe(), (void*) g_index_, n, local);
       if (vp.pe == owner) {
         max_offset = g_index_[local+1] - g_index_[local];
+        start_offset_ = std::min(start_offset, max_offset);
+        beginning = g_index_[local] + start_offset_;
+        ending = g_index_[local+1];
     //  printf("PE %d | Node: %d | (index[n] = %p) => %d | (index[n+1] = %p) => %d\n", vp.pe, n, (void*) (g_index_+n_), *(g_index_[n_]), (void*) (g_index_+(n_+1)), *(g_index_[n_+1]));
       } else {
-        foreign_start = (NodeID_**) shmem_ptr(g_index_+local, owner);
-        foreign_end = (NodeID_ **) shmem_ptr((g_index_+(local+1)), owner);
-       // printf("PE %d thinks start on PE %d is %p => and end %p => \n", vp.pe, owner, (void*) foreign_start[0], (void*) foreign_end[0]); 
-        //NodeID_** thing = (NodeID_**) shmem_ptr(g_index_, owner);
-        /*if (shmem_addr_accessible(g_index_, owner) == 1)
-          printf("%p is accessible on %d\n", (void*) g_index_, owner);
-        printf("Thing: %p\n", (void *) *thing);*/
-        max_offset = *foreign_end - *foreign_start; 
+        if (false) {    // true if calling PE shares a memory space with owner pe
+          ptr_start = (DestID_**) shmem_ptr(g_index_+local, owner);
+          ptr_end = (DestID_ **) shmem_ptr((g_index_+(local+1)), owner);
+          max_offset = ptr_end - ptr_start;
+          start_offset_ = std::min(start_offset, max_offset);
+          beginning = *ptr_start + start_offset_;
+          ending = *ptr_end;
+        } else {
+          shmem_getmem(&foreign_start, g_index_+local, sizeof(DestID_*), owner);
+          shmem_getmem(&foreign_end, g_index_+(local+1), sizeof(DestID_*), owner);
+          max_offset = foreign_end - foreign_start; 
+          start_offset_ = std::min(start_offset, max_offset);
+          beginning = foreign_start + start_offset_;
+          ending = foreign_end;
+        }
       }
-      start_offset_ = std::min(start_offset, max_offset);
+      current = beginning;
     }
+
+    // begin and end are used for range based iteration, must return refs to neighborhoods instead of DestIDs
+    // otherwise the overloaded operators won't work
+    Neighborhood& begin() { return *this; }
+
+    Neighborhood& end() { return *this; }
 
     typedef DestID_* iterator;
 
-    iterator begin() { 
+    // start and finish are what begin and end used to be: local memory can be directly dereferenced with these,
+    // but for accessing PEs on separate computers they can only be used to get the address for use in a different shmem call
+    iterator start() { 
       if (shmem_my_pe() == owner) {
-        return g_index_[local] + start_offset_; 
+        //printf("PE %d is starting for node %d\n", shmem_my_pe(), n_);
+        return(g_index_[local] + start_offset_); 
       } else {
-        DestID_ * neigh_start = (DestID_ *) shmem_ptr(*foreign_start + start_offset_, owner);
-        return (neigh_start);
-        //return(*foreign_start + start_offset_);
+        if (false) {            // Replace with a check to see if the PEs share a memory space                                                                                   
+          DestID_ * neigh_start = (DestID_ *) shmem_ptr(*ptr_start + start_offset_, owner);
+          return(neigh_start);
+        } else {
+          return(foreign_start + start_offset_);
+        }
       }
     }
 
-    iterator end()   { 
+    iterator finish() { 
       if (shmem_my_pe() == owner)
-        return g_index_[local+1]; 
+        return(g_index_[local+1]); 
       else
-        return ((DestID_*) shmem_ptr(*foreign_end, owner));
-        //return(*foreign_end);
+        if (false)
+          return ((DestID_*) shmem_ptr(*ptr_end, owner));
+        else
+          return(foreign_end);
+    }
+
+    bool operator!=(Neighborhood const& it) const { 
+      //printf("check: it.ending = %p, current = %p\n", (void*) it.ending, (void*) current);
+      return it.ending != current; 
+    }
+
+    DestID_& operator*() {
+      if (shmem_my_pe() == owner) {
+        return(*current);
+      } else {
+        shmem_getmem(&curr_val, current, sizeof(DestID_), owner);
+        return(curr_val);
+      }
+    }
+
+    const DestID_& operator*() const {
+      if (shmem_my_pe() == owner) {
+        return(*current);
+      } else {
+        shmem_getmem(&curr_val, current, sizeof(DestID_), owner);
+        return(curr_val);
+      }
+    }
+
+    Neighborhood& operator+(size_t n) {
+      current = current + n;                    // Is this correct pointer arithmetic?
+      return *this;
+    }
+
+    Neighborhood& operator++() {
+      ++current;
+      return *this;
+    }
+
+    DestID_& operator[](size_t n) {
+      if (shmem_my_pe() == owner) {
+        return(*(begin()+n));
+      } else {
+        shmem_getmem(&curr_val, begin()+n, sizeof(DestID_), owner); 
+        //printf("PE %d is pulling val (%d) from %p on PE %d\n", shmem_my_pe(), val, (void*) (begin()+n), owner);
+        return curr_val;
+      }
+    }
+
+    const DestID_& operator[](size_t n) const {
+      if (shmem_my_pe() == owner) {
+        return(*(begin()+n));
+      } else {
+        shmem_getmem(&curr_val, begin()+n, sizeof(DestID_), owner);         
+        return curr_val;
+      }
     }
   };
 
@@ -248,35 +333,43 @@ class CSRGraph {
     NodeID_ local = vp.local_pos(v);    
     if (help) {
       printf("PE %d is finding the out_degree of node %d\n", vp.pe, v);
-      shmem_global_exit(0);
-      exit(0);
     }
-    //printf("PE %d | out_index-%p: %p => %d\n", vp.pe, (void*) out_index_, (void*) out_index_[0], *(out_index_[0]));
+    //printf("PE %d | out_index+local = %p | out_index+local+1 = %p => %d\n", vp.pe, (void*) (out_index_+local), (void*) (out_index_+(local+1)), *(out_index_[local+1]));
     //printf("PE %d | out_index-%p: %p => %d\n", vp.pe, (void*) out_index_, (void*) out_index_[1], *(out_index_[1])); 
     if (v >= vp.start && v < vp.end) {
       degree = out_index_[local+1] - out_index_[local];
     } else {
-      NodeID_** one = (NodeID_**) shmem_ptr(out_index_+local, vp.recv(v));
-      NodeID_** two = (NodeID_ **) shmem_ptr((out_index_+(local+1)), vp.recv(v));
-      degree = *two - *one;
+      DestID_* one;
+      DestID_* two;
+      shmem_getmem(&one, out_index_+local, sizeof(DestID_*), vp.recv(v));  
+      shmem_getmem(&two, out_index_+(local+1), sizeof(DestID_*), vp.recv(v)); 
+      //NodeID_** one = (NodeID_**) shmem_ptr(out_index_+local, vp.recv(v));
+      //NodeID_** two = (NodeID_ **) shmem_ptr((out_index_+(local+1)), vp.recv(v));
+      //printf("PE %d | one: %p two: %p\n", vp.pe, (void*) *one, (void*) *two);
+      degree = two - one;
     }
     return degree;
   }
 
   int64_t in_degree(NodeID_ v) const {
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
-    int64_t* degree = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
-    *degree = 0;
+    //int64_t* degree = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
+    //*degree = 0;
+    int64_t degree;
     Partition<NodeID_> vp(num_nodes_);
     NodeID_ local = vp.local_pos(v);
     if (v >= vp.start && v < vp.end) {
-      *degree = in_index_[local+1] - in_index_[local];
+      degree = in_index_[local+1] - in_index_[local];
     } else {
-      NodeID_** one = (NodeID_**) shmem_ptr(in_index_+local, vp.recv(v));
-      NodeID_** two = (NodeID_ **) shmem_ptr((in_index_+(local+1)), vp.recv(v));
-      *degree = *two - *one;
+      DestID_* one;
+      DestID_* two;
+      shmem_getmem(&one, in_index_+local, sizeof(DestID_*), vp.recv(v));  
+      shmem_getmem(&two, in_index_+(local+1), sizeof(DestID_*), vp.recv(v));  
+      //NodeID_** one = (NodeID_**) shmem_ptr(in_index_+local, vp.recv(v));
+      //NodeID_** two = (NodeID_ **) shmem_ptr((in_index_+(local+1)), vp.recv(v));
+      degree = two - one;
     }
-    return *degree;
+    return degree;
   }
 
   Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
@@ -323,6 +416,7 @@ class CSRGraph {
     if (outgoing) {
       std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
       for (NodeID_ i = vp.start; i < vp.end; i++) {
+        //printf("PE %d | i %d | start: %p => %d | end: %p => %d\n", vp.pe, i, (void*) out_neigh(i).start(), out_neigh(i).start()[0], (void*) out_neigh(i).finish(), out_neigh(i).finish()[0]);
         std::cout << i << ": ";
         for (DestID_ j : out_neigh(i))
           std::cout << j << " ";
@@ -352,7 +446,6 @@ class CSRGraph {
   // offsets for given pe start from the pes first elem
   // some unused space - max_width = partition_width + remainder
   static DestID_** GenIndex(const pvector<SGOffset> &offsets, DestID_* neighs, Partition<NodeID_>* p) {
-    printf("PE %d is calling calloc with %d elems\n", p->pe, (p->max_width)+1);
     DestID_** index = (DestID_**) shmem_calloc((p->max_width)+1, sizeof(DestID_*)); 
     //if (squish)
     //  printf("PE %d | Index address %p\n", p->pe, (void*) index);
