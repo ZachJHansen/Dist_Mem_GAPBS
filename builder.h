@@ -12,6 +12,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "tournament.h"
 #include "command_line.h"
 #include "generator.h"
 #include "graph.h"
@@ -164,17 +165,19 @@ class BuilderBase {
     DestID_ *n_start, *n_end;
     #pragma omp parallel for private(n_start, n_end)
     for (NodeID_ n = vp.start; n < vp.end; n++) {
-      indx = n - vp.start;
+      indx = vp.local_pos(n);
       if (transpose) {
-        n_start = g.in_neigh(n).begin();
-        n_end = g.in_neigh(n).end();
+        n_start = g.in_neigh(n).start();
+        n_end = g.in_neigh(n).finish();
+        //printf("PE %d | n: %d | n_start: %p => %d n_end: %p => %d (t)\n", vp.pe, n, (void*) n_start, *n_start, (void*) n_end, *n_end);
       } else {
-        n_start = g.out_neigh(n).begin();
-        n_end = g.out_neigh(n).end();
+        n_start = g.out_neigh(n).start();
+        n_end = g.out_neigh(n).finish();
+        //printf("PE %d | n: %d | n_start: %p => %d n_end: %p => %d (nt)\n", vp.pe, n, (void*) n_start, *n_start, (void*) n_end, *n_end);
       }
-      std::sort(n_start, n_end);
-      DestID_ *new_end = std::unique(n_start, n_end);
-      new_end = std::remove(n_start, new_end, n);
+      std::sort(n_start, n_end);                        // sorts elements in range [n_start, n_end)
+      DestID_ *new_end = std::unique(n_start, n_end);   // removes all but one of consecutive elements
+      new_end = std::remove(n_start, new_end, n);       // removes self-loops (v,v)
       diffs[indx] = new_end - n_start;
     }
     pvector<SGOffset> sq_offsets = ParallelPrefixSum(diffs);
@@ -185,12 +188,12 @@ class BuilderBase {
     shmem_barrier_all();
     #pragma omp parallel for private(n_start)
     for (NodeID_ n=vp.start; n < vp.end; n++) {
-      indx = n - vp.start;
+      indx = vp.local_pos(n);
       if (transpose)
-        n_start = g.in_neigh(n).begin();        // transpose for incoming neighbors
+        n_start = g.in_neigh(n).start();        // transpose for incoming neighbors
       else
-        n_start = g.out_neigh(n).begin();
-      std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);     
+        n_start = g.out_neigh(n).start();
+      std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);    // copy elements [n_start, n_start+diffs[indx]) into (*sq_index)[indx]
     }
     shmem_barrier_all();
   }
@@ -331,7 +334,7 @@ class BuilderBase {
     printf("Rebuilding the graph\n");
     Timer t;
     t.Start();
-    /* Phase 1: Sort partitioned vectors */
+    // Phase 1: Sort partitioned vectors by degree 
     Partition<NodeID_> vp(g.num_nodes());
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(vp.max_width, true);                               // symmetric partitioned array of <node, degree> pairs
@@ -339,41 +342,64 @@ class BuilderBase {
     for (NodeID_ n = vp.start; n < vp.end; n++)
       degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
     std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array
-    /* Phase 2: K-way merge with tournament trees */
+    // Phase 2: K-way merge with tournament trees 
     int* LEADER = (int *) shmem_calloc(1, sizeof(int));                                       // Each PE is the leader while filling their own temp array
-    if (vp.pe == 0) {                                                                         // Initialize tree with first element from each array
-    
+    degree_node_p* init_leaves = (degree_node_p *) shmem_calloc(vp.npes, sizeof(degree_node_p));    // Initialize tree with first element from the sorted list on each PE
+    if (vp.pe > 0) {
+      shmem_putmem(init_leaves+vp.pe, degree_id_pairs.begin(), sizeof(degree_node_p), 0);
+    } else {
+      init_leaves[0] = degree_id_pairs[0];
     }
+    TournamentTree tree(init_leaves, degree_id_pairs);
     shmem_int_wait_until(LEADER, SHMEM_CMP_EQ, vp.pe);                                        // wait until previous PE puts your pe # in LEADER
-
-
-
-    for (int pe = 0; pe < vp.npes; pe++) {                                                    // Fill each PE's temp array with merged results
-      if (vp.pe == pe) {                                                                      
-        for ( 
+    for (int i = vp.start; i < vp.end; i++)                                                   // Leader fills their own temp_pairs before passing leadership to next PE
+      temp_pairs[i-vp.start] = tree.pop_root();
+    if (vp.pe < vp.npes-1) {
+      tree.transfer(vp.pe);                                                                    // Transfer contents of tree to next PE
+      shmem_int_p(LEADER, vp.pe+1, vp.pe+1);
+    }
+    degree_id_pairs.~pvector();                                                                         // Free partially sorted lists
+    // Phase 3: Relabel vertices by ascending degree 
+    pvector<NodeID_> degrees(vp.max_width);
+    pvector<NodeID_> new_ids(vp.max_width, true);
+    for (NodeID_ n=vp.start; n < vp.end; n++) {
+      NodeID_ lp_v = vp.local_pos(n);
+      degrees[lp_v] = temp_pairs[lp_v].first;
+      shmem_putmem(new_ids.begin()+vp.local_pos(temp_pairs[lp_v].second), &n, sizeof(NodeID_), vp.recv(temp_pairs[lp_v].second));
+    }
+    shmem_barrier_all();
+    for (int i = vp.start; i < vp.end; i++)
+      printf("PE %d | ID: %d Degree: %d\n", vp.pe, new_ids[vp.local_pos(i)], degrees[vp.local_pos(i)]);
+    // Phase 4: Rebuild graph with new IDs 
+    pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
+    SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    shmem_long_max_to_all(max_neigh, offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync);
+    DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
+    DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
+    shmem_barrier_all();
+    for (NodeID_ u = vp.start; u < vp.end; u++) {
+      for (NodeID_ v : g.out_neigh(u)) {
+        int owner = vp.recv(new_ids[u]);
+        int x = new_ids[u] - (owner * vp.partition_width);
+        SGOffset off = shmem_long_atomic_fetch_inc(offsets.begin()+x, owner);
+        if (owner == vp.pe) {
+          neighs[off] = new_ids[v];
+        } else {
+          shmem_putmem(neighs+off, new_ids.begin()+v, sizeof(DestID_), owner);
+        }
       }
     }
-
-  *PRINTER = 0;
-  shmem_barrier_all();
-  shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
-  ofstream shmem_out;
-  shmem_out.precision(17);
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bc_output.txt", ios::app);
-  for (NodeID n = vp.start; n < vp.end; n++) {
-    shmem_out << scores_to_test[vp.local_pos(n)] << endl;
-  }
-  shmem_out.close();
-  if (!(vp.pe == vp.npes-1))
-    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);
-  shmem_free(PRINTER);
-  return true;
-
-
+    shmem_barrier_all();
+    for (int i = 0; i < vp.end-vp.start; i++)
+      std::sort(index[i], index[i+1]);
+    t.Stop();
+    shmem_free(max_neigh);
+    PrintTime("Relabel", t.Seconds());
+    return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), index, neighs, pSync, pWrk);
   }
 
 // UNOPTIMIZED! Possibly requires partitioned parallel sorting and partitioned pvectors for space efficiency.
-  static
+ /* static
   CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
       const CSRGraph<NodeID_, DestID_, invert> &g, long* pSync, long* pWrk) {
     shmem_barrier_all();
@@ -444,9 +470,9 @@ class BuilderBase {
     shmem_free(max_neigh);
     PrintTime("Relabel", t.Seconds());
     return CSRGraph<NodeID_, DestID_, invert>(g.num_nodes(), index, neighs, pSync, pWrk);
-  }
-};
+  }*/
 
+};
 
 // complicated optimized partitioned version - https://sites.cs.ucsb.edu/~gilbert/reports/sorting111904.pdf
 /*static
