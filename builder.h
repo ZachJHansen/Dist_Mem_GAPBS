@@ -339,25 +339,38 @@ class BuilderBase {
     typedef std::pair<int64_t, NodeID_> degree_node_p;
     pvector<degree_node_p> degree_id_pairs(vp.max_width, true);                               // symmetric partitioned array of <node, degree> pairs
     pvector<degree_node_p> temp_pairs(vp.max_width, true);                                    // symmetric partitioned array for storing merged result
-    for (NodeID_ n = vp.start; n < vp.end; n++)
+    for (NodeID_ n = vp.start; n < vp.end; n++) 
       degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
+    degree_id_pairs.set_widths(vp.max_width, vp.end-vp.start);                                       // Record how many pairs each PE maintains 
     std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array
     // Phase 2: K-way merge with tournament trees 
-    int* LEADER = (int *) shmem_calloc(1, sizeof(int));                                       // Each PE is the leader while filling their own temp array
+    int* LEADER = (int *) shmem_malloc(sizeof(int));                                       // Each PE is the leader while filling their own temp array
+    *LEADER = 0;
     degree_node_p* init_leaves = (degree_node_p *) shmem_calloc(vp.npes, sizeof(degree_node_p));    // Initialize tree with first element from the sorted list on each PE
     if (vp.pe > 0) {
+      if (vp.end - vp.start == 0)                                                           // Only PEs with at least one element contribute a non-infinite leaf 
+        degree_id_pairs[0] = std::make_pair(std::numeric_limits<int64_t>::max(), 0);
       shmem_putmem(init_leaves+vp.pe, degree_id_pairs.begin(), sizeof(degree_node_p), 0);
     } else {
       init_leaves[0] = degree_id_pairs[0];
     }
+    shmem_barrier_all();
     TournamentTree tree(init_leaves, degree_id_pairs);
     shmem_int_wait_until(LEADER, SHMEM_CMP_EQ, vp.pe);                                        // wait until previous PE puts your pe # in LEADER
-    for (int i = vp.start; i < vp.end; i++)                                                   // Leader fills their own temp_pairs before passing leadership to next PE
+    for (int i = vp.start; i < vp.end; i++) {                                                  // Leader fills their own temp_pairs before passing leadership to next PE
       temp_pairs[i-vp.start] = tree.pop_root();
+      //printf("(%d, %d)\n", temp_pairs[i-vp.start].first, temp_pairs[i-vp.start].second);
+    }
+    //printf("Pe %d has filled list\n", vp.pe);
     if (vp.pe < vp.npes-1) {
+      //printf("PE %d is transfering\n", vp.pe);
       tree.transfer(vp.pe);                                                                    // Transfer contents of tree to next PE
       shmem_int_p(LEADER, vp.pe+1, vp.pe+1);
     }
+    //tree.print_tree();
+    shmem_barrier_all();
+    //shmem_global_exit(0);
+    //exit(0);
     degree_id_pairs.~pvector();                                                                         // Free partially sorted lists
     // Phase 3: Relabel vertices by ascending degree 
     pvector<NodeID_> degrees(vp.max_width);
@@ -368,8 +381,8 @@ class BuilderBase {
       shmem_putmem(new_ids.begin()+vp.local_pos(temp_pairs[lp_v].second), &n, sizeof(NodeID_), vp.recv(temp_pairs[lp_v].second));
     }
     shmem_barrier_all();
-    for (int i = vp.start; i < vp.end; i++)
-      printf("PE %d | ID: %d Degree: %d\n", vp.pe, new_ids[vp.local_pos(i)], degrees[vp.local_pos(i)]);
+    //for (int i = vp.start; i < vp.end; i++)
+      //printf("PE %d | ID: %d Degree: %d\n", vp.pe, new_ids[vp.local_pos(i)], degrees[vp.local_pos(i)]);
     // Phase 4: Rebuild graph with new IDs 
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
