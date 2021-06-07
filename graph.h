@@ -203,7 +203,14 @@ class CSRGraph {
       return *this;
     }
 
+    // prefix increment operator
     Neighborhood& operator++() {
+      ++current;
+      return *this;
+    }
+
+    // postfix increment operator
+    Neighborhood operator++(int) {
       ++current;
       return *this;
     }
