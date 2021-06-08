@@ -60,7 +60,6 @@ class Reader {
       }
       i++;
     }
-    shmem_barrier_all();
     size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
     el.set_widths(max_width, (size_t) rr.local_width());
     el.set_combined_length(i);
@@ -80,7 +79,6 @@ class Reader {
       }
       i++;
     }
-    shmem_barrier_all();
     size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
     el.set_widths(max_width, (size_t) rr.local_width());
     el.set_combined_length(i);
