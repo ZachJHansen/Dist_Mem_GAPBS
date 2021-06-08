@@ -71,6 +71,7 @@ size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
 // heuristic to see if sufficently dense power-law graph                        Does this still hold for the partitioned version?
 bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   int64_t average_degree = g.num_edges() / g.num_nodes();
+  return true;								// remove
   if (true/*average_degree < 10*/)
     return false;
   SourcePicker<Graph> sp(g);
@@ -133,7 +134,7 @@ int main(int argc, char* argv[]) {
   CLApp cli(argc, argv, "triangle count");
   if (!cli.ParseArgs())
     return -1;
-  char size_env[] = "SMA_SYMMETRIC_SIZE=4G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=3G";
   putenv(size_env);
   shmem_init();
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
@@ -147,6 +148,7 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
+    g.PrintTopology();
     shmem_barrier_all();
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;

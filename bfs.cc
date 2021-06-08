@@ -270,7 +270,7 @@ bool BFSVerifier(const Graph &g, NodeID source, const pvector<NodeID> &parent) {
   shmem_barrier_all();
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
+  shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/bfs_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
     vertex = parent[vp.local_pos(n)];
     if (vertex < -1) {
@@ -291,7 +291,7 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=2G";
   putenv(size_env);
 
 
@@ -313,7 +313,6 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
-    shmem_barrier_all();
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, PLOCKS, ll_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());
