@@ -84,7 +84,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
     NodeID u = *q_iter;
     NodeID curr_val;
     for (NodeID v : g.out_neigh(u)) {
-      curr_val = parent[vp.local_pos(v)];                                             // v is the absolute location in the complete parent array
+      shmem_getmem(&curr_val, parent.begin()+vp.local_pos(v), sizeof(NodeID), vp.recv(v)); // v is the absolute location in the complete parent array
       if (curr_val < 0) {
         if (shmem_int_atomic_compare_swap(parent.begin()+vp.local_pos(v), curr_val, u, vp.recv(v)) == curr_val) {
           lqueue.push_back(v);
