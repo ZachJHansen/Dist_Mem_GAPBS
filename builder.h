@@ -342,24 +342,30 @@ class BuilderBase {
     for (NodeID_ n = vp.start; n < vp.end; n++) 
       degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
     degree_id_pairs.set_widths(vp.max_width, vp.end-vp.start);                                       // Record how many pairs each PE maintains 
-    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array
+    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array in descending order of degree
+    /*if (vp.pe == 0)
+      for (auto i : degree_id_pairs)
+        printf("Deg, Node = %lu, %d\n", i.first, i.second);*/
     // Phase 2: K-way merge with tournament trees 
     int* LEADER = (int *) shmem_malloc(sizeof(int));                                       // Each PE is the leader while filling their own temp array
     *LEADER = 0;
     degree_node_p* init_leaves = (degree_node_p *) shmem_calloc(vp.npes, sizeof(degree_node_p));    // Initialize tree with first element from the sorted list on each PE
     if (vp.pe > 0) {
-      if (vp.end - vp.start == 0)                                                           // Only PEs with at least one element contribute a non-infinite leaf 
-        degree_id_pairs[0] = std::make_pair(std::numeric_limits<int64_t>::max(), 0);
+      if (vp.end - vp.start == 0)                                                           // Only PEs with at least one element contribute a non-negative leaf 
+        degree_id_pairs[0] = std::make_pair(-1, 0);
       shmem_putmem(init_leaves+vp.pe, degree_id_pairs.begin(), sizeof(degree_node_p), 0);
     } else {
       init_leaves[0] = degree_id_pairs[0];
     }
     shmem_barrier_all();
     TournamentTree tree(init_leaves, degree_id_pairs);
+    if (vp.pe == 0)
+      tree.print_tree();
     shmem_int_wait_until(LEADER, SHMEM_CMP_EQ, vp.pe);                                        // wait until previous PE puts your pe # in LEADER
     for (int i = vp.start; i < vp.end; i++) {                                                  // Leader fills their own temp_pairs before passing leadership to next PE
       temp_pairs[i-vp.start] = tree.pop_root();
       //printf("(%d, %d)\n", temp_pairs[i-vp.start].first, temp_pairs[i-vp.start].second);
+      //tree.print_tree();
     }
     //printf("Pe %d has filled list\n", vp.pe);
     if (vp.pe < vp.npes-1) {
@@ -371,7 +377,9 @@ class BuilderBase {
     shmem_barrier_all();
     //shmem_global_exit(0);
     //exit(0);
-    degree_id_pairs.~pvector();                                                                         // Free partially sorted lists
+    //for (int n = vp.start; n < vp.end; n++)
+      //printf("PE %d || (deg, node) = (%d, %d)\n", vp.pe, temp_pairs[vp.local_pos(n)].first, temp_pairs[vp.local_pos(n)].second);
+    degree_id_pairs.~pvector();                                                                         // Free partially sorted list
     // Phase 3: Relabel vertices by ascending degree 
     pvector<NodeID_> degrees(vp.max_width);
     pvector<NodeID_> new_ids(vp.max_width, true);
@@ -382,6 +390,7 @@ class BuilderBase {
     }
     shmem_barrier_all();
     //for (int i = vp.start; i < vp.end; i++)
+      //printf("PE %d | degrees[%d] = %d, new_ids[%d] = %d\n", vp.pe, i, degrees[vp.local_pos(i)], i, new_ids[vp.local_pos(i)]);
       //printf("PE %d | ID: %d Degree: %d\n", vp.pe, new_ids[vp.local_pos(i)], degrees[vp.local_pos(i)]);
     // Phase 4: Rebuild graph with new IDs 
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
@@ -390,15 +399,24 @@ class BuilderBase {
     DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
     shmem_barrier_all();
-    for (NodeID_ u = vp.start; u < vp.end; u++) {
+    SGOffset off;
+    NodeID_ new_u_owner, new_u_offset, v_owner, lp_v, new_v_id;
+    for (NodeID_ u = vp.start; u < vp.end; u++) {                  // how does this handle weighted graphs? I guess DestID can be the same as NodeID since tc doesn't use weights
       for (NodeID_ v : g.out_neigh(u)) {
-        int owner = vp.recv(new_ids[u]);
-        int x = new_ids[u] - (owner * vp.partition_width);
-        SGOffset off = shmem_long_atomic_fetch_inc(offsets.begin()+x, owner);
-        if (owner == vp.pe) {
-          neighs[off] = new_ids[v];
+        new_u_owner = vp.recv(new_ids[vp.local_pos(u)]);
+        new_u_offset = new_ids[vp.local_pos(u)] - (new_u_owner * vp.partition_width);
+        off = shmem_long_atomic_fetch_inc(offsets.begin()+new_u_offset, new_u_owner);
+        if (new_u_owner == vp.pe) {
+          shmem_getmem(neighs+off, new_ids.begin()+vp.local_pos(v), sizeof(NodeID_), vp.recv(v));
         } else {
-          shmem_putmem(neighs+off, new_ids.begin()+v, sizeof(DestID_), owner);
+          v_owner = vp.recv(v);
+          lp_v = vp.local_pos(v); 
+          if (v_owner == vp.pe) {
+            shmem_putmem(neighs+off, new_ids.begin()+lp_v, sizeof(NodeID_), new_u_owner);
+          } else {
+            shmem_getmem(&new_v_id, new_ids.begin()+lp_v, sizeof(NodeID_), v_owner);
+            shmem_putmem(neighs+off, &new_v_id, sizeof(NodeID_), new_u_owner);
+          }
         }
       }
     }

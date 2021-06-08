@@ -339,6 +339,7 @@
     void reserve(size_t num_elements) {
       if (num_elements > capacity()) {
         if (symmetric_) { 
+          printf("PE %d is reserving with %d elems\n", pe, num_elements);
           T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
           #pragma omp parallel for
           for (size_t i=0; i < size(); i++)
@@ -446,6 +447,9 @@
       }
     }
   */
+
+  // If PEs were to ever call push_back on a symmetric pvector, they would have to call this then push_back_fence
+  // But I think this is unneccessary, because while reading edge lists PEs push_back to local pvectors
   void push_back(T_ val) {
     if (symmetric_) {                          
       if (shmem_test_lock(resize_flag_) == 1) {                                 // a foreign PE has run out of space and is requesting a resize
