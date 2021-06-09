@@ -95,7 +95,8 @@ class CSRGraph {
   // Used to access neighbors of vertex, basically sugar for iterators
   class Neighborhood {
     int owner;
-    NodeID_ n_;                 // relative
+    bool same_space_;
+    NodeID_ n_;                 
     NodeID_ local;
     DestID_** g_index_;
     DestID_** ptr_start;
@@ -109,8 +110,8 @@ class CSRGraph {
     DestID_* current;           // Current position of iterator within neighborhood
     DestID_ curr_val;           // Current value pointed at by iterator
 
-    Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset) :
-        n_(n), g_index_(g_index), start_offset_(0) {
+    Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset, bool same_space = false) :
+        n_(n), g_index_(g_index), start_offset_(0), same_space_(same_space) {
       OffsetT max_offset;
       local = vp.local_pos(n_);
       owner = vp.recv(n_);
@@ -120,9 +121,8 @@ class CSRGraph {
         start_offset_ = std::min(start_offset, max_offset);
         beginning = g_index_[local] + start_offset_;
         ending = g_index_[local+1];
-    //  printf("PE %d | Node: %d | (index[n] = %p) => %d | (index[n+1] = %p) => %d\n", vp.pe, n, (void*) (g_index_+n_), *(g_index_[n_]), (void*) (g_index_+(n_+1)), *(g_index_[n_+1]));
       } else {
-        if (false) {    // true if calling PE shares a memory space with owner pe
+        if (same_space_) {    // true if calling PE shares a memory space with owner pe
           ptr_start = (DestID_**) shmem_ptr(g_index_+local, owner);
           ptr_end = (DestID_ **) shmem_ptr((g_index_+(local+1)), owner);
           max_offset = ptr_end - ptr_start;
@@ -136,6 +136,7 @@ class CSRGraph {
           start_offset_ = std::min(start_offset, max_offset);
           beginning = foreign_start + start_offset_;
           ending = foreign_end;
+          //printf("PE %d | Node: %d | (beginning = %p) => %d | (ending = %p) => %d\n", vp.pe, n, (void*) (beginning), *beginning, (void*) ending, *ending);
         }
       }
       current = beginning;
@@ -154,31 +155,29 @@ class CSRGraph {
     iterator start() { 
       if (shmem_my_pe() == owner) {
         //printf("PE %d is starting for node %d\n", shmem_my_pe(), n_);
-        return(g_index_[local] + start_offset_); 
+        return(beginning); 
       } else {
-        if (false) {            // Replace with a check to see if the PEs share a memory space                                                                                   
-          DestID_ * neigh_start = (DestID_ *) shmem_ptr(*ptr_start + start_offset_, owner);
+        if (same_space_) {            // check to see if the PEs share a memory space                                                                                   
+          DestID_ * neigh_start = (DestID_ *) shmem_ptr(beginning, owner);
           return(neigh_start);
         } else {
-          return(foreign_start + start_offset_);
+          //printf("PE %d is requesting start address %p\n", shmem_my_pe(), (void*) (beginning));
+          return(beginning);
         }
       }
     }
 
     iterator finish() { 
       if (shmem_my_pe() == owner)
-        return(g_index_[local+1]); 
+        return(ending); 
       else
-        if (false)
-          return ((DestID_*) shmem_ptr(*ptr_end, owner));
+        if (same_space_)
+          return ((DestID_*) shmem_ptr(ending, owner));
         else
-          return(foreign_end);
+          return(ending);
     }
 
-    bool operator!=(Neighborhood const& it) const { 
-      //printf("check: it.ending = %p, current = %p\n", (void*) it.ending, (void*) current);
-      return it.ending != current; 
-    }
+    bool operator!=(Neighborhood const& it) const { return it.ending != current; }
 
     DestID_& operator*() {
       if (shmem_my_pe() == owner) {
@@ -333,48 +332,47 @@ class CSRGraph {
     return directed_ ? num_edges_ : 2*num_edges_;
   }
 
-  int64_t out_degree(NodeID_ v, bool help = false) const {
-    int64_t degree;                                                                                             // = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
-    //*degree = 0;
+  int64_t out_degree(NodeID_ v, bool same_space = false) const {                // Do the owner of v and the calling PE share a memory space?
+    int64_t degree;                                                                                             
     Partition<NodeID_> vp(num_nodes_);
     NodeID_ local = vp.local_pos(v);    
-    if (help) {
-      printf("PE %d is finding the out_degree of node %d\n", vp.pe, v);
-    }
-    //printf("PE %d | out_index+local = %p | out_index+local+1 = %p => %d\n", vp.pe, (void*) (out_index_+local), (void*) (out_index_+(local+1)), *(out_index_[local+1]));
-    //printf("PE %d | out_index-%p: %p => %d\n", vp.pe, (void*) out_index_, (void*) out_index_[1], *(out_index_[1])); 
     if (v >= vp.start && v < vp.end) {
       degree = out_index_[local+1] - out_index_[local];
     } else {
-      DestID_* one;
-      DestID_* two;
-      shmem_getmem(&one, out_index_+local, sizeof(DestID_*), vp.recv(v));  
-      shmem_getmem(&two, out_index_+(local+1), sizeof(DestID_*), vp.recv(v)); 
-      //NodeID_** one = (NodeID_**) shmem_ptr(out_index_+local, vp.recv(v));
-      //NodeID_** two = (NodeID_ **) shmem_ptr((out_index_+(local+1)), vp.recv(v));
-      //printf("PE %d | one: %p two: %p\n", vp.pe, (void*) *one, (void*) *two);
-      degree = two - one;
+      if (same_space) {
+        NodeID_** p_one = (NodeID_**) shmem_ptr(out_index_+local, vp.recv(v));
+        NodeID_** p_two = (NodeID_ **) shmem_ptr((out_index_+(local+1)), vp.recv(v));
+        degree = *p_two - *p_one;
+      } else {
+        DestID_* one;
+        DestID_* two;
+        shmem_getmem(&one, out_index_+local, sizeof(DestID_*), vp.recv(v));  
+        shmem_getmem(&two, out_index_+(local+1), sizeof(DestID_*), vp.recv(v)); 
+        degree = two - one;
+      }
     }
     return degree;
   }
 
-  int64_t in_degree(NodeID_ v) const {
+  int64_t in_degree(NodeID_ v, bool same_space = false) const {
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
-    //int64_t* degree = (int64_t *) shmem_malloc(sizeof(int64_t));     // init value 0
-    //*degree = 0;
     int64_t degree;
     Partition<NodeID_> vp(num_nodes_);
     NodeID_ local = vp.local_pos(v);
     if (v >= vp.start && v < vp.end) {
       degree = in_index_[local+1] - in_index_[local];
     } else {
-      DestID_* one;
-      DestID_* two;
-      shmem_getmem(&one, in_index_+local, sizeof(DestID_*), vp.recv(v));  
-      shmem_getmem(&two, in_index_+(local+1), sizeof(DestID_*), vp.recv(v));  
-      //NodeID_** one = (NodeID_**) shmem_ptr(in_index_+local, vp.recv(v));
-      //NodeID_** two = (NodeID_ **) shmem_ptr((in_index_+(local+1)), vp.recv(v));
-      degree = two - one;
+      if (same_space) {
+        NodeID_** p_one = (NodeID_**) shmem_ptr(in_index_+local, vp.recv(v));
+        NodeID_** p_two = (NodeID_ **) shmem_ptr((in_index_+(local+1)), vp.recv(v));
+        degree = *p_two - *p_one;
+      } else {
+        DestID_* one;
+        DestID_* two;
+        shmem_getmem(&one, in_index_+local, sizeof(DestID_*), vp.recv(v));  
+        shmem_getmem(&two, in_index_+(local+1), sizeof(DestID_*), vp.recv(v));  
+        degree = two - one;
+      }
     }
     return degree;
   }
