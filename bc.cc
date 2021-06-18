@@ -40,7 +40,7 @@ propagation phase.
 
 using namespace std;
 typedef float ScoreT;
-typedef double CountT;
+typedef unsigned long long CountT;      // shmem atomics don't support doubles. is ulonglong large enough to represent path counts?
 
 
 // path counts, depths are partitioned
@@ -87,11 +87,12 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
         if (shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == depth) {
           succ.set_bit_partitioned(g, u, neighbor_counter, vp);
           //shmem_set_lock(PATH_LOCKS+vp.local_pos(u));                                         // is path_counts[u] safe from updates due to depth maybe?
-          CountT pc_u = shmem_double_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
-          shmem_set_lock(PATH_LOCKS+lp_v);            
-          CountT pc_v = shmem_double_g(path_counts.begin()+lp_v, vp.recv(v));
-          shmem_double_p(path_counts.begin()+lp_v, pc_u+pc_v, vp.recv(v));
-          shmem_clear_lock(PATH_LOCKS+lp_v);
+          CountT pc_u = shmem_ulonglong_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
+          shmem_ulonglong_atomic_add(path_counts.begin()+lp_v, pc_u, vp.recv(v));
+          //shmem_set_lock(PATH_LOCKS+lp_v);            
+          //CountT pc_v = shmem_double_g(path_counts.begin()+lp_v, vp.recv(v));
+          //shmem_double_p(path_counts.begin()+lp_v, pc_u+pc_v, vp.recv(v));
+          //shmem_clear_lock(PATH_LOCKS+lp_v);
           //shmem_clear_lock(PATH_LOCKS+vp.local_pos(u));
         }
         neighbor_counter++;
@@ -113,7 +114,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   Timer t;
   t.Start();
   Partition<NodeID> vp(g.num_nodes());
-  if (vp.pe == 2) {
+  /*if (vp.pe == 2) {
     for (NodeID* v_it = g.out_neigh(10).start(); v_it != g.out_neigh(10).finish(); v_it++) {
         NodeID& v = *v_it;
         if (v == 11) {
@@ -121,7 +122,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
           break;
         }
     }
-  }
+  }*/
   long* PATHLOCKS = (long *) shmem_calloc(vp.max_width, sizeof(long));
   pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
   pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
@@ -155,7 +156,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
           //for (NodeID* v_it = g.out_neigh(u).start(); v_it != g.out_neigh(u).finish(); v_it++) {
             //NodeID& v = *v_it;
             if (succ.get_bit_partitioned(g, u, neighbor_counter, vp)) {
-              delta_u += (path_counts[lp_u] / shmem_double_g(path_counts.begin()+vp.local_pos(v), vp.recv(v))) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
+              delta_u += (path_counts[lp_u] / shmem_ulonglong_g(path_counts.begin()+vp.local_pos(v), vp.recv(v))) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
             }
             neighbor_counter++;
           }
@@ -199,6 +200,7 @@ void PrintTopScores(const Graph &g, const pvector<ScoreT> &scores) {
 // Prints result to file to be read by original verifier
 bool BCVerifier(const Graph &g, SourcePicker<Graph> &sp, NodeID num_iters,
                 const pvector<ScoreT> &scores_to_test) {
+  printf("check\n");
   Partition<NodeID> vp(g.num_nodes());
   int* PRINTER = (int *) shmem_malloc(sizeof(int));
   *PRINTER = 0;
@@ -206,7 +208,7 @@ bool BCVerifier(const Graph &g, SourcePicker<Graph> &sp, NodeID num_iters,
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
   shmem_out.precision(17);
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bc_output.txt", ios::app);
+  shmem_out.open("bc_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
     shmem_out << scores_to_test[vp.local_pos(n)] << endl;
   }
