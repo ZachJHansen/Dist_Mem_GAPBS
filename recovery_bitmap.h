@@ -60,7 +60,7 @@ class Bitmap {
     for (int i = 0; i < vp.pe; i++) {
       node_interval_start = vp.partition_width * i;
       node_interval_end = vp.partition_width * (i+1) - 1;
-      ptrdiff += (g.out_neigh(node_interval_end).finish() - g.out_neigh(node_interval_start).start());
+      ptrdiff += (g.out_neigh(node_interval_end).end() - g.out_neigh(node_interval_start).begin());
     }
     *adj_start_ = ptrdiff;                                      // Cumulative ptrdiff of adjacency lists on all preceding PEs
     shmem_barrier_all();
@@ -83,13 +83,10 @@ class Bitmap {
   // not partitioned, so <u,v>'s location in a complete adj list must be reconstructed
   // Each PE maintains its own bitmap, so setting a bit is necessarily atomic (no PE accesses someone elses bitmap)
   // Eventually they are merged with an or to all
-  void set_bit_partitioned(const Graph &g, NodeID u, NodeID counter, Partition<NodeID> vp) {
-    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));                              // Bitmap starting position of the adjacency list of the PE to which u is assigned
-    NodeID* u_v = g.out_neigh(u).start() + counter;                                      // address of v in u adjacency list on assigned PE
-    size_t local_size = u_v - g.out_neigh(vp.first_node(vp.recv(u))).start();           // how deep in PE's adjacency list <u,v> occurs
-    size_t pos = u_start + local_size;                                                  // position in the complete bitmap
-    //if (shmem_my_pe() != vp.recv(u))
-      //printf("PE %d | (Set bit) Address of (%d, %d) is %p, the starting address is %p, local size %lu, position %lu\n", vp.pe, u, counter, (void*) &v, (void*) g.out_neigh(vp.first_node(vp.recv(u))).start(), local_size, pos);
+  void set_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
+    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
+    size_t pos = u_start + local_size;
     start_[word_offset(pos)] |= ((uint64_t) 1l << bit_offset(pos));
   }
 
@@ -98,10 +95,9 @@ class Bitmap {
   }
 
   // so much communication overhead for one bit...
-  bool get_bit_partitioned(const Graph &g, NodeID u, NodeID counter, Partition<NodeID> vp) { // &v is the symmetric heap address where v resides in u's edge list on PE vp.recv(u)
-    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));      // where in the bitmap (array of bits representing edge list) PE vp.recv(u)'s edges begin
-    NodeID* u_v = g.out_neigh(u).start() + counter; 
-    size_t local_size = u_v - g.out_neigh(vp.first_node(vp.recv(u))).start();
+  bool get_bit_partitioned(const Graph &g, NodeID u, NodeID &v, Partition<NodeID> vp) {
+    size_t u_start = shmem_size_g(adj_start_, vp.recv(u));
+    size_t local_size = &v - g.out_neigh(vp.first_node(vp.recv(u))).begin();
     size_t pos = u_start + local_size;
     return (start_[word_offset(pos)] >> bit_offset(pos)) & 1l;
   }
@@ -135,4 +131,3 @@ class Bitmap {
 };
 
 #endif  // BITMAP_H_
-

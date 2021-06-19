@@ -267,7 +267,7 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
-    //printf("Last check\n");
+    printf("Last check\n");
 //    g.PrintTopology(LOCK);
 
 /*    Partition<NodeID> vp(g.num_nodes());
