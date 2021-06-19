@@ -85,7 +85,7 @@ bool PRVerifier(const Graph &g, const pvector<ScoreT> &scores,
   shmem_barrier_all();
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/pr_output.txt", ios::app);
+  shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/pr_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
     shmem_out << std::setprecision (5) << scores[vp.local_pos(n)] << std::endl;
   }

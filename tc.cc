@@ -45,6 +45,7 @@ to relabel the graph, we use the heuristic in WorthRelabelling.
 using namespace std;
 
 size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
+  printf("check 6\n");
   Partition<NodeID> vp(g.num_nodes());
   long* total = (long *) shmem_calloc(1, sizeof(long));
   for (NodeID u = vp.start; u < vp.end; u++) {
@@ -71,8 +72,8 @@ size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
 // heuristic to see if sufficently dense power-law graph                        Does this still hold for the partitioned version?
 bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   int64_t average_degree = g.num_edges() / g.num_nodes();
-  return true;								// remove
-  if (true/*average_degree < 10*/)
+  printf("check 2\n");
+  if (average_degree < 10)
     return false;
   SourcePicker<Graph> sp(g);
   int64_t num_samples = min(int64_t(1000), g.num_nodes());
@@ -82,9 +83,12 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   pvector<int64_t> dest(num_samples, true);                             // symmetric overallocated pvector
   pvector<NodeID> nodes(num_samples);
   shmem_barrier_all();
+  printf("npes: %d\n", sample_part.npes);
   for (NodeID n = 0; n < num_samples; n++)
     nodes[n] = sp.PickNext();                                                   // PEs work together during PickNext
+  printf("PE %d has arrived\n", sample_part.pe);
   shmem_barrier_all();
+  printf("check 4\n");
   int64_t lp;
   for (int64_t trial = sample_part.start; trial < sample_part.end; trial++) {   // now PES can divide up the work, selecting from node candidates
     lp = sample_part.local_pos(trial);
@@ -92,6 +96,7 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
     *sample_total += samples[lp];
   }
   shmem_barrier_all();
+  printf("check 5\n");
   shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, shmem_n_pes(), pSync);
   shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, shmem_n_pes(), pWrk, pSync);
   sort(dest.begin(), dest.end());
@@ -148,8 +153,7 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
-    g.PrintTopology();
-    shmem_barrier_all();
+    printf("check 1\n");
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;

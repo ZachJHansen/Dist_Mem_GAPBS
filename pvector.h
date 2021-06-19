@@ -339,7 +339,6 @@
     void reserve(size_t num_elements) {
       if (num_elements > capacity()) {
         if (symmetric_) { 
-          printf("PE %d is reserving with %d elems\n", pe, num_elements);
           T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
           #pragma omp parallel for
           for (size_t i=0; i < size(); i++)
