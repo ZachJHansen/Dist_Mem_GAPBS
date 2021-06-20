@@ -103,8 +103,8 @@ class BuilderBase {
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
       }
       flush_counter++;
-      if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
-        shmem_barrier_all();
+      //if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
+        //shmem_barrier_all();
     }
     shmem_barrier_all();
     return degrees;
@@ -181,14 +181,12 @@ class BuilderBase {
       new_end = std::remove(n_start, new_end, n);       // removes self-loops (v,v)
       diffs[indx] = new_end - n_start;
     }
-    printf("check 5\n");
     pvector<SGOffset> sq_offsets = ParallelPrefixSum(diffs);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, sq_offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
     *sq_neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     *sq_index = CSRGraph<NodeID_, DestID_>::GenIndex(sq_offsets, *sq_neighs, &vp);
     shmem_barrier_all();
-    printf("cddheck 6\n");
     #pragma omp parallel for private(n_start)
     for (NodeID_ n=vp.start; n < vp.end; n++) {
       //indx = vp.local_pos(n);
@@ -205,9 +203,7 @@ class BuilderBase {
   CSRGraph<NodeID_, DestID_, invert> SquishGraph(
       const CSRGraph<NodeID_, DestID_, invert> &g, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
     DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
-    printf("check 3\n");
     SquishCSR(g, false, &out_index, &out_neighs, *vp, pSync, pWrk);
-    printf("check 4\n");
     shmem_barrier_all();
     if (g.directed()) {
       shmem_barrier_all();
@@ -323,9 +319,7 @@ class BuilderBase {
         el = gen.GenerateEL(cli_.uniform());
       }
       shmem_barrier_all();
-      printf("check 1\n");
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
-      printf("check 2\n");
       shmem_barrier_all();
     }
     return SquishGraph(g, &p, pSync, pWrk);

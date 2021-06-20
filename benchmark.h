@@ -70,6 +70,7 @@ class SourcePicker {
           shmem_int_p(source, *source, i);
         }
       }
+      shmem_quiet();
     } else {
       shmem_int_wait_until(source, SHMEM_CMP_GT, -1);
     }

@@ -22,7 +22,7 @@ inline
 void RelaxEdges(const WGraph &g, NodeID u, long delta, pvector<long> &dist, vector <vector<NodeID>> &local_bins, Partition<NodeID> vp) {
   long old_dist, new_dist;
   for (WNode wn : g.out_neigh(u)) {
-    shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));           
+    shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));
     shmem_getmem(&new_dist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));               // can a pe fetch data from itself?
     new_dist += wn.w;
     while (new_dist < old_dist) {
@@ -33,7 +33,7 @@ void RelaxEdges(const WGraph &g, NodeID u, long delta, pvector<long> &dist, vect
         local_bins[dest_bin].push_back(wn.v);
         break;
       }
-      shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));               
+      shmem_getmem(&old_dist, dist.begin()+vp.local_pos(wn.v), sizeof(long), vp.recv(wn.v));
     }
   }
 }
@@ -43,7 +43,6 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
   long init = 0;
   long *old_dist, *new_dist;
   Timer t;
-  printf("Delta: %d | source: %d\n", delta, source);
   Partition<NodeID> vp(g.num_nodes());                                  // Partition nodes: each PE is assigned a subset of nodes to process
   pvector<long> dist(vp.max_width, kDistInf, true);                     // Symmetric partitioned array of distances, initialized at infinity
   if (source >= vp.start && source < vp.end)                            // If src falls in your range of vertices, init distance to source as 0
@@ -72,7 +71,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     OldePartition<size_t> fp(curr_frontier_tail);                           // All PEs process a portion of edges added to the frontier in the previous iteration
     for (size_t i = 0; i < fp.end-fp.start; i++) {
       NodeID u = frontier[i];
-      shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));                      
+      shmem_getmem(&udist, dist.begin()+vp.local_pos(u), sizeof(long), vp.recv(u));
       if (udist >= delta * static_cast<long>(curr_bin_index))
         RelaxEdges(g, u, delta, dist, local_bins, vp);
     }
@@ -80,7 +79,6 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     while (curr_bin_index < local_bins.size() &&
              !local_bins[curr_bin_index].empty() &&
              local_bins[curr_bin_index].size() < kBinSizeThreshold) {
-      printf("check\n");
       vector<NodeID> curr_bin_copy = local_bins[curr_bin_index];
       local_bins[curr_bin_index].resize(0);
       for (NodeID u : curr_bin_copy) {
@@ -96,7 +94,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
       }
     }
     shmem_long_min_to_all(&next_bin_index, local_min, 1, 0, 0, vp.npes, pWrk, pSync); // next_bin_index = min of local_mins
-    t.Stop();                                                          
+    t.Stop();
     PrintStep(curr_bin_index, t.Millisecs(), curr_frontier_tail);       // End of phase 1
 
     t.Start();                                                                  // REMEMBER! Everyone must particpate in timer and label printing stuff
@@ -107,18 +105,15 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
       copy_start = shmem_ulong_atomic_fetch_add(&next_frontier_tail, local_bins[next_bin_index].size(), 0);       // PEs establish copying ranges using PE 0's copy of next frontier tail
     shmem_barrier_all();
     // Distribute next_frontier_tail weighted nodes over a partitioned frontier
-    if (vp.pe == 0) { 
-      for (int i = 0; i < vp.npes; i++) 
+    if (vp.pe == 0) {
+      for (int i = 0; i < vp.npes; i++)
         shmem_size_put(&next_frontier_tail, &next_frontier_tail, 1, i);
     }
     shmem_barrier_all();
     OldePartition<size_t> nftp(next_frontier_tail);                 // If nft = final next frontier tail, then copy_start is like node id=copy_start in an nft length array
-    printf("check\n");
     if (next_bin_index < local_bins.size()) {
       int owner = nftp.recv(copy_start);                                          // which PE to dump on
-      printf("check 1\n");
       size_t local_copy_start = nftp.local_pos(copy_start);                              // where the partitioned copy_start would be
-      printf("check 2\n");
       size_t prior = 0;                                           // how many edges (weighted nodes) have you added to previous pes
       size_t bin_remainder, partition_remainder;                // what if npes > |E|/npes? then they all get assigned to last pe but theres not enough space
       for (int i = owner; i < nftp.npes; i++) {
@@ -132,7 +127,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
           shmem_putmem(frontier.data() + local_copy_start, &*(local_bins[next_bin_index].begin() + prior), sizeof(NodeID) * partition_remainder, owner);
           prior += partition_remainder;
           owner++;
-          local_copy_start = 0; 
+          local_copy_start = 0;
         } else {                                                // remaining bin contents will fit on this PE's partitioned array
           shmem_putmem(frontier.data() + local_copy_start, &*(local_bins[next_bin_index].begin() + prior), sizeof(NodeID) * bin_remainder, owner);
           break;
@@ -151,7 +146,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
   printf("PE %d | Took %d iterations\n", vp.pe, *iter);
   return dist;
 }
- 
+
 void PrintSSSPStats(const WGraph &g, const pvector<long> &dist) {
   auto NotInf = [](long d) { return d != kDistInf; };
   int64_t num_reached = count_if(dist.begin(), dist.end(), NotInf);
@@ -167,7 +162,7 @@ bool SSSPVerifier(const WGraph &g, NodeID source,
   shmem_barrier_all();
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/sssp_output.txt", ios::app);
+  shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/Dist_Mem_GAPBS/Dist_Mem_GAPBS/sssp_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++)
     shmem_out << dist_to_test[vp.local_pos(n)] << endl;
   shmem_out.close();
@@ -189,14 +184,14 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=18G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=8G";
   putenv(size_env);
 
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
-  static long long ll_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static long long ll_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
@@ -230,8 +225,3 @@ int main(int argc, char* argv[]) {
   shmem_finalize();
   return 0;
 }
-
-
-
-
-

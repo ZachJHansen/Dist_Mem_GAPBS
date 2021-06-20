@@ -75,20 +75,29 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
     auto iter_init = queue.begin();
     for (NodeID q_iter = qp.start; q_iter < qp.end; q_iter++) {
       NodeID u = *(iter_init+q_iter);
-      for (NodeID &v : g.out_neigh(u)) {
+      NodeID neighbor_counter = 0;
+      for (NodeID v : g.out_neigh(u)) {
+      //for (NodeID* v_it = g.out_neigh(u).start(); v_it != g.out_neigh(u).finish(); v_it++) {
+        //NodeID& v = *v_it;
         NodeID lp_v = vp.local_pos(v);
-        if ((shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == -1) &&
-            (shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
+        //if ((shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == -1) &&
+            //(shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
+        if ((shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
           lqueue.push_back(v);
         }
         if (shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == depth) {
-          succ.set_bit_partitioned(g, u, v, vp);
+          succ.set_bit_partitioned(g, u, neighbor_counter, vp);
+          //shmem_set_lock(PATH_LOCKS+vp.local_pos(u));                                         // is path_counts[u] safe from updates due to depth maybe?
+          //shmem_set_lock(PATH_LOCKS);
           CountT pc_u = shmem_double_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
           shmem_set_lock(PATH_LOCKS+lp_v);            
           CountT pc_v = shmem_double_g(path_counts.begin()+lp_v, vp.recv(v));
           shmem_double_p(path_counts.begin()+lp_v, pc_u+pc_v, vp.recv(v));
+          //shmem_clear_lock(PATH_LOCKS);
           shmem_clear_lock(PATH_LOCKS+lp_v);
+          //shmem_clear_lock(PATH_LOCKS+vp.local_pos(u));
         }
+        neighbor_counter++;
       }
     }
     lqueue.flush();
@@ -107,7 +116,17 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   Timer t;
   t.Start();
   Partition<NodeID> vp(g.num_nodes());
+  /*if (vp.pe == 2) {
+    for (NodeID* v_it = g.out_neigh(10).start(); v_it != g.out_neigh(10).finish(); v_it++) {
+        NodeID& v = *v_it;
+        if (v == 11) {
+          printf("Address of PE 2 Adj start is %p, address of Adj[10] is %p, address of (10, 11) is %p\n", (void*) g.out_neigh(8).start(), (void*) g.out_neigh(10).start(), (void*) &v);
+          break;
+        }
+    }
+  }*/
   long* PATHLOCKS = (long *) shmem_calloc(vp.max_width, sizeof(long));
+  //long* PATHLOCKS = (long *) shmem_calloc(1, sizeof(long));
   pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
   pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
   Bitmap succ(g.num_edges_directed(), true);                          // symmetric non-partitioned bitmap
@@ -127,7 +146,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp, PATHLOCKS);
     t.Stop();
     PrintStep("b", t.Seconds());
-    pvector<ScoreT> deltas(g.num_nodes(), 0, true);
+    pvector<ScoreT> deltas(vp.max_width, 0, true);              // why is this not partitioned? now it is
     t.Start();
     for (long d=depth_index.size()-2; d >= 0; d--) {
       for (auto it = depth_index[d]; it < depth_index[d+1]; it++) {
@@ -135,10 +154,14 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
         if (vp.start <= u && u < vp.end) {
           NodeID lp_u = vp.local_pos(u);
           ScoreT delta_u = 0;
-          for (NodeID &v : g.out_neigh(u)) {
-            if (succ.get_bit_partitioned(g, u, v, vp)) {
+          NodeID neighbor_counter = 0;
+          for (NodeID v : g.out_neigh(u)) {
+          //for (NodeID* v_it = g.out_neigh(u).start(); v_it != g.out_neigh(u).finish(); v_it++) {
+            //NodeID& v = *v_it;
+            if (succ.get_bit_partitioned(g, u, neighbor_counter, vp)) {
               delta_u += (path_counts[lp_u] / shmem_double_g(path_counts.begin()+vp.local_pos(v), vp.recv(v))) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
             }
+            neighbor_counter++;
           }
           deltas[lp_u] = delta_u;
           scores[lp_u] += delta_u;
@@ -146,8 +169,8 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
       }
       shmem_barrier_all();              // synchronize between depths
     }
-    for (int i = 0; i < vp.max_width; i++)      // reset locks to 0 before next BFS
-      PATHLOCKS[i] = 0;
+//    for (int i = 0; i < vp.max_width; i++)      // reset locks to 0 before next BFS
+//      PATHLOCKS[i] = 0;
     t.Stop();
     PrintStep("p", t.Seconds());
   }
@@ -157,6 +180,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   #pragma omp parallel for reduction(max : biggest_score)
   for (NodeID n=vp.start; n < vp.end; n++)
     *biggest_score = max(*biggest_score, scores[vp.local_pos(n)]);
+  shmem_barrier_all();
   shmem_float_max_to_all(biggest_score, biggest_score, 1, 0, 0, vp.npes, pWrk, pSync);
   #pragma omp parallel for
   for (NodeID n=vp.start; n < vp.end; n++)
@@ -186,13 +210,13 @@ bool BCVerifier(const Graph &g, SourcePicker<Graph> &sp, NodeID num_iters,
   shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);       // wait until previous PE puts your pe # in PRINTER
   ofstream shmem_out;
   shmem_out.precision(17);
-  shmem_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/bc_output.txt", ios::app);
+  shmem_out.open("bc_output.txt", ios::app);
   for (NodeID n = vp.start; n < vp.end; n++) {
     shmem_out << scores_to_test[vp.local_pos(n)] << endl;
   }
   shmem_out.close();
   if (!(vp.pe == vp.npes-1))
-    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);     
+    shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);
   shmem_free(PRINTER);
   return true;
 }
@@ -206,7 +230,7 @@ int main(int argc, char* argv[]) {
   if (cli.num_iters() > 1 && cli.start_vertex() != -1)
     cout << "Warning: iterating from same source (-r & -i)" << endl;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=2G";
   putenv(size_env);
 
   static long QLOCK = 0;
@@ -214,8 +238,8 @@ int main(int argc, char* argv[]) {
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long lng_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
-  static float flt_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+  static long lng_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static float flt_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
@@ -227,6 +251,7 @@ int main(int argc, char* argv[]) {
   {
     Builder b(cli);
     Graph g = b.MakeGraph(lng_pWrk, pSync);
+    shmem_barrier_all();
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BCBound =
       [&sp, &cli] (const Graph &g) { return Brandes(g, sp, cli.num_iters(), &QLOCK, flt_pWrk, pSync); };

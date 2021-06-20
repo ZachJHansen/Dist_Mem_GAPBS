@@ -71,7 +71,7 @@ size_t OrderedCount(const Graph &g, long* pSync, long* pWrk) {
 // heuristic to see if sufficently dense power-law graph                        Does this still hold for the partitioned version?
 bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
   int64_t average_degree = g.num_edges() / g.num_nodes();
-  if (true/*average_degree < 10*/)
+  if (average_degree < 10)
     return false;
   SourcePicker<Graph> sp(g);
   int64_t num_samples = min(int64_t(1000), g.num_nodes());
@@ -90,6 +90,7 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
     samples[lp] = g.out_degree(nodes[trial]);
     *sample_total += samples[lp];
   }
+  printf("check\n");
   shmem_barrier_all();
   shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, shmem_n_pes(), pSync);
   shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, shmem_n_pes(), pWrk, pSync);
@@ -120,10 +121,10 @@ void PrintTriangleStats(const Graph &g, size_t total_triangles) {
 bool TCVerifier(const Graph &g, size_t test_total) {
   if (shmem_my_pe() == 0) {
   	printf("Triangles: %lu\n", test_total);
-    /*ofstream shmem_out;
-    shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/tc_output.txt", ios::app);
+    ofstream shmem_out;
+    shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/Dist_Mem_GAPBS/Dist_Mem_GAPBS/tc_output.txt", ios::app);
     shmem_out << test_total << endl;
-    shmem_out.close();*/
+    shmem_out.close();
   }
   return true;
 }
