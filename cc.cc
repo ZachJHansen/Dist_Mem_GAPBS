@@ -139,6 +139,7 @@ pvector<int> Afforest(const Graph &g, long* pSync, int32_t neighbor_rounds = 2) 
     comp[vp.local_pos(n)] = n;                                  // label should be global "name" (index) of node, even if position is local
   // Process a sparse sampled subgraph first for approximating components.
   // Sample by processing a fixed number of neighbors for each node (see paper)
+  shmem_barrier_all();
   for (int r = 0; r < neighbor_rounds; ++r) {
     for (NodeID u = vp.start; u < vp.end; u++) {
       for (NodeID v : g.out_neigh(u, r)) {
@@ -149,6 +150,7 @@ pvector<int> Afforest(const Graph &g, long* pSync, int32_t neighbor_rounds = 2) 
     }
     shmem_barrier_all();                // necessary?
     Compress(g, comp, vp);
+    shmem_barrier_all();
   }
   // Sample 'comp' to find the most frequent element -- due to prior
   // compression, this value represents the largest intermediate component

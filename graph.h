@@ -152,11 +152,13 @@ class CSRGraph {
 
     // start and finish are what begin and end used to be: local memory can be directly dereferenced with these,
     // but for accessing PEs on separate computers they can only be used to get the address for use in a different shmem call
-    iterator start() { 
+    iterator start(bool help = false) { 
       if (shmem_my_pe() == owner) {
         //printf("PE %d is starting for node %d\n", shmem_my_pe(), n_);
         return(beginning); 
       } else {
+        if (help)
+          printf("PE %d is calling n_start on a foreign PE for node %d\n", shmem_my_pe(), n_);
         if (same_space_) {            // check to see if the PEs share a memory space                                                                                   
           DestID_ * neigh_start = (DestID_ *) shmem_ptr(beginning, owner);
           return(neigh_start);
@@ -167,14 +169,15 @@ class CSRGraph {
       }
     }
 
-    iterator finish() { 
+    iterator finish(bool help = false) { 
       if (shmem_my_pe() == owner)
         return(ending); 
-      else
+      else {
         if (same_space_)
           return ((DestID_*) shmem_ptr(ending, owner));
         else
           return(ending);
+      }
     }
 
     bool operator!=(Neighborhood const& it) const { return it.ending != current; }

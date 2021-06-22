@@ -165,8 +165,8 @@ class BuilderBase {
     DestID_ *n_start, *n_end;
     #pragma omp parallel for private(n_start, n_end)
     for (NodeID_ n = vp.start; n < vp.end; n++) {
-      indx = n - vp.start;
-      //indx = vp.local_pos(n);
+      //indx = n - vp.start;
+      indx = vp.local_pos(n);
       if (transpose) {
         n_start = g.in_neigh(n).start();
         n_end = g.in_neigh(n).finish();
@@ -177,7 +177,7 @@ class BuilderBase {
         //printf("PE %d | n: %d | n_start: %p => %d n_end: %p => %d (nt)\n", vp.pe, n, (void*) n_start, *n_start, (void*) n_end, *n_end);
       }
       std::sort(n_start, n_end);                        // sorts elements in range [n_start, n_end)
-      DestID_ *new_end = std::unique(n_start, n_end);   // removes all but one of consecutive elements
+      DestID_ *new_end = std::unique(n_start, n_end);   // removes all but one of consecutive elements, returns pointer to logical end of array
       new_end = std::remove(n_start, new_end, n);       // removes self-loops (v,v)
       diffs[indx] = new_end - n_start;
     }
@@ -189,12 +189,12 @@ class BuilderBase {
     shmem_barrier_all();
     #pragma omp parallel for private(n_start)
     for (NodeID_ n=vp.start; n < vp.end; n++) {
-      //indx = vp.local_pos(n);
-      indx = n - vp.start;
+      indx = vp.local_pos(n);
+      //indx = n - vp.start;
       if (transpose)
-        n_start = g.in_neigh(n).start();        // transpose for incoming neighbors
+        n_start = g.in_neigh(n).start(true);        // transpose for incoming neighbors
       else
-        n_start = g.out_neigh(n).start();
+        n_start = g.out_neigh(n).start(true);
       std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);    // copy elements [n_start, n_start+diffs[indx]) into (*sq_index)[indx]
     }
     shmem_barrier_all();
@@ -284,7 +284,9 @@ class BuilderBase {
       num_nodes_ = FindMaxNodeID(el)+1;
     shmem_barrier_all();
     if (needs_weights_)
+    //if (true)
       Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el, src_opt);
+    printf("Created weights\n");
     shmem_barrier_all();
     MakeCSR(el, false, &index, &neighs, p, pSync, pWrk);
     if (!symmetrize_ && invert) 
@@ -318,8 +320,10 @@ class BuilderBase {
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
         el = gen.GenerateEL(cli_.uniform());
       }
+      printf("Created EL\n");
       shmem_barrier_all();
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
+      printf("Created graph\n");
       shmem_barrier_all();
     }
     return SquishGraph(g, &p, pSync, pWrk);
