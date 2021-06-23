@@ -40,16 +40,13 @@ propagation phase.
 
 using namespace std;
 typedef float ScoreT;
-typedef double CountT;
+typedef unsigned long long CountT;
 
 
 // path counts, depths are partitioned
-// an array of locks controls access to path counts
-// each address i in pathlocks could be locked by at least npes vertices v st local_pos(v) = i
-// so if v=50 needs to be protected, lp_v = 5, lock(5) blocks access to the pathcounts of all vertices whose local pos in partitioned array is 5
 void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
     Bitmap &succ, vector<SlidingQueue<NodeID>::iterator> &depth_index,
-    SlidingQueue<NodeID> &queue, Partition<NodeID> vp, long* PATH_LOCKS) {
+    SlidingQueue<NodeID> &queue, Partition<NodeID> vp) {
 
   static long BFSpSync[SHMEM_REDUCE_SYNC_SIZE];
   static long long BFSpWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
@@ -67,6 +64,7 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
   depth_index.push_back(queue.begin());
   queue.slide_window();                                 // synch point
   long depth = 0;
+  CountT old_v;
   QueueBuffer<NodeID> lqueue(queue);                    // each PE maintains a queue buffer 
   shmem_barrier_all();
   while (!queue.empty()) {
@@ -77,25 +75,13 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
       NodeID u = *(iter_init+q_iter);
       NodeID neighbor_counter = 0;
       for (NodeID v : g.out_neigh(u)) {
-      //for (NodeID* v_it = g.out_neigh(u).start(); v_it != g.out_neigh(u).finish(); v_it++) {
-        //NodeID& v = *v_it;
         NodeID lp_v = vp.local_pos(v);
-        //if ((shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == -1) &&
-            //(shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
         if ((shmem_long_atomic_compare_swap(depths.begin()+lp_v, static_cast<long>(-1), depth, vp.recv(v)) == -1)) {
           lqueue.push_back(v);
         }
         if (shmem_long_g(depths.begin()+lp_v, vp.recv(v)) == depth) {
           succ.set_bit_partitioned(g, u, neighbor_counter, vp);
-          //shmem_set_lock(PATH_LOCKS+vp.local_pos(u));                                         // is path_counts[u] safe from updates due to depth maybe?
-          //shmem_set_lock(PATH_LOCKS);
-          CountT pc_u = shmem_double_g(path_counts.begin()+vp.local_pos(u), vp.recv(u));
-          shmem_set_lock(PATH_LOCKS+lp_v);            
-          CountT pc_v = shmem_double_g(path_counts.begin()+lp_v, vp.recv(v));
-          shmem_double_p(path_counts.begin()+lp_v, pc_u+pc_v, vp.recv(v));
-          //shmem_clear_lock(PATH_LOCKS);
-          shmem_clear_lock(PATH_LOCKS+lp_v);
-          //shmem_clear_lock(PATH_LOCKS+vp.local_pos(u));
+          old_v = shmem_ulonglong_atomic_fetch_add(path_counts.begin()+lp_v, shmem_ulonglong_atomic_fetch(path_counts.begin()+vp.local_pos(u), vp.recv(u)), vp.recv(v));
         }
         neighbor_counter++;
       }
@@ -116,17 +102,6 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   Timer t;
   t.Start();
   Partition<NodeID> vp(g.num_nodes());
-  /*if (vp.pe == 2) {
-    for (NodeID* v_it = g.out_neigh(10).start(); v_it != g.out_neigh(10).finish(); v_it++) {
-        NodeID& v = *v_it;
-        if (v == 11) {
-          printf("Address of PE 2 Adj start is %p, address of Adj[10] is %p, address of (10, 11) is %p\n", (void*) g.out_neigh(8).start(), (void*) g.out_neigh(10).start(), (void*) &v);
-          break;
-        }
-    }
-  }*/
-  long* PATHLOCKS = (long *) shmem_calloc(vp.max_width, sizeof(long));
-  //long* PATHLOCKS = (long *) shmem_calloc(1, sizeof(long));
   pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
   pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
   Bitmap succ(g.num_edges_directed(), true);                          // symmetric non-partitioned bitmap
@@ -143,10 +118,10 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     depth_index.resize(0);
     queue.reset();
     succ.reset();
-    shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp, PATHLOCKS);
+    shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp);
     t.Stop();
     PrintStep("b", t.Seconds());
-    pvector<ScoreT> deltas(vp.max_width, 0, true);              // why is this not partitioned? now it is
+    pvector<ScoreT> deltas(vp.max_width, 0, true);              
     t.Start();
     for (long d=depth_index.size()-2; d >= 0; d--) {
       for (auto it = depth_index[d]; it < depth_index[d+1]; it++) {
@@ -156,10 +131,9 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
           ScoreT delta_u = 0;
           NodeID neighbor_counter = 0;
           for (NodeID v : g.out_neigh(u)) {
-          //for (NodeID* v_it = g.out_neigh(u).start(); v_it != g.out_neigh(u).finish(); v_it++) {
-            //NodeID& v = *v_it;
             if (succ.get_bit_partitioned(g, u, neighbor_counter, vp)) {
-              delta_u += (path_counts[lp_u] / shmem_double_g(path_counts.begin()+vp.local_pos(v), vp.recv(v))) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
+              double pc_v = (double) shmem_ulonglong_g(path_counts.begin()+vp.local_pos(v), vp.recv(v));
+              delta_u += (((double) path_counts[lp_u]) / pc_v) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
             }
             neighbor_counter++;
           }
@@ -169,8 +143,6 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
       }
       shmem_barrier_all();              // synchronize between depths
     }
-//    for (int i = 0; i < vp.max_width; i++)      // reset locks to 0 before next BFS
-//      PATHLOCKS[i] = 0;
     t.Stop();
     PrintStep("p", t.Seconds());
   }
@@ -230,7 +202,7 @@ int main(int argc, char* argv[]) {
   if (cli.num_iters() > 1 && cli.start_vertex() != -1)
     cout << "Warning: iterating from same source (-r & -i)" << endl;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=2G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
   putenv(size_env);
 
   static long QLOCK = 0;
