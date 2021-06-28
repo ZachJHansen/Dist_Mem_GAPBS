@@ -184,7 +184,7 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=8G";
+  char size_env[] = "SMA_SYMMETRIC_SIZE=24G";
   putenv(size_env);
 
   shmem_init();
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
     shmem_barrier_all();
     WGraph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();
-    //g.PrintTopology();
+    //g.PrintTopology(true);
     //g.PrintTopology(false);
     SourcePicker<WGraph> sp(g, cli.start_vertex());
     auto SSSPBound = [&sp, &cli] (const WGraph &g) {

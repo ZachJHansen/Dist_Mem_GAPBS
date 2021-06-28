@@ -49,6 +49,7 @@ class Reader {
   }
 
   EdgeList ReadInEL(std::ifstream &in) {
+    printf("PE %d is reading\n", shmem_my_pe());
     EdgeList el(0);                                       // Initialize a 0 element pvector on every PE
     NodeID_ u, v;
     RoundRobin<NodeID_> rr;
@@ -64,10 +65,12 @@ class Reader {
     size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
     el.set_widths(max_width, (size_t) rr.local_width());
     el.set_combined_length(i);
+    printf("PE %d read %lu elements (combined size %lu)\n", shmem_my_pe(), rr.local_width(), i);
     return el;
   }
 
   EdgeList ReadInWEL(std::ifstream &in) {
+    printf("PE %d is reading\n", shmem_my_pe());
     EdgeList el(0);
     NodeID_ u;
     NodeWeight<NodeID_, WeightT_> v;
@@ -84,6 +87,7 @@ class Reader {
     size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
     el.set_widths(max_width, (size_t) rr.local_width());
     el.set_combined_length(i);
+    printf("PE %d read %lu elements (combined size %lu)\n", shmem_my_pe(), rr.local_width(), i);
     return el;
   }
 

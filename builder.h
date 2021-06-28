@@ -86,9 +86,8 @@ class BuilderBase {
   pvector<NodeID_> CountDegrees(const EdgeList &el, bool transpose, Partition<NodeID_>* vp, Partition<>* ep = NULL) {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
-    //#pragma omp parallel for
     Edge e;
-    int flush_counter = 0;
+    //int flush_counter = 0;
     shmem_barrier_all();
     for (auto it = el.begin(); it < el.end(); it++) {
       e = *it;
@@ -102,7 +101,7 @@ class BuilderBase {
         local_v = vp->local_pos(e.v);
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
       }
-      flush_counter++;
+      //flush_counter++;
       //if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
         //shmem_barrier_all();
     }
@@ -127,7 +126,6 @@ class BuilderBase {
     const size_t block_size = 1<<20;
     const size_t num_blocks = (degrees.size() + block_size - 1) / block_size;
     pvector<SGOffset> local_sums(num_blocks);
-    #pragma omp parallel for
     for (size_t block=0; block < num_blocks; block++) {
       SGOffset lsum = 0;
       size_t block_end = std::min((block + 1) * block_size, degrees.size());
@@ -143,7 +141,6 @@ class BuilderBase {
     }
     bulk_prefix[num_blocks] = total;
     pvector<SGOffset> prefix(degrees.size() + 1, true);
-    #pragma omp parallel for
     for (size_t block=0; block < num_blocks; block++) {
       SGOffset local_total = bulk_prefix[block];
       size_t block_end = std::min((block + 1) * block_size, degrees.size());
@@ -163,18 +160,14 @@ class BuilderBase {
     NodeID_ indx;
     pvector<NodeID_> diffs(vp.max_width);
     DestID_ *n_start, *n_end;
-    #pragma omp parallel for private(n_start, n_end)
     for (NodeID_ n = vp.start; n < vp.end; n++) {
-      //indx = n - vp.start;
       indx = vp.local_pos(n);
       if (transpose) {
         n_start = g.in_neigh(n).start();
         n_end = g.in_neigh(n).finish();
-        //printf("PE %d | n: %d | n_start: %p => %d n_end: %p => %d (t)\n", vp.pe, n, (void*) n_start, *n_start, (void*) n_end, *n_end);
       } else {
         n_start = g.out_neigh(n).start();
         n_end = g.out_neigh(n).finish();
-        //printf("PE %d | n: %d | n_start: %p => %d n_end: %p => %d (nt)\n", vp.pe, n, (void*) n_start, *n_start, (void*) n_end, *n_end);
       }
       std::sort(n_start, n_end);                        // sorts elements in range [n_start, n_end)
       DestID_ *new_end = std::unique(n_start, n_end);   // removes all but one of consecutive elements, returns pointer to logical end of array
@@ -185,16 +178,19 @@ class BuilderBase {
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, sq_offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
     *sq_neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
+    if (!*sq_neighs) {
+      printf("PE %d received nullptr from neighbor allocation in SquishCSR with %lu neighbors\n", vp.pe, max_neigh);
+      shmem_global_exit(1);
+      exit(1);
+    }
     *sq_index = CSRGraph<NodeID_, DestID_>::GenIndex(sq_offsets, *sq_neighs, &vp);
     shmem_barrier_all();
-    #pragma omp parallel for private(n_start)
     for (NodeID_ n=vp.start; n < vp.end; n++) {
       indx = vp.local_pos(n);
-      //indx = n - vp.start;
       if (transpose)
-        n_start = g.in_neigh(n).start(true);        // transpose for incoming neighbors
+        n_start = g.in_neigh(n).start();        // transpose for incoming neighbors
       else
-        n_start = g.out_neigh(n).start(true);
+        n_start = g.out_neigh(n).start();
       std::copy(n_start, n_start+diffs[indx], (*sq_index)[indx]);    // copy elements [n_start, n_start+diffs[indx]) into (*sq_index)[indx]
     }
     shmem_barrier_all();
@@ -204,7 +200,7 @@ class BuilderBase {
       const CSRGraph<NodeID_, DestID_, invert> &g, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
     DestID_ **out_index, *out_neighs, **in_index, *in_neighs;
     SquishCSR(g, false, &out_index, &out_neighs, *vp, pSync, pWrk);
-    shmem_barrier_all();
+    shmem_barrier_all();                                                                // don't need all three barriers
     if (g.directed()) {
       shmem_barrier_all();
       if (invert)
@@ -226,23 +222,25 @@ class BuilderBase {
     - Allocate storage and set points according to offsets (GenIndex)
     - Copy edges into storage
   */
+
   void MakeCSR(const EdgeList &el, bool transpose, DestID_*** index,
                DestID_** neighs, Partition<NodeID_>* vp, long* pSync, long* pWrk) {
     SGOffset neighbor;
-    int64_t receiver, local_v;
+    NodeID_ receiver, local_v;
     *vp = Partition<NodeID_>(num_nodes_);                                                 // bounds for dividing vertices between PEs
     pvector<NodeID_> degrees = CountDegrees(el, transpose, vp);                  // each pe maintains an array of degrees for the vertices assigned to that pe
     shmem_barrier_all();
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);                     // offset from start of local neighs array, NOT the global array (symmetric & unsynched)
     //SGOffset* local_max = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    //SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
+    //shmem_long_max_to_all(max_neigh, local_max, 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space
     long* local_max = (long *) shmem_malloc(sizeof(long));
     *local_max = (long) *(offsets.begin()+(vp->end-vp->start));
-    //SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     SGOffset* max_neighbors = (SGOffset *) shmem_calloc(vp->npes, sizeof(SGOffset));    // alternative appproach since long_max_to_all sometimes breaks
     long* max_neigh = (long *) shmem_malloc(sizeof(long));
-    //shmem_long_max_to_all(max_neigh, local_max, 1, 0, 0, vp->npes, pWrk, pSync); //all pes must have symmetric neigh arrays, but different lengths. so use max size and acccept the wasted space?               
+
     for (int i = 0; i < vp->npes; i++)                                          // populate an array of local maxes on every PE
-      shmem_putmem(max_neighbors+(vp->pe), local_max, sizeof(SGOffset), i); 
+      shmem_putmem(max_neighbors+(vp->pe), local_max, sizeof(SGOffset), i);
     shmem_barrier_all();
     SGOffset maxn = -1;
     for (int i = 0; i < vp->npes; i++) {
@@ -250,8 +248,12 @@ class BuilderBase {
         maxn = max_neighbors[i];
     }
     shmem_barrier_all();
-    *neighs = (DestID_ *) shmem_calloc(maxn, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
-    //*neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));              // maybe copy the neighbors into exact-sized local memory arrays once they no longer need to be symmetric
+    *neighs = (DestID_ *) shmem_calloc(maxn, sizeof(DestID_));              
+    if (!*neighs) {
+      printf("PE %d received nullptr from neighbor allocation in MakeCSR with %lu neighbors\n", vp->pe, maxn);
+      shmem_global_exit(1);
+      exit(1);
+    }
     shmem_barrier_all();
     *index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, *neighs, vp);
     shmem_barrier_all();
@@ -267,7 +269,7 @@ class BuilderBase {
         receiver = vp->recv(e.v);
         local_v = vp->local_pos(static_cast<NodeID_>(e.v));
         // why wont shmem_int64 work?
-        neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);                     
+        neighbor = shmem_long_atomic_fetch_inc(offsets.begin()+local_v, receiver);
         DestID_ src = GetSource(e);
         shmem_putmem((*neighs)+neighbor, &src, sizeof(DestID_), receiver);
       }
@@ -284,9 +286,7 @@ class BuilderBase {
       num_nodes_ = FindMaxNodeID(el)+1;
     shmem_barrier_all();
     if (needs_weights_)
-    //if (true)
       Generator<NodeID_, DestID_, WeightT_>::InsertWeights(el, src_opt);
-    printf("Created weights\n");
     shmem_barrier_all();
     MakeCSR(el, false, &index, &neighs, p, pSync, pWrk);
     if (!symmetrize_ && invert) 
@@ -320,10 +320,8 @@ class BuilderBase {
         Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
         el = gen.GenerateEL(cli_.uniform());
       }
-      printf("Created EL\n");
       shmem_barrier_all();
       g = MakeGraphFromEL(el, &p, pSync, pWrk, src_option);
-      printf("Created graph\n");
       shmem_barrier_all();
     }
     return SquishGraph(g, &p, pSync, pWrk);
@@ -349,9 +347,7 @@ class BuilderBase {
       degree_id_pairs[vp.local_pos(n)] = std::make_pair(g.out_degree(n), n);
     degree_id_pairs.set_widths(vp.max_width, vp.end-vp.start);                                       // Record how many pairs each PE maintains 
     std::sort(degree_id_pairs.begin(), degree_id_pairs.end(), std::greater<degree_node_p>()); // Sort local partition of array in descending order of degree
-    /*if (vp.pe == 0)
-      for (auto i : degree_id_pairs)
-        printf("Deg, Node = %lu, %d\n", i.first, i.second);*/
+
     // Phase 2: K-way merge with tournament trees 
     int* LEADER = (int *) shmem_malloc(sizeof(int));                                       // Each PE is the leader while filling their own temp array
     *LEADER = 0;
@@ -370,22 +366,14 @@ class BuilderBase {
     shmem_int_wait_until(LEADER, SHMEM_CMP_EQ, vp.pe);                                        // wait until previous PE puts your pe # in LEADER
     for (int i = vp.start; i < vp.end; i++) {                                                  // Leader fills their own temp_pairs before passing leadership to next PE
       temp_pairs[i-vp.start] = tree.pop_root();
-      //printf("(%d, %d)\n", temp_pairs[i-vp.start].first, temp_pairs[i-vp.start].second);
-      //tree.print_tree();
     }
-    //printf("Pe %d has filled list\n", vp.pe);
     if (vp.pe < vp.npes-1) {
-      //printf("PE %d is transfering\n", vp.pe);
       tree.transfer(vp.pe);                                                                    // Transfer contents of tree to next PE
       shmem_int_p(LEADER, vp.pe+1, vp.pe+1);
     }
-    //tree.print_tree();
     shmem_barrier_all();
-    //shmem_global_exit(0);
-    //exit(0);
-    //for (int n = vp.start; n < vp.end; n++)
-      //printf("PE %d || (deg, node) = (%d, %d)\n", vp.pe, temp_pairs[vp.local_pos(n)].first, temp_pairs[vp.local_pos(n)].second);
     degree_id_pairs.~pvector();                                                                         // Free partially sorted list
+
     // Phase 3: Relabel vertices by ascending degree 
     pvector<NodeID_> degrees(vp.max_width);
     pvector<NodeID_> new_ids(vp.max_width, true);
@@ -395,14 +383,17 @@ class BuilderBase {
       shmem_putmem(new_ids.begin()+vp.local_pos(temp_pairs[lp_v].second), &n, sizeof(NodeID_), vp.recv(temp_pairs[lp_v].second));
     }
     shmem_barrier_all();
-    //for (int i = vp.start; i < vp.end; i++)
-      //printf("PE %d | degrees[%d] = %d, new_ids[%d] = %d\n", vp.pe, i, degrees[vp.local_pos(i)], i, new_ids[vp.local_pos(i)]);
-      //printf("PE %d | ID: %d Degree: %d\n", vp.pe, new_ids[vp.local_pos(i)], degrees[vp.local_pos(i)]);
+
     // Phase 4: Rebuild graph with new IDs 
     pvector<SGOffset> offsets = ParallelPrefixSum(degrees);
     SGOffset* max_neigh = (SGOffset *) shmem_malloc(sizeof(SGOffset));
     shmem_long_max_to_all(max_neigh, offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync);
     DestID_* neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
+    if (!neighs) {
+      printf("PE %d received nullptr from neighbor allocation in RelabelByDegree with %lu neighbors\n", vp.pe, *max_neigh);
+      shmem_global_exit(1);
+      exit(1);
+    }
     DestID_** index = CSRGraph<NodeID_, DestID_>::GenIndex(offsets, neighs, &vp);
     shmem_barrier_all();
     SGOffset off;
@@ -512,25 +503,5 @@ class BuilderBase {
 };
 
 // complicated optimized partitioned version - https://sites.cs.ucsb.edu/~gilbert/reports/sorting111904.pdf
-/*static
-CSRGraph<NodeID_, DestID_, invert> RelabelByDegree(
-    const CSRGraph<NodeID_, DestID_, invert> &g) {
-  if (g.directed()) {
-    std::cout << "Cannot relabel directed graph" << std::endl;
-    std::exit(-11);
-  }
-  Timer t;
-  t.Start();
-  Partition<NodeID_> vp(g.num_nodes());
-  typedef std::pair<int64_t, NodeID_> degree_node_p;            // do we need a different partition scheme to satisfy distribution requirement?
-  pvector<degree_node_p> degree_id_pairs(vp.max_width);         // symmetric partitioned pvector (unsynched)
-  for (NodeID_ n = vp.start; n < vp.end; n++)                   // 1. Local sort
-    degree_id_pair(g.out_degree(n), n);                         
-    std::sort(degree_id_pairs.begin(), degree_id_pairs.end(),
-              std::greater<degree_node_p>());
-  shmem_barrier_all();
-  // 2. Exact splitting
-*/
-
 #endif  // BUILDER_H_
 

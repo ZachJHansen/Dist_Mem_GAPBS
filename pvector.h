@@ -89,7 +89,7 @@
     Partition(int64_t num_nodes, bool ignore=false) : N(num_nodes){
       pe = shmem_my_pe();
       npes = shmem_n_pes();
-      //  shmem_barrier_all();    why does this cause deadlock?
+      //  shmem_barrier_all();    why does this cause deadlock? b/c PEs shouldn't need everyone to calculate these bounds, so they call it alone
       if (num_nodes < npes && !ignore) {
         small = true;
         if (pe < num_nodes) {
@@ -340,6 +340,11 @@
       if (num_elements > capacity()) {
         if (symmetric_) { 
           T_ *new_range = (T_ *) shmem_calloc(num_elements, sizeof(T_));
+          if (!new_range) {
+            printf("PE %d received nullptr from pvector allocation in reserve with %lu neighbors\n", pe, num_elements);
+            shmem_global_exit(1);
+            exit(1);
+          }
           #pragma omp parallel for
           for (size_t i=0; i < size(); i++)
             new_range[i] = start_[i];

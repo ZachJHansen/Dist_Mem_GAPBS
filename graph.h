@@ -160,7 +160,7 @@ class CSRGraph {
         if (help)
           printf("PE %d is calling n_start on a foreign PE for node %d\n", shmem_my_pe(), n_);
         if (same_space_) {            // check to see if the PEs share a memory space                                                                                   
-          DestID_ * neigh_start = (DestID_ *) shmem_ptr(beginning, owner);
+          DestID_* neigh_start = (DestID_ *) shmem_ptr(beginning, owner);
           return(neigh_start);
         } else {
           //printf("PE %d is requesting start address %p\n", shmem_my_pe(), (void*) (beginning));
@@ -219,9 +219,9 @@ class CSRGraph {
 
     DestID_& operator[](size_t n) {
       if (shmem_my_pe() == owner) {
-        return(*(begin()+n));
+        return(*(beginning+n));
       } else {
-        shmem_getmem(&curr_val, begin()+n, sizeof(DestID_), owner); 
+        shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner); 
         //printf("PE %d is pulling val (%d) from %p on PE %d\n", shmem_my_pe(), val, (void*) (begin()+n), owner);
         return curr_val;
       }
@@ -229,9 +229,9 @@ class CSRGraph {
 
     const DestID_& operator[](size_t n) const {
       if (shmem_my_pe() == owner) {
-        return(*(begin()+n));
+        return(*(beginning+n));
       } else {
-        shmem_getmem(&curr_val, begin()+n, sizeof(DestID_), owner);         
+        shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner);         
         return curr_val;
       }
     }
@@ -423,25 +423,43 @@ class CSRGraph {
     shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
     if (outgoing) {
       std::cout << "########################  Graph Topology (Outgoing): PE " << vp.pe <<  " #######################" << std::endl;
+      int j = 0;
       for (NodeID_ i = vp.start; i < vp.end; i++) {
+        int k = 0;
         //printf("PE %d | i %d | start: %p => %d | end: %p => %d\n", vp.pe, i, (void*) out_neigh(i).start(), out_neigh(i).start()[0], (void*) out_neigh(i).finish(), out_neigh(i).finish()[0]);
         std::cout << i << ": ";
-        for (DestID_ j : out_neigh(i))
+        for (DestID_ j : out_neigh(i)) {
           std::cout << j << " ";
+          if (k > 20)
+            break;
+          k++;
+        }
         //std::cout << std::endl;
         printf("\n");
+        if (j > 20)
+          break;
+        j++;
       }
       if (!(vp.pe == vp.npes-1))
         shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?
       shmem_barrier_all();
     } else {
       std::cout << "########################  Graph Topology (Incoming): PE " << vp.pe <<  " #######################" << std::endl;
+      int j = 0;
       for (NodeID_ i = vp.start; i < vp.end; i++) {
+        int k = 0;
         std::cout << i << ": ";
-        for (DestID_ j : in_neigh(i))
+        for (DestID_ j : in_neigh(i)) {
           std::cout << j << " ";
+          if (k > 20)
+            break;
+          k++;
+        }
         //std::cout << std::endl;
         printf("\n");
+        if (j > 20)
+          break;
+        j++;
       }
       if (!(vp.pe == vp.npes-1))
         shmem_int_p(PRINTER, vp.pe+1, vp.pe+1);             // who's next?

@@ -40,8 +40,6 @@ them in parent array as negative numbers. Thus the encoding of parent is:
     November 2012.
 */
 
-// Different from bfs.cc, updates partitioning logic with Partition methods
-
 using namespace std;
 
 // Assumes all PEs begin with synchronized front bitmaps, graph
@@ -51,7 +49,7 @@ using namespace std;
 int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bitmap &next, int pe, int npes, long long *pWrk, long *psync, Partition<NodeID> vp) {
   int relative;
   next.reset();
-  long long* awake_count = (long long *) shmem_malloc(sizeof(long long));               // Synchonization point?
+  long long* awake_count = (long long *) shmem_malloc(sizeof(long long));               // Synchonization point
   *awake_count = 0;
   for (NodeID u = vp.start; u < vp.end; u++) {                                  // PE N has parent array[lower : upper] and is responsible for processing nodes lower-upper
     relative = vp.local_pos(u);
@@ -72,7 +70,6 @@ int64_t SHMEM_BUStep(const Graph &g, pvector<NodeID> &parent, Bitmap &front, Bit
 }
 
 // This assumes NodeIDs are integers, otherwise I'm not sure how to do the atomic compare and swap
-// Assumes PLOCKS is an array of locks of length npes: so access to the parent array on each PE is controlled by a seperate lock
 int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeID> &queue,
                       long *QLOCK, long *pSync, long long *pWrk, Partition<NodeID> vp) {
   long long* scout_count = (long long *) shmem_calloc(1, sizeof(long long));    // The global scout_count is in symmetric memory (calloc to init at 0)
@@ -80,7 +77,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
   Partition<NodeID> qp(queue.size());                                           // Partition queue processing
   auto q_iter = queue.begin() + qp.start;
   auto q_end = queue.begin() + qp.end;
-  while (q_iter < q_end) {      // what if q size < npes?
+  while (q_iter < q_end) {      
     NodeID u = *q_iter;
     NodeID curr_val;
     for (NodeID v : g.out_neigh(u)) {
@@ -105,11 +102,10 @@ void QueueToBitmap(const SlidingQueue<NodeID> &queue, Bitmap &bm) {
   #pragma omp parallel for
   for (auto q_iter = queue.begin(); q_iter < queue.end(); q_iter++) {
     NodeID u = *q_iter;
-    bm.set_bit_atomic(u);
+    bm.set_bit(u);
   }
 }
 
-// Create afunction to calculate bounds, return them in a struct?
 // Assumes bitmaps are merged (synched) at function entry
 void BitmapToQueue(const Graph &g, const Bitmap &bm, SlidingQueue<NodeID> &queue, long *QLOCK, int pe, int npes) {
   Partition<NodeID> vp(g.num_nodes());
