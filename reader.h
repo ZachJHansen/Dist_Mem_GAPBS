@@ -48,66 +48,6 @@ class Reader {
     return filename_.substr(suff_pos);
   }
 
-  EdgeList ReadInEL(std::ifstream &in) {
-    printf("PE %d is reading\n", shmem_my_pe());
-    EdgeList el(0);                                       // Initialize a 0 element pvector on every PE
-    NodeID_ u, v;
-    RoundRobin<NodeID_> rr;
-    int64_t i = 0;
-    while (in >> u >> v) {
-      if (rr.owner(i) == rr.pe) {                         // every PE pushes back to their local pvector (edgelist)
-        el.push_back(Edge(u, v));
-        rr.inc_local();
-      }
-      i++;
-    }
-    shmem_barrier_all();
-    size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
-    el.set_widths(max_width, (size_t) rr.local_width());
-    el.set_combined_length(i);
-    printf("PE %d read %lu elements (combined size %lu)\n", shmem_my_pe(), rr.local_width(), i);
-    return el;
-  }
-
-  EdgeList ReadInWEL(std::ifstream &in) {
-    printf("PE %d is reading\n", shmem_my_pe());
-    EdgeList el(0);
-    NodeID_ u;
-    NodeWeight<NodeID_, WeightT_> v;
-    RoundRobin<NodeID_> rr;
-    int64_t i = 0;
-    while (in >> u >> v) {
-      if (rr.owner(i) == rr.pe) {                         // every PE pushes back to their local pvector (edgelist)
-        el.push_back(Edge(u, v));
-        rr.inc_local();
-      }
-      i++;
-    }
-    shmem_barrier_all();
-    size_t max_width = (size_t) rr.finalize_max_width();        // find maximum size of local edgelists
-    el.set_widths(max_width, (size_t) rr.local_width());
-    el.set_combined_length(i);
-    printf("PE %d read %lu elements (combined size %lu)\n", shmem_my_pe(), rr.local_width(), i);
-    return el;
-  }
-
-  // Note: converts vertex numbering from 1..N to 0..N-1
-  EdgeList ReadInGR(std::ifstream &in) {
-    EdgeList el(0, true);
-    char c;
-    NodeID_ u;
-    NodeWeight<NodeID_, WeightT_> v;
-    while (!in.eof()) {
-      c = in.peek();
-      if (c == 'a') {
-        in >> c >> u >> v;
-        el.push_back(Edge(u - 1, NodeWeight<NodeID_, WeightT_>(v.v-1, v.w)));
-      } else {
-        in.ignore(200, '\n');
-      }
-    }
-    return el;
-  }
 
   // Note: converts vertex numbering from 1..N to 0..N-1
   EdgeList ReadInMetis(std::ifstream &in, bool &needs_weights) {
