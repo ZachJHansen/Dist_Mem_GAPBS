@@ -74,11 +74,7 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
                       long *QLOCK, long *pSync, long long *pWrk, Partition<NodeID> vp) {
   long long* scout_count = (long long *) shmem_calloc(1, sizeof(long long));    // The global scout_count is in symmetric memory (calloc to init at 0)
   QueueBuffer<NodeID> lqueue(queue);                                            // Every PE maintains a queue buffer that updates the shared sliding queue
-  Partition<NodeID> qp(queue.size());                                           // Partition queue processing
-  auto q_iter = queue.begin() + qp.start;
-  auto q_end = queue.begin() + qp.end;
-  while (q_iter < q_end) {      
-    NodeID u = *q_iter;
+  for (NodeID u : queue) {                                                      // Each PE processes it's local portion of the active window
     NodeID curr_val;
     for (NodeID v : g.out_neigh(u)) {
       shmem_getmem(&curr_val, parent.begin()+vp.local_pos(v), sizeof(NodeID), vp.recv(v)); // v is the absolute location in the complete parent array
@@ -98,12 +94,13 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
 
 // if the parent array is split accross many pes, it must be combined into one bitmap
 // Bitmaps should be reset before this function
-void QueueToBitmap(const SlidingQueue<NodeID> &queue, Bitmap &bm) {
-  #pragma omp parallel for
+void QueueToBitmap(const SlidingQueue<NodeID> &queue, Bitmap &bm, long long* pWrk, long* pSync) {
   for (auto q_iter = queue.begin(); q_iter < queue.end(); q_iter++) {
     NodeID u = *q_iter;
     bm.set_bit(u);
   }
+  bm.merge(pWrk, pSync);
+  shmem_barrier_all();
 }
 
 // Assumes bitmaps are merged (synched) at function entry
@@ -123,7 +120,7 @@ void BitmapToQueue(const Graph &g, const Bitmap &bm, SlidingQueue<NodeID> &queue
 // Accessing node v on PE p means accessing node (n/k)*p + v in a complete parent array of n nodes and k PEs
 // Similarly, node V in the complete parent array is the V%(n/k) element in the parent array of PE V/(n/k)
 // (Unless pe = npes-1, then V is the V-(n/k)*p element in the npes-1 PE)
-pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
+pvector<NodeID> InitParent(const Graph &g, NodeID source) {
   Partition<NodeID> p(g.num_nodes());
   pvector<NodeID> parent(p.max_width, true);                               // The last PE contains the remainding elements, so the symmetric parent array must be at least this large on each PE
   #pragma omp parallel for                                              // But even though the parent array is symmetric, the elements aren't the same across PEs
@@ -135,33 +132,30 @@ pvector<NodeID> InitParent(const Graph &g, NodeID source, int pe, int npes) {
 }
 
 pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long long* pWrk, long* pSync, int alpha = 15, int beta = 18) {
-  int pe = shmem_my_pe();
-  int npes = shmem_n_pes();
   Partition<NodeID> vp(g.num_nodes());
   PrintStep("Source", static_cast<int64_t>(source));
   Timer t;
   t.Start();
-  pvector<NodeID> parent = InitParent(g, source, pe, npes);
+  pvector<NodeID> parent = InitParent(g, source);
   t.Stop();
   PrintStep("i", t.Seconds());
-  void* frontier_alloc = shmem_malloc(sizeof(SlidingQueue<NodeID>));
-  SlidingQueue<NodeID>* frontier = new(frontier_alloc) SlidingQueue<NodeID>{(size_t) g.num_nodes(), FRONTIER_LOCK}; // too large?               
+  SlidingQueue<NodeID> frontier(vp.max_width);          // Partitioned symmetric queue
   if (pe == 0)
-    frontier->push_back(source);
-  frontier->slide_window();
-  Bitmap curr(g.num_nodes(), true);                     // Symmetric bitmap
+    frontier.push_back(source);
+  frontier.slide_window();
+  Bitmap curr(g.num_nodes(), true);                     // Symmetric unpartitioned bitmap
   curr.reset();
-  Bitmap front(g.num_nodes(), true);                    // Symmetric bitmap
+  Bitmap front(g.num_nodes(), true);                    // Symmetric unpartitioned bitmap
   front.reset();                                        // All PEs are synched at this point
   int64_t edges_to_check = g.num_edges_directed();
   int64_t scout_count = g.out_degree(source);
-  while (!frontier->empty()) {
+  while (!frontier.empty()) {
     if (scout_count > edges_to_check / alpha) {
       int64_t awake_count, old_awake_count;
-      TIME_OP(t, QueueToBitmap(*frontier, front));
+      TIME_OP(t, QueueToBitmap(*frontier, front, pWrk, pSync));
       PrintStep("e", t.Seconds());
-      awake_count = frontier->size();
-      frontier->slide_window();
+      awake_count = frontier.size();
+      frontier.slide_window();
       do {
         t.Start();
         old_awake_count = awake_count;
@@ -170,16 +164,16 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long l
         t.Stop();
         PrintStep("bu", t.Seconds(), awake_count);
       } while ((awake_count >= old_awake_count) || (awake_count > vp.max_width / beta));    // used to ac > g.num_nodes / beta, does vp.max_width make sense?
-      TIME_OP(t, BitmapToQueue(g, front, *frontier, FRONTIER_LOCK, pe, npes));
+      TIME_OP(t, BitmapToQueue(g, front, frontier, FRONTIER_LOCK, pe, npes));
       PrintStep("c", t.Seconds());
       scout_count = 1;
     } else {
       t.Start();
       edges_to_check -= scout_count;
-      scout_count = SHMEM_TDStep(g, parent, *frontier, FRONTIER_LOCK, pSync, pWrk, vp);
-      frontier->slide_window();
+      scout_count = SHMEM_TDStep(g, parent, frontier, FRONTIER_LOCK, pSync, pWrk, vp);
+      frontier.slide_window();
       t.Stop();
-      PrintStep("td", t.Seconds(), frontier->size());
+      PrintStep("td", t.Seconds(), frontier.size());
     }
   }
   return(parent);
