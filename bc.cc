@@ -43,7 +43,7 @@ typedef float ScoreT;
 typedef unsigned long long CountT;
 
 
-// path counts, depths are partitioned
+// path counts, depths, queue are partitioned
 void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
     Bitmap &succ, vector<SlidingQueue<NodeID>::iterator> &depth_index,
     SlidingQueue<NodeID> &queue, Partition<NodeID> vp) {
@@ -59,7 +59,7 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
   if (source >= vp.start && source < vp.end) {
     depths[vp.local_pos(source)] = 0;
     path_counts[vp.local_pos(source)] = 1;
-    queue.push_back(source);                            // queue is symmetric but not partitioned, only one PE pushbacks
+    queue.push_back(source);                            // queue is symmetric and partitioned
   }
   depth_index.push_back(queue.begin());
   queue.slide_window();                                 // synch point
@@ -67,12 +67,9 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
   CountT old_v;
   QueueBuffer<NodeID> lqueue(queue);                    // each PE maintains a queue buffer 
   shmem_barrier_all();
-  while (!queue.empty()) {
+  while (!queue.empty()) {                              // while at least one PE has a non-empty frontier
     depth++;                                            // Thread local so each PE should maintain and increment a copy
-    Partition<NodeID> qp(queue.size());                 // Divide processing of queue - if npes > q.size then pe npes-1 handles entire queue, not optimal for large npes
-    auto iter_init = queue.begin();
-    for (NodeID q_iter = qp.start; q_iter < qp.end; q_iter++) {
-      NodeID u = *(iter_init+q_iter);
+    for (NodeID u : queue) {                            // Each PE processes their entire active portion of the queue
       NodeID neighbor_counter = 0;
       for (NodeID v : g.out_neigh(u)) {
         NodeID lp_v = vp.local_pos(v);
@@ -102,12 +99,12 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   Timer t;
   t.Start();
   Partition<NodeID> vp(g.num_nodes());
-  pvector<ScoreT> scores(vp.max_width, 0, true);                // symmetric partitioned pvector
-  pvector<CountT> path_counts(vp.max_width, true);                   // symmetric partitioned pvector
-  Bitmap succ(g.num_edges_directed(), true);                          // symmetric non-partitioned bitmap
+  pvector<ScoreT> scores(vp.max_width, 0, true);                        // symmetric partitioned pvector
+  pvector<CountT> path_counts(vp.max_width, true);                      // symmetric partitioned pvector
+  Bitmap succ(g.num_edges_directed(), true);                            // symmetric non-partitioned bitmap
   succ.init_bitmap_offsets(g, vp);
   vector<SlidingQueue<NodeID>::iterator> depth_index;
-  SlidingQueue<NodeID> queue(g.num_nodes(), QLOCK);                    // really wish i knew how to get away with a smaller queue. resize when necessary?
+  SlidingQueue<NodeID> queue(vp.max_width, QLOCK);                      // symmetric partitioned frontier (queue) 
   t.Stop();
   PrintStep("a", t.Seconds());
   for (NodeID iter=0; iter < num_iters; iter++) {
@@ -121,40 +118,44 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp);
     t.Stop();
     PrintStep("b", t.Seconds());
-    pvector<ScoreT> deltas(vp.max_width, 0, true);              
+    pvector<ScoreT> deltas(vp.max_width, 0, true);                      // symmetric partitioned pvector 
     t.Start();
-    for (long d=depth_index.size()-2; d >= 0; d--) {
-      for (auto it = depth_index[d]; it < depth_index[d+1]; it++) {
-        NodeID u = *it;
-        if (vp.start <= u && u < vp.end) {
-          NodeID lp_u = vp.local_pos(u);
-          ScoreT delta_u = 0;
-          NodeID neighbor_counter = 0;
-          for (NodeID v : g.out_neigh(u)) {
-            if (succ.get_bit_partitioned(g, u, neighbor_counter, vp)) {
-              double pc_v = (double) shmem_ulonglong_g(path_counts.begin()+vp.local_pos(v), vp.recv(v));
-              delta_u += (((double) path_counts[lp_u]) / pc_v) * (1 + shmem_float_g(deltas.begin()+vp.local_pos(v), vp.recv(v)));
+    for (long d=depth_index.size()-2; d >= 0; d--) {                    // the partitioned frontier is divided into regions based on depth
+      ScoreT delta_u;
+      NodeID u, lp_u, lp_v;
+      for (auto it = depth_index[d]; it < depth_index[d+1]; it++) {     // process all nodes in local copy of frontier within given depth
+        u = *it;
+        lp_u = vp.local_pos(u);
+        delta_u = 0;
+        NodeID neighbor_counter = 0;
+        for (NodeID v : g.out_neigh(u)) {
+          lp_v = vp.local_pos(v);
+          if (succ.get_bit_partitioned(g, u, neighbor_counter, vp)) {
+            double pc_v = (double) shmem_ulonglong_g(path_counts.begin()+lp_v, vp.recv(v));
+            delta_u += (((double) shmem_ulonglong_g(path_counts.begin()+lp_u, vp.recv(u))) / pc_v) * (1 + shmem_float_g(deltas.begin()+lp_v, vp.recv(v)));
             }
             neighbor_counter++;
           }
-          deltas[lp_u] = delta_u;
-          scores[lp_u] += delta_u;
+          if (vp.pe == vp.recv(u)) {
+            deltas[lp_u] = delta_u;
+            scores[lp_u] += delta_u;
+          } else {
+            shmem_float_p(deltas.begin()+lp_u, delta_u, vp.recv(u));
+            shmem_float_p(scores.begin()+lp_u, shmem_float_g(scores.begin()+lp_u, vp.recv(u))+delta_u, vp.recv(u));
+          }
         }
+        shmem_barrier_all();                                              // synchronize between depths
       }
-      shmem_barrier_all();              // synchronize between depths
-    }
     t.Stop();
     PrintStep("p", t.Seconds());
   }
 
-  ScoreT* biggest_score = (float *) shmem_malloc(sizeof(float));
+  ScoreT* biggest_score = (float *) shmem_malloc(sizeof(float));        // Normalize scores
   *biggest_score = 0;
-  #pragma omp parallel for reduction(max : biggest_score)
   for (NodeID n=vp.start; n < vp.end; n++)
     *biggest_score = max(*biggest_score, scores[vp.local_pos(n)]);
   shmem_barrier_all();
   shmem_float_max_to_all(biggest_score, biggest_score, 1, 0, 0, vp.npes, pWrk, pSync);
-  #pragma omp parallel for
   for (NodeID n=vp.start; n < vp.end; n++)
     scores[vp.local_pos(n)] = scores[vp.local_pos(n)] / *biggest_score;
   return scores;
