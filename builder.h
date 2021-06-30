@@ -44,10 +44,11 @@ class BuilderBase {
   const CLBase &cli_;
   bool symmetrize_;
   bool needs_weights_;
+  bool verify_;
   int64_t num_nodes_ = -1;
 
  public:
-  explicit BuilderBase(const CLBase &cli) : cli_(cli) {
+  explicit BuilderBase(const CLBase &cli, bool verify) : cli_(cli), verify_(verify) {
     symmetrize_ = cli_.symmetrize();
     needs_weights_ = !std::is_same<NodeID_, DestID_>::value;
   }
@@ -87,7 +88,7 @@ class BuilderBase {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
     Edge e;
-    //int flush_counter = 0;
+    int flush_counter = 0;
     shmem_barrier_all();
     for (auto it = el.begin(); it < el.end(); it++) {
       e = *it;
@@ -101,9 +102,9 @@ class BuilderBase {
         local_v = vp->local_pos(e.v);
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE) 
       }
-      //flush_counter++;
-      //if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
-        //shmem_barrier_all();
+      flush_counter++;
+      if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
+        shmem_barrier_all();
     }
     shmem_barrier_all();
     return degrees;
@@ -179,7 +180,7 @@ class BuilderBase {
     shmem_long_max_to_all(max_neigh, sq_offsets.begin()+(vp.end - vp.start), 1, 0, 0, vp.npes, pWrk, pSync); 
     *sq_neighs = (DestID_ *) shmem_calloc(*max_neigh, sizeof(DestID_));
     if (!*sq_neighs) {
-      printf("PE %d received nullptr from neighbor allocation in SquishCSR with %lu neighbors\n", vp.pe, max_neigh);
+      printf("PE %d received nullptr from neighbor allocation in SquishCSR with %lu neighbors\n", vp.pe, *max_neigh);
       shmem_global_exit(1);
       exit(1);
     }
@@ -317,7 +318,7 @@ class BuilderBase {
         }
       } else if (cli_.scale() != -1) {
         src_option = 1;
-        Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree());
+        Generator<NodeID_, DestID_> gen(cli_.scale(), cli_.degree(), verify_);
         el = gen.GenerateEL(cli_.uniform());
       }
       shmem_barrier_all();
