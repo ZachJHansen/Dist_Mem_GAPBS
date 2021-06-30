@@ -222,7 +222,7 @@ int main(int argc, char* argv[]) {
   }
 
   {
-    Builder b(cli);
+    Builder b(cli, cli.do_verify());
     Graph g = b.MakeGraph(lng_pWrk, pSync);
     shmem_barrier_all();
     SourcePicker<Graph> sp(g, cli.start_vertex());

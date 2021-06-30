@@ -236,6 +236,7 @@ int main(int argc, char* argv[]) {
   putenv(size_env);
 
   static long FRONTIER_LOCK = 0;                                                      // Create a mutex lock in symmetric memory to control access to the frontier
+
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
@@ -252,10 +253,9 @@ int main(int argc, char* argv[]) {
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));
 
   {
-    Builder b(cli);
+    Builder b(cli, cli.do_verify());
     Graph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();
-    //g.PrintTopology();
     SourcePicker<Graph> sp(g, cli.start_vertex());
     auto BFSBound = [&sp] (const Graph &g) { return DOBFS(g, sp.PickNext(), &FRONTIER_LOCK, ll_pWrk, pSync); };
     SourcePicker<Graph> vsp(g, cli.start_vertex());
@@ -264,6 +264,7 @@ int main(int argc, char* argv[]) {
     };
     BenchmarkKernel(cli, g, BFSBound, PrintBFSStats, VerifierBound);
   }                                                                                            // Extra scope to trigger deletion of graph, otherwise shmem destructor is screwy
+
   shmem_finalize();
   return 0;
 }

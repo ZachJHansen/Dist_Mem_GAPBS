@@ -55,7 +55,7 @@ pvector<ScoreT> PageRankPull(const Graph &g, int max_iters,
       scores[vp.local_pos(u)] = base_score + kDamp * incoming_total;
       *error += fabs(scores[vp.local_pos(u)] - old_score);
     }
-    shmem_barrier_all();                                        // is this needed? or will the reduction sync before starting?
+    shmem_barrier_all();                                        
     shmem_double_sum_to_all(error, error, 1, 0, 0, vp.npes, pWrk, pSync);      // Reduction : +
     if (*error < epsilon)
       break;
@@ -118,8 +118,9 @@ int main(int argc, char* argv[]) {
   }
 
   static long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long)); 
+
   {
-    Builder b(cli);
+    Builder b(cli, cli.do_verify());
     Graph g = b.MakeGraph(pWrk, pSync);
     auto PRBound = [&cli] (const Graph &g) {
       return PageRankPull(g, cli.max_iters(), pSync, dbl_pWrk, cli.tolerance());
@@ -129,6 +130,7 @@ int main(int argc, char* argv[]) {
     };
     BenchmarkKernel(cli, g, PRBound, PrintTopScores, VerifierBound);
   }
+
   shmem_free(PRINT_LOCK);
   shmem_finalize();
   return 0;

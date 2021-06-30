@@ -38,10 +38,14 @@ class Generator {
   typedef pvector<Edge> EdgeList;
 
  public:
-  Generator(int scale, int degree) {
+  Generator(int scale, int degree, bool verify) {
+    deterministic_ = verify;                                    // Should the graph be deterministic with the original implementation
+    if (deterministic_)
+      printf("Deterministic\n"); 
     scale_ = scale;
     num_nodes_ = 1l << scale;
     num_edges_ = num_nodes_ * degree;
+    printf("Scale: %lu | Degree: %lu | Nodes: %d | Edges: %d | node size: %lu | edge size: %lu\n", scale, degree, num_nodes_, num_edges_, sizeof(NodeID_), sizeof(WEdge));
     if (num_nodes_ > std::numeric_limits<NodeID_>::max()) {
       std::cout << "NodeID type (max: " << std::numeric_limits<NodeID_>::max();
       std::cout << ") too small to hold " << num_nodes_ << std::endl;
@@ -51,15 +55,33 @@ class Generator {
     }
   }
 
+  // Haven't thought of a way to make this deterministic with the original without taking O(V) space
+  // so if deterministic=false then it takes less space but can't be verified with the current system
   void PermuteIDs(EdgeList &el) {
     NodeID_ global_e, owner, offset;
-    pvector<NodeID_> permutation(num_nodes_);
     std::mt19937 rng(kRandSeed);
-    for (NodeID_ n=0; n < num_nodes_; n++)
-      permutation[n] = n;
-    shuffle(permutation.begin(), permutation.end(), rng);
-    for (int64_t e = 0; e < el.size(); e++) {
-      el[e] = Edge(permutation[el[e].u], permutation[el[e].v]);
+    if (deterministic_) {
+      pvector<NodeID_> permutation(num_nodes_);
+      for (NodeID_ n=0; n < num_nodes_; n++)
+        permutation[n] = n;
+      shuffle(permutation.begin(), permutation.end(), rng);
+      for (int64_t e = 0; e < el.size(); e++) {
+        el[e] = Edge(permutation[el[e].u], permutation[el[e].v]);
+      }
+    } else {
+      Partition<NodeID_> vp(num_nodes_);
+      pvector<NodeID_> permutation(vp.max_width, true);
+      for (NodeID_ n=vp.start; n < vp.end; n++)
+        permutation[vp.local_pos(n)] = n;
+      shuffle(permutation.begin(), permutation.end(), rng);
+      shmem_barrier_all();
+      for (int64_t e = 0; e < el.size(); e++) {
+        NodeID_ lp_u = vp.local_pos(el[e].u);
+        NodeID_ lp_v = vp.local_pos(el[e].v);
+        NodeID_ perm_u = shmem_int_g(permutation.begin()+lp_u, vp.recv(el[e].u));
+        NodeID_ perm_v = shmem_int_g(permutation.begin()+lp_v, vp.recv(el[e].v));
+        el[e] = Edge(perm_u, perm_v);
+      }
     }
   }
 
@@ -152,6 +174,15 @@ class Generator {
   }
 
   static void InsertWeights(pvector<EdgePair<NodeID_, NodeID_>> &el, int option) {}
+
+  // Overwrites existing weights with random from [1,255]
+  static void InsertWeights(pvector<WEdge> &el, int option) {
+    if (option == 0) {
+      InsertWeightsEdgeList(el);
+    } else {
+      InsertWeightsSynthetic(el, option);
+    }
+  }
   
   static void InsertWeightsEdgeList(pvector<WEdge> &el) {
     std::mt19937 rng;
@@ -187,15 +218,6 @@ class Generator {
     }
   }
 
-  // Overwrites existing weights with random from [1,255]
-  static void InsertWeights(pvector<WEdge> &el, int option) {
-    if (option == 0) {
-      InsertWeightsEdgeList(el);
-    } else {
-      InsertWeightsSynthetic(el, option);
-    }
-  }
-
   static void InsertWeightsSynthetic(pvector<WEdge> &el, int option) {
     int pe = shmem_my_pe();
     int npes = shmem_n_pes();
@@ -222,63 +244,40 @@ class Generator {
     // determine the block the edge would belong to
     int64_t previous_block_count = el_offset / block_size;              // How many complete blocks belonged to previous el partitions?
     int64_t block = previous_block_count * block_size;                  // where does this block begin?
-    if (false/*el_offset % block_size == 0*/) {                                  // Edge partitions are aligned with block boundaries
+    rng.seed(kRandSeed + block/block_size);
+    if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
+      rng.discard(el_offset - block);
+    int64_t e = el_offset;
+    if (el_offset + el.size() > block + block_size) {                                         // Edge list extends past this block's boundary
+      int64_t remainder = (block+block_size) - el_offset;
+      for (int64_t r = 0; r < remainder; r++) {                                               // Process remaining portion of block with current seed 
+        el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+        e++;
+      }
+      block += block_size;                                                    // Now e and block should be aligned
       while ((block-el_offset) < el.size()) {
         rng.seed(kRandSeed + block/block_size);
         if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
           rng.discard(el_offset - block);
-        for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()); e++) {
+        for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()+el_offset); e++) {
           el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-        }      
+        }
         block += block_size;
       }
-    } else {                                                            // Edge partition splits the block
-      rng.seed(kRandSeed + block/block_size);
-      if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
-        rng.discard(el_offset - block);
-      int64_t e = el_offset;
-      if (el_offset + el.size() > block + block_size) {                                         // Edge list extends past this block's boundary
-        int64_t remainder = (block+block_size) - el_offset;
-        for (int64_t r = 0; r < remainder; r++) {                                               // Process remaining portion of block with current seed 
-          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-          e++;
-        }
-        block += block_size;                                                    // Now e and block should be aligned
-        while ((block-el_offset) < el.size()) {
-          rng.seed(kRandSeed + block/block_size);
-          if (block < el_offset)                                          // Other PEs have processed previous edges belonging to this block
-            rng.discard(el_offset - block);
-          for (int64_t e = block; e < std::min(block+block_size, (int64_t) el.size()+el_offset); e++) {
-            el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-          }      
-          block += block_size;
-        }
-      } else {                                                                  // Block extends past EL boundary
-        for (int64_t remainder = 0; remainder < el.size(); remainder++) {       // Process entire edge list with current seed 
-          el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
-          e++;
-        }
+    } else {                                                                  // Block extends past EL boundary
+      for (int64_t remainder = 0; remainder < el.size(); remainder++) {       // Process entire edge list with current seed 
+        el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
+        e++;
       }
     }
-    std::ofstream orig_out;
-    int* PRINTER = (int*) shmem_calloc(1, sizeof(int));
-    shmem_barrier_all();
-    pe = shmem_my_pe();
-    shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, pe);           // wait until previous PE puts your pe # in PRINTER
-    orig_out.open("/home/zach/projects/Dist_Mem_GAPBS/Dist_Mem_GAPBS/weights_output.txt", std::ios::app);
-    for(WEdge wait : el)
-      orig_out << wait.v.w << std::endl;
-    orig_out.close();
-    if (pe != shmem_n_pes()-1)
-      shmem_int_p(PRINTER, pe+1, pe+1);             // who's next?
   }
 
  private:
+  bool deterministic_;
   int scale_;
   int64_t num_nodes_;
   int64_t num_edges_;
   static const int64_t block_size = 1<<18;
-  //static const int64_t block_size = 3;
 };
 
 #endif  // GENERATOR_H_

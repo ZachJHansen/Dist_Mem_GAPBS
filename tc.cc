@@ -90,7 +90,6 @@ bool WorthRelabelling(const Graph &g, long *pSync, long *pWrk) {
     samples[lp] = g.out_degree(nodes[trial]);
     *sample_total += samples[lp];
   }
-  printf("check\n");
   shmem_barrier_all();
   shmem_collect64(dest.begin(), samples.begin(), sample_part.end-sample_part.start, 0, 0, shmem_n_pes(), pSync);
   shmem_long_sum_to_all(sample_total, sample_total, 1, 0, 0, shmem_n_pes(), pWrk, pSync);
@@ -134,19 +133,22 @@ int main(int argc, char* argv[]) {
   CLApp cli(argc, argv, "triangle count");
   if (!cli.ParseArgs())
     return -1;
+
   char size_env[] = "SMA_SYMMETRIC_SIZE=4G";
   putenv(size_env);
+
   shmem_init();
+
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
   static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
-
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
   for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) 
     pWrk[i] = SHMEM_SYNC_VALUE;
+  shmem_barrier_all();
 
   {
-    Builder b(cli);
+    Builder b(cli, cli.do_verify());
     Graph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();
     if (g.directed()) {
@@ -156,6 +158,7 @@ int main(int argc, char* argv[]) {
     auto TCBound = [] (const Graph &g) { return Hybrid(g, pSync, pWrk); };
     BenchmarkKernel(cli, g, TCBound, PrintTriangleStats, TCVerifier);
   }
+
   shmem_finalize();
   return 0;
 }

@@ -266,45 +266,12 @@ int main(int argc, char* argv[]) {
   int pe = shmem_my_pe();
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
   static long* LOCK = (long *) shmem_calloc(1, sizeof(long)); 
-  {
-    Builder b(cli);
-    Graph g = b.MakeGraph(pWrk, pSync);
-    printf("Last check\n");
-//    g.PrintTopology(LOCK);
 
-/*    Partition<NodeID> vp(g.num_nodes());
-    pvector<NodeID> comp(vp.max_width, true);
-    if (pe == 0) {
-      comp[0] = 0;
-      comp[1] = 0;
-      comp[2] = 4;
-      comp[3] = 0;
-      comp[4] = 4;
-    } else {
-      comp[0] = 4;
-      comp[1] = 1;
-      comp[2] = 5;
-      comp[3] = 6;
-      comp[4] = 5;
-    }
+  {
+    Builder b(cli, cli.do_verify());
+    Graph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();
-    Compress(g, comp, vp);
-    Link(6, 7, comp, vp);
-    Compress(g, comp, vp);
-    shmem_barrier_all();
-    for (NodeID c : comp)
-      printf("PE %d | c = %d\n", pe, c);
-*/
-/*    int64_t* thing = (int64_t*) shmem_calloc(5, sizeof(int64_t));
-    for (int64_t i = 0; i < 5; i++)
-      thing[i] = 4;
-    shmem_barrier_all();
-    if (pe == 0)
-      if (shmem_int64_atomic_compare_swap(thing, 4, 15, 1))
-        printf("Thank goodness, i was afraid c&s was broken\n");
-*/
     auto CCBound = [](const Graph& gr){ return Afforest(gr, pSync); };
-    //CCBound(g);
     BenchmarkKernel(cli, g, CCBound, PrintCompStats, CCVerifier);
   }
 
