@@ -113,7 +113,7 @@ void BitmapToQueue(const Graph &g, const Bitmap &bm, SlidingQueue<NodeID> &queue
       }
   }
   lqueue.flush();
-  queue.slide_window();                                                         // Slide window barrier_all PEs on function entry and exit 
+  queue.slide_window();                                                         // Slide window barrier_all PEs on function entry and exit
 }
 
 // Partition parent array ~evenly across PEs (final PE gets remainder)
@@ -232,8 +232,8 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
-  putenv(size_env);
+  //char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  //putenv(size_env);
 
   static long FRONTIER_LOCK = 0;                                                      // Create a mutex lock in symmetric memory to control access to the frontier
 

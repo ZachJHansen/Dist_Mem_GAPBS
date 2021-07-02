@@ -134,16 +134,16 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=4G";
-  putenv(size_env);
+//  char size_env[] = "SMA_SYMMETRIC_SIZE=4G";
+//  putenv(size_env);
 
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
-  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++) 
+  for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++)
     pWrk[i] = SHMEM_SYNC_VALUE;
   shmem_barrier_all();
 
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
     if (g.directed()) {
       cout << "Input graph is directed but tc requires undirected" << endl;
       return -2;
-    } 
+    }
     auto TCBound = [] (const Graph &g) { return Hybrid(g, pSync, pWrk); };
     BenchmarkKernel(cli, g, TCBound, PrintTriangleStats, TCVerifier);
   }

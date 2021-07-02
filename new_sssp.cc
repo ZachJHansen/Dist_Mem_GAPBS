@@ -58,12 +58,12 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
   if (vp.pe == vp.npes-1)                                                // The PE 0 always controls the first node in a length 1 array (current partition scheme)
     frontier[0] = source;
   t.Start();                                                            // Timer start and stops are synch points
-  vector<vector<NodeID> > local_bins(0);                                // Local vector of vector of node ids 
+  vector<vector<NodeID> > local_bins(0);                                // Local vector of vector of node ids
   NodeID* iter = (NodeID *) shmem_calloc(1, sizeof(NodeID));            // Shared counter for iteration (init 0)
 
   size_t copy_start;
   while (shared_indexes[(*iter)&1] != kMaxBin) {                        // if iter is odd, iter bitwise and (&) 1 is 1, if iter is even iter&1 is 0 and enter loop
-    long &curr_bin_index = shared_indexes[(*iter)&1];                   // shared_indexes[0]    (always?)   
+    long &curr_bin_index = shared_indexes[(*iter)&1];                   // shared_indexes[0]    (always?)
     long &next_bin_index = shared_indexes[((*iter)+1)&1];                      // shared_indexes[1]
     size_t &curr_frontier_tail = frontier_tails[(*iter)&1];                     // frontier_tails[0]
     size_t &next_frontier_tail = frontier_tails[((*iter)+1)&1];                 // frontier_tails[1]
@@ -184,8 +184,8 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=24G";
-  putenv(size_env);
+  //char size_env[] = "SMA_SYMMETRIC_SIZE=24G";
+  //putenv(size_env);
 
   shmem_init();
 

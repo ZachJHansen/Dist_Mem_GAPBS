@@ -26,8 +26,8 @@ Will return comp array labelling each vertex with a connected component ID
 This CC implementation makes use of the Afforest subgraph sampling algorithm [1],
 which restructures and extends the Shiloach-Vishkin algorithm [2].
 
-[1] Michael Sutton, Tal Ben-Nun, and Amnon Barak. "Optimizing Parallel 
-    Graph Connectivity Computation via Subgraph Sampling" Symposium on 
+[1] Michael Sutton, Tal Ben-Nun, and Amnon Barak. "Optimizing Parallel
+    Graph Connectivity Computation via Subgraph Sampling" Symposium on
     Parallel and Distributed Processing, IPDPS 2018.
 
 [2] Yossi Shiloach and Uzi Vishkin. "An o(logn) parallel connectivity algorithm"
@@ -41,8 +41,8 @@ which restructures and extends the Shiloach-Vishkin algorithm [2].
 using namespace std;
 
 
-// Place nodes u and v in same component of lower component ID  
-void Link(NodeID u, NodeID v, pvector<int>& comp, Partition<NodeID> vp) {   
+// Place nodes u and v in same component of lower component ID
+void Link(NodeID u, NodeID v, pvector<int>& comp, Partition<NodeID> vp) {
   int temp, comparator;
   int p1 = shmem_int_g(comp.begin()+vp.local_pos(u), vp.recv(u));
   int p2 = shmem_int_g(comp.begin()+vp.local_pos(v), vp.recv(v));
@@ -234,7 +234,7 @@ bool CCVerifier(const Graph &g, const pvector<int> &comp) {
     */
   ofstream shmem_out;
   shmem_out.open("/home/zhansen/Dist_Mem_GAPBS/Dist_Mem_GAPBS/Dist_Mem_GAPBS/cc_output.txt", ios::app);
-  for (NodeID n = vp.start; n < vp.end; n++) 
+  for (NodeID n = vp.start; n < vp.end; n++)
     shmem_out << comp[vp.local_pos(n)] << endl;
   shmem_out.close();
   //}
@@ -247,15 +247,15 @@ bool CCVerifier(const Graph &g, const pvector<int> &comp) {
 int main(int argc, char* argv[]) {
   CLApp cli(argc, argv, "connected-components-afforest");
   if (!cli.ParseArgs())
-    return -1;   
+    return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
-  putenv(size_env);
+  //char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  //putenv(size_env);
 
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
@@ -265,7 +265,7 @@ int main(int argc, char* argv[]) {
   int npes = shmem_n_pes();
   int pe = shmem_my_pe();
   static long* PLOCKS = (long *) shmem_calloc(shmem_n_pes(), sizeof(long));                                     // Access to shared resources controlled by a single pe is determined by a lock on each pe
-  static long* LOCK = (long *) shmem_calloc(1, sizeof(long)); 
+  static long* LOCK = (long *) shmem_calloc(1, sizeof(long));
 
   {
     Builder b(cli, cli.do_verify());

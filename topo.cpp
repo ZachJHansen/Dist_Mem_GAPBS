@@ -23,22 +23,22 @@ int main(int argc, char* argv[]) {
   long* PRINT_LOCK = (long*) shmem_calloc(1, sizeof(long));
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
   for (int i = 0; i < SHMEM_REDUCE_MIN_WRKDATA_SIZE; i++)
     pWrk[i] = SHMEM_SYNC_VALUE;
 
-  char size_env[] = "SHMEM_SYMMETRIC_SIZE=2048M";
-  putenv(size_env);
+//  char size_env[] = "SHMEM_SYMMETRIC_SIZE=2048M";
+//  putenv(size_env);
 
   {
     Builder b(cli);
     Graph g = b.MakeGraph(pWrk, pSync);
-    g.PrintTopology(); 
+    g.PrintTopology();
   }
-  
+
   shmem_free(PRINT_LOCK);
   shmem_finalize();
   return 0;

@@ -1,0 +1,6 @@
+cmdModule.c(583):ERROR:50: Cannot open file '/opt/modulefiles/eproxy/2.0.24-7.0.2.1_2.34__g8e04b33.ari' for 'reading'
+environment: line 0: unalias: sinfo_knl: not found
+===============Test 1 Complete!===============
+===============Test 2 Complete!===============
+slurmstepd: error: *** JOB 1218094 ON nid00106 CANCELLED AT 2021-07-02T12:42:42 ***
+slurmstepd: error: Detected 2 oom-kill event(s) in StepId=1218094.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

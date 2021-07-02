@@ -65,7 +65,7 @@ void shmem_BFS(const Graph &g, NodeID source, pvector<CountT> &path_counts,
   queue.slide_window();                                 // synch point
   long depth = 0;
   CountT old_v;
-  QueueBuffer<NodeID> lqueue(queue);                    // each PE maintains a queue buffer 
+  QueueBuffer<NodeID> lqueue(queue);                    // each PE maintains a queue buffer
   shmem_barrier_all();
   while (!queue.empty()) {                              // while at least one PE has a non-empty frontier
     depth++;                                            // Thread local so each PE should maintain and increment a copy
@@ -104,7 +104,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
   Bitmap succ(g.num_edges_directed(), true);                            // symmetric non-partitioned bitmap
   succ.init_bitmap_offsets(g, vp);
   vector<SlidingQueue<NodeID>::iterator> depth_index;
-  SlidingQueue<NodeID> queue(vp.max_width, QLOCK);                      // symmetric partitioned frontier (queue) 
+  SlidingQueue<NodeID> queue(vp.max_width, QLOCK);                      // symmetric partitioned frontier (queue)
   t.Stop();
   PrintStep("a", t.Seconds());
   for (NodeID iter=0; iter < num_iters; iter++) {
@@ -118,7 +118,7 @@ pvector<ScoreT> Brandes(const Graph &g, SourcePicker<Graph> &sp,
     shmem_BFS(g, source, path_counts, succ, depth_index, queue, vp);
     t.Stop();
     PrintStep("b", t.Seconds());
-    pvector<ScoreT> deltas(vp.max_width, 0, true);                      // symmetric partitioned pvector 
+    pvector<ScoreT> deltas(vp.max_width, 0, true);                      // symmetric partitioned pvector
     t.Start();
     for (long d=depth_index.size()-2; d >= 0; d--) {                    // the partitioned frontier is divided into regions based on depth
       ScoreT delta_u;
@@ -203,8 +203,8 @@ int main(int argc, char* argv[]) {
   if (cli.num_iters() > 1 && cli.start_vertex() != -1)
     cout << "Warning: iterating from same source (-r & -i)" << endl;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
-  putenv(size_env);
+  //char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  //putenv(size_env);
 
   static long QLOCK = 0;
 

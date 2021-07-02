@@ -31,7 +31,7 @@ using namespace std;
 typedef float ScoreT;
 const float kDamp = 0.85;
 
-pvector<ScoreT> PageRankPull(const Graph &g, int max_iters, 
+pvector<ScoreT> PageRankPull(const Graph &g, int max_iters,
                              long* pSync, double* pWrk, double epsilon = 0) {
   ScoreT temp, incoming_total, old_score;
   double* error = (double *) shmem_malloc(sizeof(double));
@@ -55,7 +55,7 @@ pvector<ScoreT> PageRankPull(const Graph &g, int max_iters,
       scores[vp.local_pos(u)] = base_score + kDamp * incoming_total;
       *error += fabs(scores[vp.local_pos(u)] - old_score);
     }
-    shmem_barrier_all();                                        
+    shmem_barrier_all();
     shmem_double_sum_to_all(error, error, 1, 0, 0, vp.npes, pWrk, pSync);      // Reduction : +
     if (*error < epsilon)
       break;
@@ -101,14 +101,14 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
-  putenv(size_env);
+  //char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  //putenv(size_env);
 
   shmem_init();
 
   static long pSync[SHMEM_REDUCE_SYNC_SIZE];
-  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];      
-  static double dbl_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];                 
+  static long pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
+  static double dbl_pWrk[SHMEM_REDUCE_MIN_WRKDATA_SIZE];
 
   for (int i = 0; i < SHMEM_REDUCE_SYNC_SIZE; i++)
     pSync[i] = SHMEM_SYNC_VALUE;
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
     dbl_pWrk[i] = SHMEM_SYNC_VALUE;
   }
 
-  static long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long)); 
+  static long* PRINT_LOCK = (long *) shmem_calloc(1, sizeof(long));
 
   {
     Builder b(cli, cli.do_verify());
