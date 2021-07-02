@@ -99,6 +99,7 @@ void QueueToBitmap(const SlidingQueue<NodeID> &queue, Bitmap &bm, long long* pWr
     NodeID u = *q_iter;
     bm.set_bit(u);
   }
+  shmem_barrier_all();
   bm.merge(pWrk, pSync);
   shmem_barrier_all();
 }
