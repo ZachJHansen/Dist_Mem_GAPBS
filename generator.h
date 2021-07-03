@@ -41,11 +41,11 @@ class Generator {
   Generator(int scale, int degree, bool verify) {
     deterministic_ = verify;                                    // Should the graph be deterministic with the original implementation
     if (deterministic_)
-      printf("Deterministic\n"); 
+      printf("Deterministic\n");
     scale_ = scale;
     num_nodes_ = 1l << scale;
     num_edges_ = num_nodes_ * degree;
-    printf("Scale: %lu | Degree: %lu | Nodes: %d | Edges: %d | node size: %lu | edge size: %lu\n", scale, degree, num_nodes_, num_edges_, sizeof(NodeID_), sizeof(WEdge));
+    printf("Scale: %lu | Degree: %lu | Nodes: %ld | Edges: %ld | node size: %lu | edge size: %lu\n", scale, degree, num_nodes_, num_edges_, sizeof(NodeID_), sizeof(WEdge));
     if (num_nodes_ > std::numeric_limits<NodeID_>::max()) {
       std::cout << "NodeID type (max: " << std::numeric_limits<NodeID_>::max();
       std::cout << ") too small to hold " << num_nodes_ << std::endl;
@@ -112,7 +112,7 @@ class Generator {
       rng.seed(kRandSeed + block/block_size);
       for (int64_t e=block; e < std::min(block+block_size, num_edges_); e++) {
         el[e - (block_partition.start * block_size)] = Edge(udist(rng), udist(rng));
-      } 
+      }
     }
     return el;
   }
@@ -183,7 +183,7 @@ class Generator {
       InsertWeightsSynthetic(el, option);
     }
   }
-  
+
   static void InsertWeightsEdgeList(pvector<WEdge> &el) {
     std::mt19937 rng;
     std::uniform_int_distribution<int> udist(1, 255);
@@ -200,10 +200,10 @@ class Generator {
         weights[e] = udist(rng);
       }
     }
-    Partition<int64_t> ep(num_edges);                                      
+    Partition<int64_t> ep(num_edges);
     for (int64_t i = 0; i < el.size(); i++) {                                           // Update local region of edge list from weights stored in symmetric memory
       int64_t global_edge = ep.npes * i + ep.pe;                                                            // Position of round-robin partitioned edge i within complete edge list
-      int owner = -1;      
+      int owner = -1;
       int64_t count = 0;
       for (int k = 0; k < bp.npes-1; k++) {                                       // Find the first PE where the weight associated with edge global_edge is saved
         if (count <= global_edge && global_edge < (count + bp.partition_width*block_size)) {
@@ -212,7 +212,7 @@ class Generator {
         }
         count += bp.partition_width * block_size;
       }
-      if (owner == -1) 
+      if (owner == -1)
         owner = bp.npes-1;
       el[i].v.w = static_cast<WeightT_>(shmem_int_g(weights+(global_edge-count), owner));
     }
@@ -250,7 +250,7 @@ class Generator {
     int64_t e = el_offset;
     if (el_offset + el.size() > block + block_size) {                                         // Edge list extends past this block's boundary
       int64_t remainder = (block+block_size) - el_offset;
-      for (int64_t r = 0; r < remainder; r++) {                                               // Process remaining portion of block with current seed 
+      for (int64_t r = 0; r < remainder; r++) {                                               // Process remaining portion of block with current seed
         el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
         e++;
       }
@@ -265,7 +265,7 @@ class Generator {
         block += block_size;
       }
     } else {                                                                  // Block extends past EL boundary
-      for (int64_t remainder = 0; remainder < el.size(); remainder++) {       // Process entire edge list with current seed 
+      for (int64_t remainder = 0; remainder < el.size(); remainder++) {       // Process entire edge list with current seed
         el[e - el_offset].v.w = static_cast<WeightT_>(udist(rng));
         e++;
       }

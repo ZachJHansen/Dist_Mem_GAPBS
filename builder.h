@@ -88,7 +88,7 @@ class BuilderBase {
     int local_v, receiver;
     pvector<NodeID_> degrees(vp->max_width, 0, true);                                     // Symmetric pvector of size max partition width
     Edge e;
-    //int flush_counter = 0;
+    unsigned long flush_counter = 0;
     shmem_barrier_all();
     for (auto it = el.begin(); it < el.end(); it++) {
       e = *it;
@@ -102,9 +102,9 @@ class BuilderBase {
         local_v = vp->local_pos(e.v);
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE)
       }
-      //flush_counter++;
-      //if (flush_counter % 2000000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
-      //  shmem_barrier_all();
+      flush_counter++;
+      if (flush_counter % 200000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
+        shmem_quiet();
     }
     shmem_barrier_all();
     return degrees;
