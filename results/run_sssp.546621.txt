@@ -1,0 +1,24 @@
+new_sssp.cc: In function 'int main(int, char**)':
+new_sssp.cc:209:26: error: no matching function for call to 'BuilderBase<int, NodeWeight<int, int>, int>::BuilderBase(CLDelta<int>&)'
+  209 |     WeightedBuilder b(cli);
+      |                          ^
+In file included from benchmark.h:14,
+                 from new_sssp.cc:7:
+builder.h:51:12: note: candidate: 'BuilderBase<NodeID_, DestID_, WeightT_, invert>::BuilderBase(const CLBase&, bool) [with NodeID_ = int; DestID_ = NodeWeight<int, int>; WeightT_ = int; bool invert = true]'
+   51 |   explicit BuilderBase(const CLBase &cli, bool verify) : cli_(cli), verify_(verify) {
+      |            ^~~~~~~~~~~
+builder.h:51:12: note:   candidate expects 2 arguments, 1 provided
+builder.h:40:7: note: candidate: 'constexpr BuilderBase<int, NodeWeight<int, int>, int>::BuilderBase(const BuilderBase<int, NodeWeight<int, int>, int>&)'
+   40 | class BuilderBase {
+      |       ^~~~~~~~~~~
+builder.h:40:7: note:   no known conversion for argument 1 from 'CLDelta<int>' to 'const BuilderBase<int, NodeWeight<int, int>, int>&'
+builder.h:40:7: note: candidate: 'constexpr BuilderBase<int, NodeWeight<int, int>, int>::BuilderBase(BuilderBase<int, NodeWeight<int, int>, int>&&)'
+builder.h:40:7: note:   no known conversion for argument 1 from 'CLDelta<int>' to 'BuilderBase<int, NodeWeight<int, int>, int>&&'
+===============Test 1 Complete!===============
+===============Test 2 Complete!===============
+===============Test 3 Complete!===============
+===============Test 4 Complete!===============
+===============Test 5 Complete!===============
+===============Test 6 Complete!===============
+===============Test 9 Complete!===============
+===============Test 10 Complete!===============

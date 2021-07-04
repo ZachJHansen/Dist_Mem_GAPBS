@@ -1,0 +1,231 @@
+ Data for JOB [22640,1] offset 0 Total slots allocated 512
+
+ ========================   JOB MAP   ========================
+
+ Data for node: nid00000	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 3 Bound: N/A
+
+ Data for node: nid00155	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 7 Bound: N/A
+
+ Data for node: nid00156	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 11 Bound: N/A
+
+ Data for node: nid00157	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 15 Bound: N/A
+
+ Data for node: nid00158	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 19 Bound: N/A
+
+ Data for node: nid00159	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 23 Bound: N/A
+
+ Data for node: nid00160	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 27 Bound: N/A
+
+ Data for node: nid00161	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 31 Bound: N/A
+
+ Data for node: nid00163	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 35 Bound: N/A
+
+ Data for node: nid00164	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 39 Bound: N/A
+
+ Data for node: nid00165	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 43 Bound: N/A
+
+ Data for node: nid00166	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 47 Bound: N/A
+
+ Data for node: nid00167	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 51 Bound: N/A
+
+ Data for node: nid00168	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 55 Bound: N/A
+
+ Data for node: nid00169	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 59 Bound: N/A
+
+ Data for node: nid00170	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [22640,1] App: 0 Process rank: 63 Bound: N/A
+
+ =============================================================
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+PE: 0 | Generate Time:       2786.40803
+PE: 0 | Build Time:          3727.94652
+PE 61 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 56 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 10 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 39 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 18 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 43 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 51 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 55 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 62 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 34 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 14 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 7 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 47 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 57 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 20 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 27 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 8 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 3 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 40 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 48 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 53 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 63 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 35 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 15 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 4 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 44 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 28 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 58 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 21 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 24 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 11 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 37 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 19 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 16 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 1 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 41 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 49 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 54 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 60 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 32 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 12 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 5 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 45 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 29 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 59 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 22 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 25 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 9 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 38 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 17 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 2 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 42 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 50 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 52 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 33 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 13 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 6 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 46 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 30 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 23 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 26 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 36 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 0 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors
+PE 31 received nullptr from neighbor allocation in SquishCSR with 6149388530 neighbors

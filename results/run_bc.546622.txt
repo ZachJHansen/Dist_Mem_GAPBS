@@ -1,0 +1,6 @@
+===============Test 1 Complete!===============
+===============Test 2 Complete!===============
+===============Test 3 Complete!===============
+===============Test 4 Complete!===============
+slurmstepd: error: *** JOB 546622 ON nid00067 CANCELLED AT 2021-07-04T10:04:53 ***
+slurmstepd: error: Detected 3 oom-kill event(s) in StepId=546622.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

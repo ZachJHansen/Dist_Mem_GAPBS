@@ -1,0 +1,615 @@
+ Data for JOB [2790,1] offset 0 Total slots allocated 512
+
+ ========================   JOB MAP   ========================
+
+ Data for node: nid00029	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 3 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 7 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 11 Bound: N/A
+
+ Data for node: nid00030	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 15 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 19 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 23 Bound: N/A
+
+ Data for node: nid00031	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 27 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 31 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 35 Bound: N/A
+
+ Data for node: nid00032	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 39 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 43 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 47 Bound: N/A
+
+ Data for node: nid00033	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 51 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 55 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 59 Bound: N/A
+
+ Data for node: nid00035	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 63 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 64 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 65 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 66 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 67 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 68 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 69 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 70 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 71 Bound: N/A
+
+ Data for node: nid00036	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 72 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 73 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 74 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 75 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 76 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 77 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 78 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 79 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 80 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 81 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 82 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 83 Bound: N/A
+
+ Data for node: nid00037	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 84 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 85 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 86 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 87 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 88 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 89 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 90 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 91 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 92 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 93 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 94 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 95 Bound: N/A
+
+ Data for node: nid00038	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 96 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 97 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 98 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 99 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 100 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 101 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 102 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 103 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 104 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 105 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 106 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 107 Bound: N/A
+
+ Data for node: nid00039	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 108 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 109 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 110 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 111 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 112 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 113 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 114 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 115 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 116 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 117 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 118 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 119 Bound: N/A
+
+ Data for node: nid00040	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 120 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 121 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 122 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 123 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 124 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 125 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 126 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 127 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 128 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 129 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 130 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 131 Bound: N/A
+
+ Data for node: nid00041	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 132 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 133 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 134 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 135 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 136 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 137 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 138 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 139 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 140 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 141 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 142 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 143 Bound: N/A
+
+ Data for node: nid00042	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 144 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 145 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 146 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 147 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 148 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 149 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 150 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 151 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 152 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 153 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 154 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 155 Bound: N/A
+
+ Data for node: nid00043	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 156 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 157 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 158 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 159 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 160 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 161 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 162 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 163 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 164 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 165 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 166 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 167 Bound: N/A
+
+ Data for node: nid00044	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 168 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 169 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 170 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 171 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 172 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 173 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 174 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 175 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 176 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 177 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 178 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 179 Bound: N/A
+
+ Data for node: nid00045	Num slots: 32	Max slots: 0	Num procs: 12
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 180 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 181 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 182 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 183 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 184 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 185 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 186 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 187 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 188 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 189 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 190 Bound: N/A
+ 	Process OMPI jobid: [2790,1] App: 0 Process rank: 191 Bound: N/A
+
+ =============================================================
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+PE: 0 | Generate Time:       1093.17108
+PE: 0 | Build Time:          1637.73057
+PE 7 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 2 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 9 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 61 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 57 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 83 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 184 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 163 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 95 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 100 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 132 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 155 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 36 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 21 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 179 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 121 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 35 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 113 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 37 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 19 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 168 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 120 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 24 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 114 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 0 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 62 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 58 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 77 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 188 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 156 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 84 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 102 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 133 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 148 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 185 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 165 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 85 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 107 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 134 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 150 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 38 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 14 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 169 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 127 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 34 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 110 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 8 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 71 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 51 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 74 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 25 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 119 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 3 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 63 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 59 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 79 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 187 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 159 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 86 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 103 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 139 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 151 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 47 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 12 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 175 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 131 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 23 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 171 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 124 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 32 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 111 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 10 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 60 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 48 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 82 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 189 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 157 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 88 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 98 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 135 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 146 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 39 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 27 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 115 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 5 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 65 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 55 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 73 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 190 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 164 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 92 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 105 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 140 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 153 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 44 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 16 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 170 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 123 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 143 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 154 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 45 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 13 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 176 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 122 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 30 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 108 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 1 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 67 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 49 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 81 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 186 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 166 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 89 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 106 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 118 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 4 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 68 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 52 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 76 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 191 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 162 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 87 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 104 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 142 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 147 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 46 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 17 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 173 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 129 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 29 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 6 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 69 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 53 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 72 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 180 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 160 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 91 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 99 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 137 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 149 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 41 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 20 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 178 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 126 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 31 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 112 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 96 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 136 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 144 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 40 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 22 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 174 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 130 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 28 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 109 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 11 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 70 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 54 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 80 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 181 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 158 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 93 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 182 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 161 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 94 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 101 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 141 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 152 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 43 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 18 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 177 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 125 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 33 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 116 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 66 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 56 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 75 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 15 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 172 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 128 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 26 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 117 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 64 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 50 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 78 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 183 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 167 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 90 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 97 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 138 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 145 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors
+PE 42 received nullptr from neighbor allocation in SquishCSR with 4283965655 neighbors

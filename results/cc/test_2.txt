@@ -1,0 +1,560 @@
+ Data for JOB [40349,1] offset 0 Total slots allocated 512
+
+ ========================   JOB MAP   ========================
+
+ Data for node: nid00000	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 3 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 7 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 11 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 15 Bound: N/A
+
+ Data for node: nid00155	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 19 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 23 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 27 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 31 Bound: N/A
+
+ Data for node: nid00156	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 35 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 39 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 43 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 47 Bound: N/A
+
+ Data for node: nid00157	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 51 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 55 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 59 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 63 Bound: N/A
+
+ Data for node: nid00158	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 64 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 65 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 66 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 67 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 68 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 69 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 70 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 71 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 72 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 73 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 74 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 75 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 76 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 77 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 78 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 79 Bound: N/A
+
+ Data for node: nid00159	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 80 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 81 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 82 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 83 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 84 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 85 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 86 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 87 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 88 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 89 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 90 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 91 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 92 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 93 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 94 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 95 Bound: N/A
+
+ Data for node: nid00160	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 96 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 97 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 98 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 99 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 100 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 101 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 102 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 103 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 104 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 105 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 106 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 107 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 108 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 109 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 110 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 111 Bound: N/A
+
+ Data for node: nid00161	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 112 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 113 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 114 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 115 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 116 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 117 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 118 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 119 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 120 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 121 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 122 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 123 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 124 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 125 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 126 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 127 Bound: N/A
+
+ Data for node: nid00163	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 128 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 129 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 130 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 131 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 132 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 133 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 134 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 135 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 136 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 137 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 138 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 139 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 140 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 141 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 142 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 143 Bound: N/A
+
+ Data for node: nid00164	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 144 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 145 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 146 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 147 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 148 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 149 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 150 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 151 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 152 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 153 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 154 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 155 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 156 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 157 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 158 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 159 Bound: N/A
+
+ Data for node: nid00165	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 160 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 161 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 162 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 163 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 164 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 165 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 166 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 167 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 168 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 169 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 170 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 171 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 172 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 173 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 174 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 175 Bound: N/A
+
+ Data for node: nid00166	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 176 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 177 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 178 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 179 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 180 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 181 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 182 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 183 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 184 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 185 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 186 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 187 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 188 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 189 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 190 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 191 Bound: N/A
+
+ Data for node: nid00167	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 192 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 193 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 194 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 195 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 196 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 197 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 198 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 199 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 200 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 201 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 202 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 203 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 204 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 205 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 206 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 207 Bound: N/A
+
+ Data for node: nid00168	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 208 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 209 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 210 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 211 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 212 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 213 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 214 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 215 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 216 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 217 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 218 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 219 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 220 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 221 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 222 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 223 Bound: N/A
+
+ Data for node: nid00169	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 224 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 225 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 226 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 227 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 228 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 229 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 230 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 231 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 232 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 233 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 234 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 235 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 236 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 237 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 238 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 239 Bound: N/A
+
+ Data for node: nid00170	Num slots: 32	Max slots: 0	Num procs: 16
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 240 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 241 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 242 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 243 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 244 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 245 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 246 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 247 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 248 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 249 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 250 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 251 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 252 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 253 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 254 Bound: N/A
+ 	Process OMPI jobid: [40349,1] App: 0 Process rank: 255 Bound: N/A
+
+ =============================================================
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+--------------------------------------------------------------------------
+ORTE has lost communication with a remote daemon.
+
+  HNP daemon   : [[40349,0],0] on node nid00000
+  Remote daemon: [[40349,0],10] on node nid00164
+
+This is usually due to either a failure of the TCP network
+connection to the node, or possibly an internal failure of
+the daemon itself. We cannot recover from this failure, and
+therefore will terminate the job.
+--------------------------------------------------------------------------
