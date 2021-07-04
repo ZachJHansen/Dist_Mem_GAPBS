@@ -1,0 +1,6 @@
+cmdModule.c(583):ERROR:50: Cannot open file '/opt/modulefiles/eproxy/2.0.24-7.0.2.1_2.34__g8e04b33.ari' for 'reading'
+environment: line 0: unalias: sinfo_knl: not found
+===============Test 7 Complete!===============
+===============Test 9 Complete!===============
+===============Test 11 Complete!===============
+===============Test 13 Complete!===============
