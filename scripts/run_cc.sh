@@ -41,44 +41,44 @@ cd $HOME/Dist_Mem_GAPBS
 oshc++ -std=c++11 -o CC cc.cc
 
 # Run Tests
-export SHMEM_SYMMETRIC_HEAP_SIZE=6656M
-oshrun -display-map -np 256 -npernode 16 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_1.txt
-echo '===============Test 1 Complete!==============='
-oshrun -display-map -np 256 -npernode 16 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_2.txt
-echo '===============Test 2 Complete!==============='
+#export SHMEM_SYMMETRIC_HEAP_SIZE=6656M
+#oshrun -display-map -np 256 -npernode 16 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_1.txt
+#echo '===============Test 1 Complete!==============='
+#oshrun -display-map -np 256 -npernode 16 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_2.txt
+#echo '===============Test 2 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=8G
-oshrun -display-map -np 192 -npernode 12 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_3.txt
-echo '===============Test 3 Complete!==============='
-oshrun -display-map -np 192 -npernode 12 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_4.txt
-echo '===============Test 4 Complete!==============='
+#export SHMEM_SYMMETRIC_HEAP_SIZE=8G
+#oshrun -display-map -np 192 -npernode 12 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_3.txt
+#echo '===============Test 3 Complete!==============='
+#oshrun -display-map -np 192 -npernode 12 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_4.txt
+#echo '===============Test 4 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=16G
-oshrun -display-map -np 64 -npernode 4 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_5.txt
-echo '===============Test 5 Complete!==============='
-oshrun -display-map -np 64 -npernode 4 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_6.txt
-echo '===============Test 6 Complete!==============='
+#export SHMEM_SYMMETRIC_HEAP_SIZE=16G
+#oshrun -display-map -np 64 -npernode 4 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_5.txt
+#echo '===============Test 5 Complete!==============='
+#oshrun -display-map -np 64 -npernode 4 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_6.txt
+#echo '===============Test 6 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=8G
 oshrun -display-map -np 192 -npernode 12 ./CC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_7.txt
 echo '===============Test 7 Complete!==============='
-oshrun -display-map -np 192 -npernode 12 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_8.txt
-echo '===============Test 8 Complete!==============='
+#oshrun -display-map -np 192 -npernode 12 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_8.txt
+#echo '===============Test 8 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=18G
 oshrun -display-map -np 64 -npernode 4 ./CC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_9.txt
 echo '===============Test 9 Complete!==============='
-oshrun -display-map -np 64 -npernode 4 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_10.txt
-echo '===============Test 10 Complete!==============='
+#oshrun -display-map -np 64 -npernode 4 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_10.txt
+#echo '===============Test 10 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=18G
 oshrun -display-map -np 64 -npernode 4 ./CC -g 30 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_11.txt
 echo '===============Test 11 Complete!==============='
-oshrun -display-map -np 64 -npernode 4 ./CC -u 30 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_12.txt
-echo '===============Test 12 Complete!==============='
+#oshrun -display-map -np 64 -npernode 4 ./CC -u 30 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_12.txt
+#echo '===============Test 12 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=36G
 oshrun -display-map -np 32 -npernode 2 ./CC -g 31 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_13.txt
 echo '===============Test 13 Complete!==============='
-oshrun -display-map -np 32 -npernode 2 ./CC -u 31 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_14.txt
-echo '===============Test 14 Complete!==============='
+#oshrun -display-map -np 32 -npernode 2 ./CC -u 31 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_14.txt
+#echo '===============Test 14 Complete!==============='

@@ -1,0 +1,294 @@
+ Data for JOB [45571,1] offset 0 Total slots allocated 512
+
+ ========================   JOB MAP   ========================
+
+ Data for node: nid00106	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 3 Bound: N/A
+
+ Data for node: nid00107	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 7 Bound: N/A
+
+ Data for node: nid00109	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 11 Bound: N/A
+
+ Data for node: nid00110	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 15 Bound: N/A
+
+ Data for node: nid00111	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 19 Bound: N/A
+
+ Data for node: nid00140	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 23 Bound: N/A
+
+ Data for node: nid00141	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 27 Bound: N/A
+
+ Data for node: nid00142	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 31 Bound: N/A
+
+ Data for node: nid00143	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 35 Bound: N/A
+
+ Data for node: nid00144	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 39 Bound: N/A
+
+ Data for node: nid00145	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 43 Bound: N/A
+
+ Data for node: nid00146	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 47 Bound: N/A
+
+ Data for node: nid00147	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 51 Bound: N/A
+
+ Data for node: nid00161	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 55 Bound: N/A
+
+ Data for node: nid00162	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 59 Bound: N/A
+
+ Data for node: nid00163	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [45571,1] App: 0 Process rank: 63 Bound: N/A
+
+ =============================================================
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+Scale: 30 | Degree: 64 | Nodes: 1073741824 | Edges: 68719476736 | node size: 4 | edge size: 12
+PE: 0 | Generate Time:       6610.65969
+PE 3 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00147][[45571,1],51][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00162][[45571,1],57][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00111][[45571,1],17][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00109][[45571,1],10][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00147][[45571,1],48][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00140][[45571,1],23][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00143][[45571,1],35][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00144][[45571,1],39][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00161][[45571,1],54][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00106][[45571,1],0][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 62 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 26 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 31 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 46 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 57 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 42 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 4 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00110][[45571,1],15][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00142][[45571,1],28][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00143][[45571,1],32][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00144][[45571,1],38][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00162][[45571,1],58][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00110][[45571,1],12][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00107][[45571,1],5][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00140][[45571,1],20][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 61 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 24 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 47 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 54 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 1 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 41 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 17 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 10 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 48 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00106][[45571,1],1][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00111][[45571,1],18][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00147][[45571,1],49][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00146][[45571,1],47][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 38 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 58 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 55 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 12 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 43 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 5 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 11 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 20 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 63 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 27 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 28 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 32 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 37 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 56 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 18 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 49 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00146][[45571,1],44][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00161][[45571,1],55][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00106][[45571,1],3][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00110][[45571,1],13][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00145][[45571,1],40][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00107][[45571,1],6][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00109][[45571,1],11][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00140][[45571,1],21][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00163][[45571,1],60][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00141][[45571,1],24][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00142][[45571,1],29][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00143][[45571,1],33][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00107][[45571,1],7][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00109][[45571,1],8][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00147][[45571,1],50][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00141][[45571,1],27][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 40 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 19 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 21 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 60 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 29 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 33 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 44 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 39 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 59 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 13 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00161][[45571,1],52][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00106][[45571,1],2][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00110][[45571,1],14][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00145][[45571,1],41][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00111][[45571,1],19][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00140][[45571,1],22][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00163][[45571,1],61][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00141][[45571,1],25][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 52 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 2 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 6 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 8 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 50 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00142][[45571,1],30][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00143][[45571,1],34][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00146][[45571,1],45][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00144][[45571,1],36][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00162][[45571,1],56][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00145][[45571,1],43][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00111][[45571,1],16][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00109][[45571,1],9][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 0 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 14 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 7 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 51 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 22 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 25 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 34 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 45 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 36 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00163][[45571,1],63][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00142][[45571,1],31][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00162][[45571,1],59][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00161][[45571,1],53][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00163][[45571,1],62][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00141][[45571,1],26][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00146][[45571,1],46][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00144][[45571,1],37][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+PE 30 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 35 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 53 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 15 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 16 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 9 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+PE 23 received nullptr from neighbor allocation in MakeCSR with 26484674135 neighbors
+[nid00145][[45571,1],42][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
+[nid00107][[45571,1],4][pshmem_alloc.c:59:_shmalloc] Requested (105938696540)bytes and it exceeds symmetric space size (19327352832)bytes
