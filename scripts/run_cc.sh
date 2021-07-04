@@ -53,31 +53,31 @@ echo '===============Test 3 Complete!==============='
 oshrun -display-map -np 192 -npernode 12 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_4.txt
 echo '===============Test 4 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=16G #26484841272  - 24.665930561721 GB
+export SHMEM_SYMMETRIC_HEAP_SIZE=16G #Needed 26484841272  = 24.665GB
 oshrun -display-map -np 64 -npernode 4 ./CC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_5.txt
 echo '===============Test 5 Complete!==============='
 oshrun -display-map -np 64 -npernode 4 ./CC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_6.txt
 echo '===============Test 6 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=8G
+export SHMEM_SYMMETRIC_HEAP_SIZE=8G #Needed 37431676116  = 34.860 GB
 oshrun -display-map -np 192 -npernode 12 ./CC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_7.txt
 echo '===============Test 7 Complete!==============='
 oshrun -display-map -np 192 -npernode 12 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_8.txt
 echo '===============Test 8 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=18G
+export SHMEM_SYMMETRIC_HEAP_SIZE=18G #Needed 52968840052 = 49.33 GB
 oshrun -display-map -np 64 -npernode 4 ./CC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_9.txt
 echo '===============Test 9 Complete!==============='
 oshrun -display-map -np 64 -npernode 4 ./CC -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_10.txt
 echo '===============Test 10 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=18G
+export SHMEM_SYMMETRIC_HEAP_SIZE=18G #Needed 105938696540 = 98.663
 oshrun -display-map -np 64 -npernode 4 ./CC -g 30 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_11.txt
 echo '===============Test 11 Complete!==============='
 oshrun -display-map -np 64 -npernode 4 ./CC -u 30 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_12.txt
 echo '===============Test 12 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=36G
+export SHMEM_SYMMETRIC_HEAP_SIZE=36G #Other error
 oshrun -display-map -np 32 -npernode 2 ./CC -g 31 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_13.txt
 echo '===============Test 13 Complete!==============='
 oshrun -display-map -np 32 -npernode 2 ./CC -u 31 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/cc/test_14.txt
