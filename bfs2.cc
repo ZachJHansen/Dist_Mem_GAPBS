@@ -85,7 +85,6 @@ int64_t SHMEM_TDStep(const Graph &g, pvector<NodeID> &parent, SlidingQueue<NodeI
         }
       }
     }
-    q_iter++;
   }
   lqueue.flush();
   shmem_longlong_sum_to_all(scout_count, scout_count, 1, 0, 0, vp.npes, pWrk, pSync);           // Reduction: + (represents a synchronization point)
@@ -140,8 +139,8 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long l
   pvector<NodeID> parent = InitParent(g, source);
   t.Stop();
   PrintStep("i", t.Seconds());
-  SlidingQueue<NodeID> frontier(vp.max_width);          // Partitioned symmetric queue
-  if (pe == 0)
+  SlidingQueue<NodeID> frontier(vp.max_width, FRONTIER_LOCK);          // Partitioned symmetric queue
+  if (shmem_my_pe() == 0)
     frontier.push_back(source);
   frontier.slide_window();
   Bitmap curr(g.num_nodes(), true);                     // Symmetric unpartitioned bitmap
@@ -153,19 +152,19 @@ pvector<NodeID> DOBFS(const Graph &g, NodeID source, long *FRONTIER_LOCK, long l
   while (!frontier.empty()) {
     if (scout_count > edges_to_check / alpha) {
       int64_t awake_count, old_awake_count;
-      TIME_OP(t, QueueToBitmap(*frontier, front, pWrk, pSync));
+      TIME_OP(t, QueueToBitmap(frontier, front, pWrk, pSync));
       PrintStep("e", t.Seconds());
       awake_count = frontier.size();
       frontier.slide_window();
       do {
         t.Start();
         old_awake_count = awake_count;
-        awake_count = SHMEM_BUStep(g, parent, front, curr, pe, npes, pWrk, pSync, vp);
+        awake_count = SHMEM_BUStep(g, parent, front, curr, shmem_my_pe(), shmem_n_pes(), pWrk, pSync, vp);
         front.swap(curr);
         t.Stop();
         PrintStep("bu", t.Seconds(), awake_count);
       } while ((awake_count >= old_awake_count) || (awake_count > vp.max_width / beta));    // used to ac > g.num_nodes / beta, does vp.max_width make sense?
-      TIME_OP(t, BitmapToQueue(g, front, frontier, FRONTIER_LOCK, pe, npes));
+      TIME_OP(t, BitmapToQueue(g, front, frontier, FRONTIER_LOCK, shmem_my_pe(), shmem_n_pes()));
       PrintStep("c", t.Seconds());
       scout_count = 1;
     } else {

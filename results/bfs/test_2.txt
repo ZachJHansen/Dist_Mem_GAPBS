@@ -1,303 +1,896 @@
- Data for JOB [62080,1] offset 0 Total slots allocated 512
+ Data for JOB [27984,1] offset 0 Total slots allocated 512
 
  ========================   JOB MAP   ========================
 
  Data for node: nid00089	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 0 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 1 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 2 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 3 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 4 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 5 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 6 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 7 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 8 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 9 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 10 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 11 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 12 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 13 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 14 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 15 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 3 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 7 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 11 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 15 Bound: N/A
 
  Data for node: nid00090	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 16 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 17 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 18 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 19 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 20 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 21 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 22 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 23 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 24 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 25 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 26 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 27 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 28 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 29 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 30 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 31 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 19 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 23 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 27 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 31 Bound: N/A
 
  Data for node: nid00091	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 32 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 33 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 34 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 35 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 36 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 37 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 38 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 39 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 40 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 41 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 42 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 43 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 44 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 45 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 46 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 47 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 35 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 39 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 43 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 47 Bound: N/A
 
  Data for node: nid00092	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 48 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 49 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 50 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 51 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 52 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 53 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 54 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 55 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 56 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 57 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 58 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 59 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 60 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 61 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 62 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 63 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 51 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 55 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 59 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 63 Bound: N/A
 
  Data for node: nid00093	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 64 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 65 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 66 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 67 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 68 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 69 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 70 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 71 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 72 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 73 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 74 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 75 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 76 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 77 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 78 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 79 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 64 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 65 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 66 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 67 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 68 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 69 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 70 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 71 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 72 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 73 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 74 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 75 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 76 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 77 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 78 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 79 Bound: N/A
 
  Data for node: nid00094	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 80 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 81 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 82 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 83 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 84 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 85 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 86 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 87 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 88 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 89 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 90 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 91 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 92 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 93 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 94 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 95 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 80 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 81 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 82 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 83 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 84 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 85 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 86 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 87 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 88 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 89 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 90 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 91 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 92 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 93 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 94 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 95 Bound: N/A
 
  Data for node: nid00095	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 96 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 97 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 98 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 99 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 100 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 101 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 102 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 103 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 104 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 105 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 106 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 107 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 108 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 109 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 110 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 111 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 96 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 97 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 98 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 99 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 100 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 101 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 102 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 103 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 104 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 105 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 106 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 107 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 108 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 109 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 110 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 111 Bound: N/A
 
  Data for node: nid00096	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 112 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 113 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 114 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 115 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 116 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 117 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 118 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 119 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 120 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 121 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 122 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 123 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 124 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 125 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 126 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 127 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 112 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 113 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 114 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 115 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 116 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 117 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 118 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 119 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 120 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 121 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 122 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 123 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 124 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 125 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 126 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 127 Bound: N/A
 
  Data for node: nid00097	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 128 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 129 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 130 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 131 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 132 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 133 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 134 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 135 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 136 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 137 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 138 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 139 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 140 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 141 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 142 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 143 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 128 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 129 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 130 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 131 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 132 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 133 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 134 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 135 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 136 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 137 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 138 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 139 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 140 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 141 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 142 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 143 Bound: N/A
 
  Data for node: nid00098	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 144 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 145 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 146 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 147 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 148 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 149 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 150 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 151 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 152 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 153 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 154 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 155 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 156 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 157 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 158 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 159 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 144 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 145 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 146 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 147 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 148 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 149 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 150 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 151 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 152 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 153 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 154 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 155 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 156 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 157 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 158 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 159 Bound: N/A
 
  Data for node: nid00099	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 160 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 161 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 162 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 163 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 164 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 165 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 166 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 167 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 168 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 169 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 170 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 171 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 172 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 173 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 174 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 175 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 160 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 161 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 162 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 163 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 164 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 165 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 166 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 167 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 168 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 169 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 170 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 171 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 172 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 173 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 174 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 175 Bound: N/A
 
  Data for node: nid00100	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 176 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 177 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 178 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 179 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 180 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 181 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 182 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 183 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 184 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 185 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 186 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 187 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 188 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 189 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 190 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 191 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 176 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 177 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 178 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 179 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 180 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 181 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 182 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 183 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 184 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 185 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 186 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 187 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 188 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 189 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 190 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 191 Bound: N/A
 
  Data for node: nid00101	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 192 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 193 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 194 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 195 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 196 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 197 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 198 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 199 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 200 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 201 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 202 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 203 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 204 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 205 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 206 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 207 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 192 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 193 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 194 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 195 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 196 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 197 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 198 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 199 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 200 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 201 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 202 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 203 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 204 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 205 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 206 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 207 Bound: N/A
 
  Data for node: nid00102	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 208 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 209 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 210 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 211 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 212 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 213 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 214 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 215 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 216 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 217 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 218 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 219 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 220 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 221 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 222 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 223 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 208 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 209 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 210 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 211 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 212 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 213 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 214 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 215 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 216 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 217 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 218 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 219 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 220 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 221 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 222 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 223 Bound: N/A
 
  Data for node: nid00103	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 224 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 225 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 226 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 227 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 228 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 229 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 230 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 231 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 232 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 233 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 234 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 235 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 236 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 237 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 238 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 239 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 224 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 225 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 226 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 227 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 228 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 229 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 230 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 231 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 232 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 233 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 234 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 235 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 236 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 237 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 238 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 239 Bound: N/A
 
  Data for node: nid00104	Num slots: 32	Max slots: 0	Num procs: 16
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 240 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 241 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 242 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 243 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 244 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 245 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 246 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 247 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 248 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 249 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 250 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 251 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 252 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 253 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 254 Bound: N/A
- 	Process OMPI jobid: [62080,1] App: 0 Process rank: 255 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 240 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 241 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 242 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 243 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 244 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 245 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 246 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 247 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 248 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 249 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 250 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 251 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 252 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 253 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 254 Bound: N/A
+ 	Process OMPI jobid: [27984,1] App: 0 Process rank: 255 Bound: N/A
 
  =============================================================
---------------------------------------------------------------------------
-oshrun was unable to launch the specified application as it could not access
-or execute an executable:
-
-Executable: ./BFS
-Node: nid00102
-
-while attempting to start process rank 208.
---------------------------------------------------------------------------
-256 total processes failed to start
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+Scale: 28 | Degree: 64 | Nodes: 268435456 | Edges: 17179869184 | node size: 4 | edge size: 12
+PE: 0 | Generate Time:       8.68284
+PE: 0 | Build Time:          1069.69249
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+PE: 0 | Source:             57228934
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+Graph has 268435456 nodes and 17179865052 undirected edges for degree: 63
+PE: 0 |     i                0.09229
+PE: 0 |    td        117     0.00246
+PE: 0 |    td      14999     0.14458
+PE: 0 |    td    1911684     2.11610
+PE: 0 |    td  159411409   165.53518
+PE: 0 |     e                0.16244
+PE: 0 |    bu  107097246     0.29731
+PE: 0 |    bu          0     0.14977
+PE: 0 |     c                0.00903
+PE: 0 | Trial Time:          168.56824
+PE: 0 | Source:            250645983
+PE: 0 |     i                0.09170
+PE: 0 |    td        133     0.00253
+PE: 0 |    td      16991     0.15679
+PE: 0 |    td    2167113     2.40912
+PE: 0 |    td  171509332   178.12712
+PE: 0 |     e                0.10533
+PE: 0 |    bu   94741886     0.25417
+PE: 0 |    bu          0     0.10081
+PE: 0 |     c                0.00909
+PE: 0 | Trial Time:          181.31462
+PE: 0 | Source:              4987759
+PE: 0 |     i                0.09181
+PE: 0 |    td        124     0.00221
+PE: 0 |    td      15779     0.14673
+PE: 0 |    td    2011116     2.15990
+PE: 0 |    td  164296601   170.65162
+PE: 0 |     e                0.09596
+PE: 0 |    bu  102111835     0.22840
+PE: 0 |    bu          0     0.09961
+PE: 0 |     c                0.00916
+PE: 0 | Trial Time:          173.54352
+PE: 0 | Source:             77525034
+PE: 0 |     i                0.09160
+PE: 0 |    td        140     0.00253
+PE: 0 |    td      17937     0.16420
+PE: 0 |    td    2283980     2.52982
+PE: 0 |    td  176564170   183.63915
+PE: 0 |     e                0.09787
+PE: 0 |    bu   89569228     0.20816
+PE: 0 |    bu          0     0.09992
+PE: 0 |     c                0.00900
+PE: 0 | Trial Time:          186.90058
+PE: 0 | Source:             79341147
+PE: 0 |     i                0.09229
+PE: 0 |    td        123     0.00241
+PE: 0 |    td      15772     0.14524
+PE: 0 |    td    2011280     2.15491
+PE: 0 |    td  164305295   170.97289
+PE: 0 |     e                0.09566
+PE: 0 |    bu  102102985     0.22576
+PE: 0 |    bu          0     0.10109
+PE: 0 |     c                0.00901
+PE: 0 | Trial Time:          173.85721
+PE: 0 | Source:            117078810
+PE: 0 |     i                0.09170
+PE: 0 |    td        123     0.00243
+PE: 0 |    td      15851     0.14570
+PE: 0 |    td    2021186     2.16811
+PE: 0 |    td  164774978   171.65243
+PE: 0 |     e                0.09669
+PE: 0 |    bu  101623317     0.22451
+PE: 0 |    bu          0     0.09953
+PE: 0 |     c                0.00916
+PE: 0 | Trial Time:          174.54817
+PE: 0 | Source:            265486579
+PE: 0 |     i                0.09195
+PE: 0 |    td        125     0.00244
+PE: 0 |    td      15938     0.14739
+PE: 0 |    td    2031817     2.18081
+PE: 0 |    td  165300635   172.33418
+PE: 0 |     e                0.09641
+PE: 0 |    bu  101086940     0.22421
+PE: 0 |    bu          0     0.10061
+PE: 0 |     c                0.00899
+PE: 0 | Trial Time:          175.24530
+PE: 0 | Source:             68261674
+PE: 0 |     i                0.09158
+PE: 0 |    td        134     0.00252
+PE: 0 |    td      17015     0.15843
+PE: 0 |    td    2169956     2.42108
+PE: 0 |    td  171652051   179.04940
+PE: 0 |     e                0.09757
+PE: 0 |    bu   94596299     0.21628
+PE: 0 |    bu          0     0.09993
+PE: 0 |     c                0.00899
+PE: 0 | Trial Time:          182.20410
+PE: 0 | Average Time:        177.02272

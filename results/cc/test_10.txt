@@ -1,102 +1,102 @@
- Data for JOB [19695,1] offset 0 Total slots allocated 512
+ Data for JOB [25927,1] offset 0 Total slots allocated 512
 
  ========================   JOB MAP   ========================
 
- Data for node: nid00089	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 0 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 1 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 2 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 3 Bound: N/A
+ Data for node: nid00105	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 0 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 1 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 2 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 3 Bound: N/A
 
- Data for node: nid00090	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 4 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 5 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 6 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 7 Bound: N/A
+ Data for node: nid00106	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 4 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 5 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 6 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 7 Bound: N/A
 
- Data for node: nid00091	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 8 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 9 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 10 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 11 Bound: N/A
+ Data for node: nid00107	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 8 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 9 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 10 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 11 Bound: N/A
 
- Data for node: nid00092	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 12 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 13 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 14 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 15 Bound: N/A
+ Data for node: nid00112	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 12 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 13 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 14 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 15 Bound: N/A
 
- Data for node: nid00093	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 16 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 17 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 18 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 19 Bound: N/A
+ Data for node: nid00113	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 16 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 17 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 18 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 19 Bound: N/A
 
- Data for node: nid00094	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 20 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 21 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 22 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 23 Bound: N/A
+ Data for node: nid00114	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 20 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 21 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 22 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 23 Bound: N/A
 
- Data for node: nid00095	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 24 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 25 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 26 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 27 Bound: N/A
+ Data for node: nid00115	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 24 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 25 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 26 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 27 Bound: N/A
 
- Data for node: nid00096	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 28 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 29 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 30 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 31 Bound: N/A
+ Data for node: nid00116	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 28 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 29 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 30 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 31 Bound: N/A
 
- Data for node: nid00097	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 32 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 33 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 34 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 35 Bound: N/A
+ Data for node: nid00117	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 32 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 33 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 34 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 35 Bound: N/A
 
- Data for node: nid00098	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 36 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 37 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 38 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 39 Bound: N/A
+ Data for node: nid00118	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 36 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 37 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 38 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 39 Bound: N/A
 
- Data for node: nid00099	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 40 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 41 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 42 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 43 Bound: N/A
+ Data for node: nid00119	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 40 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 41 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 42 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 43 Bound: N/A
 
- Data for node: nid00100	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 44 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 45 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 46 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 47 Bound: N/A
+ Data for node: nid00120	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 44 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 45 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 46 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 47 Bound: N/A
 
- Data for node: nid00101	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 48 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 49 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 50 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 51 Bound: N/A
+ Data for node: nid00121	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 48 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 49 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 50 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 51 Bound: N/A
 
- Data for node: nid00102	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 52 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 53 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 54 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 55 Bound: N/A
+ Data for node: nid00122	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 52 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 53 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 54 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 55 Bound: N/A
 
- Data for node: nid00103	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 56 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 57 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 58 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 59 Bound: N/A
+ Data for node: nid00123	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 56 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 57 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 58 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 59 Bound: N/A
 
- Data for node: nid00104	Num slots: 32	Max slots: 0	Num procs: 4
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 60 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 61 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 62 Bound: N/A
- 	Process OMPI jobid: [19695,1] App: 0 Process rank: 63 Bound: N/A
+ Data for node: nid00124	Num slots: 32	Max slots: 0	Num procs: 4
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 60 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 61 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 62 Bound: N/A
+ 	Process OMPI jobid: [25927,1] App: 0 Process rank: 63 Bound: N/A
 
  =============================================================
 Scale: 29 | Degree: 64 | Nodes: 536870912 | Edges: 34359738368 | node size: 4 | edge size: 12
@@ -163,8 +163,8 @@ Scale: 29 | Degree: 64 | Nodes: 536870912 | Edges: 34359738368 | node size: 4 | 
 Scale: 29 | Degree: 64 | Nodes: 536870912 | Edges: 34359738368 | node size: 4 | edge size: 12
 Scale: 29 | Degree: 64 | Nodes: 536870912 | Edges: 34359738368 | node size: 4 | edge size: 12
 Scale: 29 | Degree: 64 | Nodes: 536870912 | Edges: 34359738368 | node size: 4 | edge size: 12
-PE: 0 | Generate Time:       74.13302
-PE: 0 | Build Time:          6915.95659
+PE: 0 | Generate Time:       73.40324
+PE: 0 | Build Time:          6925.79166
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
@@ -229,92 +229,20 @@ Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
-PE: 0 | Source:            122633431
-PE: 0 |     i                0.74060
-PE: 0 |    td        122     0.00175
-PE: 0 |    td      15425     0.03717
-PE: 0 |    td    1971586     2.02269
-PE: 0 |    td  200604926   183.97069
-PE: 0 |     e                0.32386
-PE: 0 |    bu  334278852     1.98653
-PE: 0 |    bu          0     0.33095
-PE: 0 |     c                0.07157
-PE: 0 | Trial Time:          189.57850
-PE: 0 | Source:             10688055
-PE: 0 |     i                0.73969
-PE: 0 |    td        124     0.00137
-PE: 0 |    td      15834     0.03441
-PE: 0 |    td    2021860     2.04170
-PE: 0 |    td  204564347   187.79259
-PE: 0 |     e                0.26318
-PE: 0 |    bu  330268746     1.93357
-PE: 0 |    bu          0     0.26557
-PE: 0 |     c                0.07150
-PE: 0 | Trial Time:          193.23636
-PE: 0 | Source:            166125074
-PE: 0 |     i                0.74057
-PE: 0 |    td        122     0.00164
-PE: 0 |    td      15755     0.03455
-PE: 0 |    td    2013791     2.03865
-PE: 0 |    td  203929071   187.57242
-PE: 0 |     e                0.25061
-PE: 0 |    bu  330912172     1.88501
-PE: 0 |    bu          0     0.26336
-PE: 0 |     c                0.07168
-PE: 0 | Trial Time:          192.95040
-PE: 0 | Source:            170016745
-PE: 0 |     i                0.74046
-PE: 0 |    td        125     0.00166
-PE: 0 |    td      16025     0.03506
-PE: 0 |    td    2045723     2.06923
-PE: 0 |    td  206442859   190.07994
-PE: 0 |     e                0.25189
-PE: 0 |    bu  328366179     1.87334
-PE: 0 |    bu          0     0.26569
-PE: 0 |     c                0.07150
-PE: 0 | Trial Time:          195.48078
-PE: 0 | Source:            250883164
-PE: 0 |     i                0.74076
-PE: 0 |    td        138     0.00179
-PE: 0 |    td      17613     0.03710
-PE: 0 |    td    2247600     2.26268
-PE: 0 |    td  221777671   204.30973
-PE: 0 |     e                0.26176
-PE: 0 |    bu  312827889     1.78861
-PE: 0 |    bu          0     0.26429
-PE: 0 |     c                0.07156
-PE: 0 | Trial Time:          209.83027
-PE: 0 | Source:            146275016
-PE: 0 |     i                0.74031
-PE: 0 |    td        138     0.00181
-PE: 0 |    td      17678     0.03711
-PE: 0 |    td    2259098     2.27211
-PE: 0 |    td  222619272   205.25551
-PE: 0 |     e                0.26113
-PE: 0 |    bu  311974725     1.78793
-PE: 0 |    bu          0     0.26716
-PE: 0 |     c                0.07160
-PE: 0 | Trial Time:          210.78675
-PE: 0 | Source:            316228028
-PE: 0 |     i                0.74049
-PE: 0 |    td        122     0.00168
-PE: 0 |    td      15641     0.03460
-PE: 0 |    td    2001208     2.02908
-PE: 0 |    td  202947252   187.27612
-PE: 0 |     e                0.25093
-PE: 0 |    bu  331906688     1.89091
-PE: 0 |    bu          0     0.26467
-PE: 0 |     c                0.07160
-PE: 0 | Trial Time:          192.65217
-PE: 0 | Source:            522008234
-PE: 0 |     i                0.73949
-PE: 0 |    td        130     0.00172
-PE: 0 |    td      16504     0.03620
-PE: 0 |    td    2107899     2.13570
-PE: 0 |    td  211234358   194.98034
-PE: 0 |     e                0.25502
-PE: 0 |    bu  323512020     1.84400
-PE: 0 |    bu          0     0.26379
-PE: 0 |     c                0.07153
-PE: 0 | Trial Time:          200.41981
-PE: 0 | Average Time:        198.11688
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3898.78822
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3886.92241
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3895.63831
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3897.83692
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3918.48165
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3929.77933
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3904.44472
+Skipping largest intermediate component (ID: 0, approx. 100% of the graph)
+PE: 0 | Trial Time:          3929.63502
+PE: 0 | Average Time:        3907.69082

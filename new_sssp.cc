@@ -95,7 +95,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     }
     shmem_long_min_to_all(&next_bin_index, local_min, 1, 0, 0, vp.npes, pWrk, pSync); // next_bin_index = min of local_mins
     t.Stop();
-    PrintStep(curr_bin_index, t.Millisecs(), curr_frontier_tail);       // End of phase 1
+    //PrintStep(curr_bin_index, t.Millisecs(), curr_frontier_tail);       // End of phase 1
 
     t.Start();                                                                  // REMEMBER! Everyone must particpate in timer and label printing stuff
     curr_bin_index = kMaxBin;                                                   // Every PE updates current frontier tails and bin indexes to the same values
@@ -143,7 +143,7 @@ pvector<long> Shmem_DeltaStep(const WGraph &g, NodeID source, int delta, long* p
     }
     shmem_barrier_all();
   }
-  printf("PE %d | Took %d iterations\n", vp.pe, *iter);
+  //printf("PE %d | Took %d iterations\n", vp.pe, *iter);
   return dist;
 }
 
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
   static long* PLOCKS = (long *) shmem_calloc(npes, sizeof(long));              // Access to shared resources controlled by a single pe is determined by a lock on each pe
 
   {
-    WeightedBuilder b(cli);
+    WeightedBuilder b(cli, cli.do_verify());
     shmem_barrier_all();
     WGraph g = b.MakeGraph(pWrk, pSync);
     shmem_barrier_all();

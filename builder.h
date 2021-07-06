@@ -103,7 +103,7 @@ class BuilderBase {
         shmem_int_atomic_inc(degrees.begin()+(local_v), receiver);                                   // increment degree of vertex e.v on pe receiver (could be local PE)
       }
       flush_counter++;
-      if (flush_counter % 20000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
+      if (flush_counter % 5000 == 0)  // weirdness: without periodic barriers, CountDegrees runs out of memory on twitter, road. barrier forces shmem to flush communication buffers maybe?
         shmem_quiet();
     }
     shmem_barrier_all();
