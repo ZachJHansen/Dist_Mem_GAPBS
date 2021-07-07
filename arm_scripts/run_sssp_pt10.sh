@@ -58,7 +58,7 @@ export SHMEM_SYMMETRIC_HEAP_SIZE=18G
 #oshrun -display-map -np 192 -npernode 12 ./SSSP -u 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/sssp/test_8.txt
 #echo '===============Test 8 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=55G
+export SHMEM_SYMMETRIC_HEAP_SIZE=45G
 #oshrun -display-map -np 64 -npernode 4 ./SSSP -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/sssp/test_9.txt
 #echo '===============Test 9 Complete!==============='
 oshrun -display-map -np 64 -npernode 4 ./SSSP -u 29 -k 64 -n 1 &> $HOME/Dist_Mem_GAPBS/results/sssp/test_10.txt

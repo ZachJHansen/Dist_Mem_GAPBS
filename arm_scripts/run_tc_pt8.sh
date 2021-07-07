@@ -34,11 +34,11 @@ cd $HOME/Dist_Mem_GAPBS
 oshc++ -std=c++11 -o TC tc.cc
 
 # Run Tests
-export SHMEM_SYMMETRIC_HEAP_SIZE=12G
+export SHMEM_SYMMETRIC_HEAP_SIZE=14G
 #oshrun -display-map -np 256 -npernode 16 ./TC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/tc/test_1.txt
 #echo '===============Test 1 Complete!==============='
-oshrun -display-map -np 256 -npernode 16 ./TC -u 28 -k 64 -n 1 &> $HOME/Dist_Mem_GAPBS/results/tc/test_2.txt
-echo '===============Test 2 Complete!==============='
+#oshrun -display-map -np 256 -npernode 16 ./TC -u 28 -k 64 -n 1 &> $HOME/Dist_Mem_GAPBS/results/tc/test_2.txt
+#echo '===============Test 2 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=18G
 #oshrun -display-map -np 192 -npernode 12 ./TC -g 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/tc/test_3.txt
@@ -52,11 +52,11 @@ export SHMEM_SYMMETRIC_HEAP_SIZE=55G
 #oshrun -display-map -np 64 -npernode 4 ./TC -u 28 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/tc/test_6.txt
 #echo '===============Test 6 Complete!==============='
 
-export SHMEM_SYMMETRIC_HEAP_SIZE=18G
+export SHMEM_SYMMETRIC_HEAP_SIZE=16G
 #oshrun -display-map -np 192 -npernode 12 ./TC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/tc/test_7.txt
 #echo '===============Test 7 Complete!==============='
-#oshrun -display-map -np 192 -npernode 12 ./TC -u 29 -k 64 -n 1 &> $HOME/Dist_Mem_GAPBS/results/tc/test_8.txt
-#echo '===============Test 8 Complete!==============='
+oshrun -display-map -np 192 -npernode 12 ./TC -u 29 -k 64 -n 1 &> $HOME/Dist_Mem_GAPBS/results/tc/test_8.txt
+echo '===============Test 8 Complete!==============='
 
 export SHMEM_SYMMETRIC_HEAP_SIZE=55G
 #oshrun -display-map -np 64 -npernode 4 ./TC -g 29 -k 64 -n 8 &> $HOME/Dist_Mem_GAPBS/results/tc/test_9.txt
