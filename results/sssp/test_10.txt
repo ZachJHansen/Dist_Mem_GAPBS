@@ -229,3 +229,5 @@ Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
 Graph has 536870912 nodes and 34359734159 undirected edges for degree: 63
+PE: 0 | Trial Time:          12004.25836
+PE: 0 | Average Time:        12004.25836
