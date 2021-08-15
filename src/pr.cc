@@ -108,8 +108,8 @@ int main(int argc, char* argv[]) {
   if (!cli.ParseArgs())
     return -1;
 
-  //char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
-  //putenv(size_env);
+  char size_env[] = "SMA_SYMMETRIC_SIZE=16G";
+  putenv(size_env);
 
   shmem_init();
 
