@@ -106,6 +106,7 @@ class CSRGraph {
   class Neighborhood {
     int owner;
     bool same_space_;
+    bool bulk_;
     NodeID_ n_;                 
     NodeID_ local;
     DestID_** g_index_;
@@ -116,21 +117,24 @@ class CSRGraph {
     DestID_* foreign_end;
     DestID_* beginning;
     DestID_* ending;
+    DestID_* buff_neighbor_;
    public:
     DestID_* current;           // Current position of iterator within neighborhood
     DestID_ curr_val;           // Current value pointed at by iterator
 
-    Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset, bool same_space = false) :
-        n_(n), g_index_(g_index), start_offset_(0), same_space_(same_space) {
+    Neighborhood(NodeID_ n, DestID_** g_index, Partition<NodeID_> vp, OffsetT start_offset, DestID_* buffer, bool bulk_transfer, bool same_space = false) :
+        n_(n), g_index_(g_index), start_offset_(0), buff_neighbor_(buffer), bulk_(bulk_transfer), same_space_(same_space) {
       OffsetT max_offset;
       local = vp.local_pos(n_);
       owner = vp.recv(n_);
+      //printf("PE %d | buffer: %p\n", shmem_my_pe(), (void*) buff_neighbor_);
       //printf("PE %d | g_index: %p, globeql %d local %d\n", shmem_my_pe(), (void*) g_index_, n, local);
       if (vp.pe == owner) {
         max_offset = g_index_[local+1] - g_index_[local];
         start_offset_ = std::min(start_offset, max_offset);
         beginning = g_index_[local] + start_offset_;
         ending = g_index_[local+1];
+        current = beginning;
       } else {
         if (same_space_) {    // true if calling PE shares a memory space with owner pe
           ptr_start = (DestID_**) shmem_ptr(g_index_+local, owner);
@@ -139,6 +143,7 @@ class CSRGraph {
           start_offset_ = std::min(start_offset, max_offset);
           beginning = *ptr_start + start_offset_;
           ending = *ptr_end;
+          current = beginning;
         } else {
           shmem_getmem(&foreign_start, g_index_+local, sizeof(DestID_*), owner);
           shmem_getmem(&foreign_end, g_index_+(local+1), sizeof(DestID_*), owner);
@@ -146,10 +151,17 @@ class CSRGraph {
           start_offset_ = std::min(start_offset, max_offset);
           beginning = foreign_start + start_offset_;
           ending = foreign_end;
+	  shmem_getmem(buff_neighbor_, beginning, (ending-beginning)*sizeof(DestID_), owner);
+	  //printf("HHH: %lu\n", ending - beginning);
+          current = buff_neighbor_;
+	  ending = buff_neighbor_ + (ending-beginning); 
+	  //for (int i = 0; i < ending-beginning; i++) {
+//		printf("Neigh: %d\n", current[i]);	  
+//	  }
           //printf("PE %d | Node: %d | (beginning = %p) => %d | (ending = %p) => %d\n", vp.pe, n, (void*) (beginning), *beginning, (void*) ending, *ending);
         }
       }
-      current = beginning;
+      //current = beginning;
     }
 
     // begin and end are used for range based iteration, must return refs to neighborhoods instead of DestIDs
@@ -186,28 +198,18 @@ class CSRGraph {
         if (same_space_)
           return ((DestID_*) shmem_ptr(ending, owner));
         else
-          return(ending);
+          return(foreign_end);
       }
     }
 
     bool operator!=(Neighborhood const& it) const { return it.ending != current; }
 
     DestID_& operator*() {
-      if (shmem_my_pe() == owner) {
         return(*current);
-      } else {
-        shmem_getmem(&curr_val, current, sizeof(DestID_), owner);
-        return(curr_val);
-      }
     }
 
     const DestID_& operator*() const {
-      if (shmem_my_pe() == owner) {
         return(*current);
-      } else {
-        shmem_getmem(&curr_val, current, sizeof(DestID_), owner);
-        return(curr_val);
-      }
     }
 
     Neighborhood& operator+(size_t n) {
@@ -231,9 +233,12 @@ class CSRGraph {
       if (shmem_my_pe() == owner) {
         return(*(beginning+n));
       } else {
-        shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner); 
-        //printf("PE %d is pulling val (%d) from %p on PE %d\n", shmem_my_pe(), val, (void*) (begin()+n), owner);
-        return curr_val;
+	      if (bulk_) {
+		      	return(*(buff_neighbor_+n));
+		} else {
+        		shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner); 
+        		return curr_val;
+		}
       }
     }
 
@@ -241,8 +246,12 @@ class CSRGraph {
       if (shmem_my_pe() == owner) {
         return(*(beginning+n));
       } else {
-        shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner);         
-        return curr_val;
+	      if (bulk_) {
+		      	return(*(buff_neighbor_+n));
+		} else {
+        		shmem_getmem(&curr_val, beginning+n, sizeof(DestID_), owner);         
+        		return curr_val;
+		}
       }
     }
   };
@@ -257,6 +266,8 @@ class CSRGraph {
         shmem_free(in_index_);
       if (in_neighbors_ != nullptr)
         shmem_free(in_neighbors_);
+      if (buff_neighbor_ != nullptr)
+        delete [] buff_neighbor_;
     }
   }
 
@@ -275,6 +286,7 @@ class CSRGraph {
     *edge_counts = out_index_[p.end - p.start] - out_index_[0];                             // how long is the local neighbor array?
     shmem_long_sum_to_all(edge_counts, edge_counts, 1, 0, 0, p.npes, pWrk, pSync);      // Reduction : +
     num_edges_ = *edge_counts / 2;
+    buff_neighbor_ = new DestID_[num_edges_/num_nodes_];
   }
 
   CSRGraph(int64_t num_nodes, DestID_** out_index, DestID_* out_neighs,
@@ -287,18 +299,20 @@ class CSRGraph {
     *edge_counts = out_index_[p.end - p.start] - out_index_[0];                             // how long is the local neighbor array?
     shmem_long_sum_to_all(edge_counts, edge_counts, 1, 0, 0, p.npes, pWrk, pSync);      // Reduction : +
     num_edges_ = *edge_counts;
+    buff_neighbor_ = new DestID_[num_edges_/num_nodes_];				// is this necessary? can it be inherited from the graph pre-inversion?
   }
 
   CSRGraph(CSRGraph&& other) : directed_(other.directed_),
     num_nodes_(other.num_nodes_), num_edges_(other.num_edges_),
     out_index_(other.out_index_), out_neighbors_(other.out_neighbors_),
-    in_index_(other.in_index_), in_neighbors_(other.in_neighbors_) {
+    in_index_(other.in_index_), in_neighbors_(other.in_neighbors_), buff_neighbor_(other.buff_neighbor_) {
       other.num_edges_ = -1;
       other.num_nodes_ = -1;
       other.out_index_ = nullptr;
       other.out_neighbors_ = nullptr;
       other.in_index_ = nullptr;
       other.in_neighbors_ = nullptr;
+      other.buff_neighbor_ = nullptr;
   }
 
   ~CSRGraph() {
@@ -315,12 +329,14 @@ class CSRGraph {
       out_neighbors_ = other.out_neighbors_;
       in_index_ = other.in_index_;
       in_neighbors_ = other.in_neighbors_;
+      buff_neighbor_ = other.buff_neighbor_;
       other.num_edges_ = -1;
       other.num_nodes_ = -1;
       other.out_index_ = nullptr;
       other.out_neighbors_ = nullptr;
       other.in_index_ = nullptr;
       other.in_neighbors_ = nullptr;
+      other.buff_neighbor_ = nullptr;
     }
     return *this;
   }
@@ -388,13 +404,13 @@ class CSRGraph {
 
   Neighborhood out_neigh(NodeID_ n, OffsetT start_offset = 0) const {
     Partition<NodeID_> vp(num_nodes_);
-    return Neighborhood(n, out_index_, vp, start_offset);
+    return Neighborhood(n, out_index_, vp, start_offset, buff_neighbor_, true);
   }
 
   Neighborhood in_neigh(NodeID_ n, OffsetT start_offset = 0) const {
     Partition<NodeID_> vp(num_nodes_);
     static_assert(MakeInverse, "Graph inversion disabled but reading inverse");
-    return Neighborhood(n, in_index_, vp, start_offset);
+    return Neighborhood(n, in_index_, vp, start_offset, buff_neighbor_, true);
   }
 
   void PrintStats() const {
@@ -406,7 +422,7 @@ class CSRGraph {
     std::cout << num_edges_/num_nodes_ << std::endl;
   }
 
-  void PrintTopology(long* PRINT_LOCK) const {
+  void PrintTopology(long* PRINT_LOCK) {
     shmem_barrier_all();
     Partition<NodeID_> vp(num_nodes_);
     shmem_set_lock(PRINT_LOCK);
@@ -423,7 +439,7 @@ class CSRGraph {
   }
 
 
-  void PrintTopology(bool outgoing = true) {
+  void PrintTopology(bool outgoing = true) const {
     Partition<NodeID_> vp(num_nodes_);
     int* PRINTER = (int *) shmem_calloc(1, sizeof(int));                // init 0
     shmem_int_wait_until(PRINTER, SHMEM_CMP_EQ, vp.pe);           // wait until previous PE puts your pe # in PRINTER
@@ -517,6 +533,7 @@ class CSRGraph {
   DestID_*  out_neighbors_;
   DestID_** in_index_;
   DestID_*  in_neighbors_;
+  DestID_* buff_neighbor_;
 };
 
 #endif  // GRAPH_H_
